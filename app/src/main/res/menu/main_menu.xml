@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/left"
+        android:icon="@drawable/ic_baseline_align_horizontal_left_24"
+        android:title="Left"/>
+    <item
+        android:id="@+id/add"
+        android:icon="@drawable/ic_baseline_add_box_24"
+        android:title="Add"/>
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="Settings"/>
+
+</menu>
