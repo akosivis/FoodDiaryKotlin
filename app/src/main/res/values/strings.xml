@@ -2,4 +2,7 @@
     <string name="app_name">FoodDiaryKotlin</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_food_item">Add food item</string>
+    <string name="hi_user">Hi User!</string>
+    <string name="what_have_you_eaten_today">What have you eaten today?</string>
 </resources>
