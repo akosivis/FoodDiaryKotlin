@@ -12,4 +12,9 @@ class FoodItemRepository(private val foodItemDao: FoodItemDao ) {
     suspend fun insertFoodItem(foodItem: FoodItemModel): Long {
         return foodItemDao.insertFoodItem(foodItem)
     }
+
+    suspend fun getAllFoodItems(): Flow<List<FoodItemModel>> {
+        return foodItemDao.getAllFoodItems()
+    }
+
 }

@@ -10,8 +10,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.viselvis.fooddiarykotlin.AddFoodItemActivity
+import com.viselvis.fooddiarykotlin.activity.AddFoodItemActivity
 import com.viselvis.fooddiarykotlin.R
+import com.viselvis.fooddiarykotlin.activity.FoodHistoryActivity
 import com.viselvis.fooddiarykotlin.adapter.FoodItemAdapter
 import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
 import com.viselvis.fooddiarykotlin.databinding.FragmentMainBinding
@@ -40,6 +41,11 @@ class MainFragment : Fragment() {
             // call an activity here
             val intentToAddFoodItem = Intent(activity, AddFoodItemActivity::class.java)
             startActivity(intentToAddFoodItem)
+        }
+
+        binding.cdvViewHistory.setOnClickListener {
+            val intentToFoodHistory = Intent(activity, FoodHistoryActivity::class.java)
+            startActivity(intentToFoodHistory)
         }
 
         // declare adapter here
