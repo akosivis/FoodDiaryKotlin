@@ -5,4 +5,5 @@
     <string name="add_food_item">Add food item</string>
     <string name="hi_user">Hi User!</string>
     <string name="what_have_you_eaten_today">What have you eaten today?</string>
+    <string name="view_food_history">View food history</string>
 </resources>

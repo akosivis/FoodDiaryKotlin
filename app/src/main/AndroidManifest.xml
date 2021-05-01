@@ -10,7 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodDiaryKotlin">
-        <activity android:name=".AddFoodItemActivity"></activity>
+        <activity android:name=".activity.FoodHistoryActivity"></activity>
+        <activity android:name=".activity.AddFoodItemActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

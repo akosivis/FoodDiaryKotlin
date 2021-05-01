@@ -1,4 +1,4 @@
-package com.viselvis.fooddiarykotlin
+package com.viselvis.fooddiarykotlin.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

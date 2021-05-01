@@ -14,7 +14,7 @@ interface FoodItemDao {
     @Update
     fun updateFoodItem(foodItem: FoodItemModel)
 
-    @Query("SELECT * FROM food_item_table ORDER BY foodItemCreated ASC")
+    @Query("SELECT * FROM food_item_table ORDER BY foodItemCreated DESC")
     fun getAllFoodItems(): Flow<List<FoodItemModel>>
 
     @Query("SELECT * FROM food_item_table ORDER BY foodItemCreated DESC LIMIT 3")
