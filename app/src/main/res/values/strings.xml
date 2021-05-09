@@ -6,4 +6,7 @@
     <string name="hi_user">Hi User!</string>
     <string name="what_have_you_eaten_today">What have you eaten today?</string>
     <string name="view_food_history">View food history</string>
+    <string name="no_food_items_recorded">No food items recorded!</string>
+    <string name="navigation_drawer_open">OPEN</string>
+    <string name="navigation_drawer_close">CLOSE</string>
 </resources>

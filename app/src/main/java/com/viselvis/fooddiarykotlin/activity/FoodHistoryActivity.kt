@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.opengl.Visibility
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -21,7 +22,7 @@ import java.util.*
 class FoodHistoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFoodHistoryBinding
     private lateinit var daySelected: Calendar
-    private val adapter = FoodItemAdapter()
+    private val adapter = FoodItemAdapter(1)
     private lateinit var dateToday: Calendar
     private lateinit var dateSelected: Date
 
@@ -72,13 +73,16 @@ class FoodHistoryActivity : AppCompatActivity() {
     }
 
     private fun getFoodItemsByDate() {
-        foodHistoryViewModel.allFoodItems.observe(this, Observer { foodItems ->
-            foodItems.let { adapter.submitList(foodItemsListByDate(it, daySelected)) }
+        foodHistoryViewModel.allFoodItems.observe(this, { foodItems ->
+            foodItems.let {
+                adapter.submitList(foodItemsListByDate(it, daySelected))
+            }
         })
     }
 
     private fun foodItemsListByDate(list: List<FoodItemModel>, date: Calendar) : List<FoodItemModel> {
         val toReturnList = mutableListOf<FoodItemModel>()
+
         for (model in list) {
             val dateObject = Date(model.foodItemCreated)
             val cal: Calendar = Calendar.getInstance()
@@ -88,7 +92,7 @@ class FoodHistoryActivity : AppCompatActivity() {
                 toReturnList.add(model)
             }
         }
-
+        showOrHide(toReturnList.size)
         return toReturnList
     }
 
@@ -118,5 +122,15 @@ class FoodHistoryActivity : AppCompatActivity() {
         var date = daySelected.time
         dateSelected = daySelected.time
         return DateFormat.getDateInstance().format(date)
+    }
+
+    private fun showOrHide(itemCount: Int) {
+        if (itemCount == 0) {
+            binding.rcvFoodHistoryByDay.visibility = View.GONE
+            binding.tvNoItems.visibility = View.VISIBLE
+        } else {
+            binding.tvNoItems.visibility = View.GONE
+            binding.rcvFoodHistoryByDay.visibility = View.VISIBLE
+        }
     }
 }
