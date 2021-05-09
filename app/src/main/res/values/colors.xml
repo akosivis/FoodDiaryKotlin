@@ -9,4 +9,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="bgColor_mainPages">#c7c7c7</color>
+
+    <color name="pinColor">#959191</color>
+    <color name="connectorGreen">#00C600</color>
 </resources>

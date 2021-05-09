@@ -25,7 +25,7 @@ class MainFragment : Fragment() {
         MainViewModelFactory((activity?.application as FoodItemListApplication).repository)
     }
 
-    private val adapter = FoodItemAdapter()
+    private val adapter = FoodItemAdapter(0)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
