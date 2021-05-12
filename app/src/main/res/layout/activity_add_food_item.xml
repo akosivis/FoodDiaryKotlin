@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.AddFoodItemActivity">
+    tools:context=".activity.AddFoodItemActivity"
+    android:background="@color/bgColor_mainPages">
 
     <RelativeLayout
         android:id="@+id/rlt_editFields"
@@ -27,6 +28,7 @@
                 android:text="Add a food item"
                 android:textStyle="bold"
                 android:textSize="18sp"
+                android:textColor="@color/white"
                 />
 
             <TextView
@@ -35,6 +37,7 @@
                 android:layout_height="wrap_content"
                 android:text="What have you eaten today?"
                 android:textSize="18sp"
+                android:textColor="@color/white"
                 />
         </LinearLayout>
 
@@ -50,15 +53,21 @@
                 android:id="@+id/edt_foodItemName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Food item name"
-                />
+                android:hint="@string/food_item_name"
+                android:background="@drawable/rounded_borders"
+                android:padding="10dp"/>
 
             <EditText
+                android:layout_marginTop="10dp"
                 android:id="@+id/edt_foodItemDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Food item details (e.g. with 1 cup rice)"
-                />
+                android:background="@drawable/rounded_borders"
+                android:padding="10dp"
+                android:autofillHints=""
+                android:lines="3"
+                android:gravity="start"
+                android:hint="@string/food_item_details"/>
 
         </LinearLayout>
 
