@@ -9,4 +9,6 @@
     <string name="no_food_items_recorded">No food items recorded!</string>
     <string name="navigation_drawer_open">OPEN</string>
     <string name="navigation_drawer_close">CLOSE</string>
+    <string name="food_item_name"><i>Food item name</i></string>
+    <string name="food_item_details"><i>Food item details</i></string>
 </resources>
