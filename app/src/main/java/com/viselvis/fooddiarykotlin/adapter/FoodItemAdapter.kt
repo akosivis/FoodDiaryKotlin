@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -25,7 +26,6 @@ class FoodItemAdapter(private val viewIndicator: Int) : ListAdapter<FoodItemMode
 
                 0 - from MainFragment
                 1 - from FoodHistoryActivity
-
 
                specialItem
 
@@ -57,6 +57,10 @@ class FoodItemAdapter(private val viewIndicator: Int) : ListAdapter<FoodItemMode
 
                 timeLayout.visibility = View.VISIBLE
                 connectorLayout.visibility = View.VISIBLE
+
+                itemView.setOnClickListener {
+
+                }
             }
 
             foodItemViewTitle.text = title
