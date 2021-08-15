@@ -7,14 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.viselvis.fooddiarykotlin.R
 
-class LeftFragment : Fragment() {
+class PrintFoodDiaryFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_left, container, false)
+        return inflater.inflate(R.layout.fragment_print, container, false)
     }
 
     companion object {

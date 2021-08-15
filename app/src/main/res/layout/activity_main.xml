@@ -10,26 +10,12 @@
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <include
+        android:id="@+id/mainContent"
+        layout="@layout/main_activity_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="wrap_content"
-            android:id="@+id/im_hamburger"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            app:srcCompat="@drawable/ic_baseline_menu_24"
-            tools:ignore="VectorDrawableCompat"
-            android:padding="5dp"
-            android:tint="@color/white"/>
-
-        <FrameLayout
-            android:id="@+id/flt_main"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+        android:layout_height="match_parent"
+        />
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation"
