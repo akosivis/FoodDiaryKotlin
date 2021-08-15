@@ -12,7 +12,9 @@
         android:theme="@style/Theme.FoodDiaryKotlin">
         <activity android:name=".activity.FoodHistoryActivity"></activity>
         <activity android:name=".activity.AddFoodItemActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.FoodDiaryKotlin.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

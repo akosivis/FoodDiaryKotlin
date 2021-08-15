@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgColor_mainPages"
-    tools:context=".fragments.LeftFragment">
+    tools:context=".fragments.PrintFoodDiaryFragment">
 
     <TextView
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This is Left fragment"
+        android:text="This is Print diary fragment"
         android:textSize="16sp"
         android:textColor="@color/white"/>
 
