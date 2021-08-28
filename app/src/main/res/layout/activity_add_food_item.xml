@@ -55,7 +55,9 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/food_item_name"
                 android:background="@drawable/rounded_borders"
-                android:padding="10dp"/>
+                android:padding="10dp"
+                android:inputType="text"
+                android:importantForAutofill="no"/>
 
             <EditText
                 android:layout_marginTop="10dp"
@@ -64,10 +66,77 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_borders"
                 android:padding="10dp"
-                android:autofillHints=""
                 android:lines="3"
                 android:gravity="start"
-                android:hint="@string/food_item_details"/>
+                android:hint="@string/food_item_details"
+                android:inputType="text"
+                android:importantForAutofill="no"/>
+
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/contains"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="italic"
+                    />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_borders"
+                    android:padding="5dp">
+
+                    <com.google.android.flexbox.FlexboxLayout
+                        android:id="@+id/fbl_chipgroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        app:flexWrap="wrap"
+                        app:alignItems="stretch"
+                        app:alignContent="space_around"
+                        app:showDivider="beginning|middle|end"
+                        app:dividerDrawable="@drawable/chip_group_divider">
+<!--                        -->
+                        <EditText
+                            android:id="@+id/edt_ingredient"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/ingredients_hint"
+                            android:background="@drawable/rounded_borders"
+                            android:padding="5dp"
+                            android:inputType="text"
+                            android:importantForAutofill="no"
+                            android:textSize="18sp"/>
+
+                    </com.google.android.flexbox.FlexboxLayout>
+
+
+
+<!--                    <com.google.android.material.chip.ChipGroup-->
+<!--                        android:layout_below="@id/edt_ingredient"-->
+<!--                        android:id="@+id/cgp_main"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"/>-->
+
+                </RelativeLayout>
+
+
+<!--                <com.google.android.material.chip.Chip-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Sample chip!"-->
+<!--                    app:chipSurfaceColor="@color/design_default_color_primary"-->
+<!--                    android:textColor="@color/white"/>-->
+
+            </LinearLayout>
 
         </LinearLayout>
 
