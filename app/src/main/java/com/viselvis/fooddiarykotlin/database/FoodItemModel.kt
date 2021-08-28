@@ -9,12 +9,14 @@ data class FoodItemModel(
         var foodItemTitle: String,
         var foodItemDetails: String,
         var foodItemCreated: Long,
-        var foodItemLastModified: Long
+        var foodItemLastModified: Long,
+        var foodItemIngredients: ArrayList<String>
 ) {
     constructor(
             foodItemTitle: String,
             foodItemDetails: String,
             foodItemCreated: Long,
-            foodItemLastModified: Long
-    ) : this(0, foodItemTitle, foodItemDetails, foodItemCreated, foodItemLastModified)
+            foodItemLastModified: Long,
+            foodItemIngredients: ArrayList<String>
+    ) : this(0, foodItemTitle, foodItemDetails, foodItemCreated, foodItemLastModified, foodItemIngredients)
 }
