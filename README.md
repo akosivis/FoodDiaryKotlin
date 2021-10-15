@@ -1,5 +1,5 @@
 # FoodDiaryKotlin
-A personal app intended for saving information of your daily food intake.
+A personal app intended for saving information of your daily food intake. It is a native Anddroid app made in Kotlin.
 
 This app is primarily created as a way for me to track the food that I have eaten daily as I am suffering from occasional acid reflux a few months ago. I also created this app to reinforce specific concepts in Android app architecture that I am currently trying to learn such as ViewModels, Room database, Coroutines and View Binding.  
 
