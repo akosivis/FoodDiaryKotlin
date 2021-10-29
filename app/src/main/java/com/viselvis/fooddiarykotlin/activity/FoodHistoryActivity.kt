@@ -84,7 +84,7 @@ class FoodHistoryActivity : AppCompatActivity() {
         val toReturnList = mutableListOf<FoodItemModel>()
 
         for (model in list) {
-            val dateObject = Date(model.foodItemCreated)
+            val dateObject = model.foodItemCreated
             val cal: Calendar = Calendar.getInstance()
             cal.time = dateObject
 

@@ -75,8 +75,8 @@ class AddFoodItemActivity : AppCompatActivity() {
     }
 
     private fun insertFoodItemOnDb(name: String, details: String) {
-        val dateCreated = Calendar.getInstance().timeInMillis
-        val dateModified = Calendar.getInstance().timeInMillis
+        val dateCreated = Calendar.getInstance().time
+        val dateModified = Calendar.getInstance().time
         val newFoodItem = FoodItemModel(name, details, dateCreated, dateModified, ingredientsArrayList)
 
         addFoodItemViewModel.saveFoodItem(newFoodItem)

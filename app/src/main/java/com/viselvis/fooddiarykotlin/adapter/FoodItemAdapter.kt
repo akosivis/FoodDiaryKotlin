@@ -110,7 +110,7 @@ class FoodItemAdapter(private val viewIndicator: Int) : ListAdapter<FoodItemMode
             specialItem = 1
         }
 
-        holder.bind(viewIndicator, current.foodItemTitle, current.foodItemDetails, current.foodItemCreated, specialItem)
+        holder.bind(viewIndicator, current.foodItemTitle, current.foodItemDetails, current.foodItemCreated.time, specialItem)
     }
 
 }
