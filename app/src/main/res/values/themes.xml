@@ -31,4 +31,11 @@
     <style name="NoTitleText">
         <item name="android:displayOptions">useLogo|showHome</item>
     </style>
+
+    <style name="DateRangePickerCustomTheme"
+        parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="android:windowFullscreen">false</item>
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">16dp</item>
+    </style>
 </resources>

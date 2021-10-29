@@ -4,6 +4,8 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
+import java.util.*
+import kotlin.collections.ArrayList
 
 class Converters {
     @TypeConverter
@@ -17,4 +19,16 @@ class Converters {
         val listType = object : TypeToken<ArrayList<String?>?>() {}.type
         return Gson().fromJson(string, listType)
     }
+
+    @TypeConverter
+    fun timeStampToDate(value: Long?): Date? {
+        return if (value == null) {
+            null
+        } else {
+            Date(value)
+        }
+    }
+
+    @TypeConverter
+    fun dateToTimeStamp(date: Date?): Long? = date?.time
 }
