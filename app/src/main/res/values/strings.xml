@@ -14,4 +14,5 @@
     <string name="contains">Contains:</string>
     <string name="ingredients_hint">e.g. onion, nuts</string>
     <string name="generate_pdf">Generate PDF</string>
+    <string name="select_food_type">Select food type:</string>
 </resources>
