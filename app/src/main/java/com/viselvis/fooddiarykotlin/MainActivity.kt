@@ -9,6 +9,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -22,7 +23,7 @@ import com.viselvis.fooddiarykotlin.fragments.SettingsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_activity_content.view.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MainFragment.MainFragmentListener {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var mainBinding: ActivityMainBinding
 
@@ -56,5 +57,11 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+    override fun navigateToSelectFoodTypes() {
+        val navController = findNavController(R.id.nav_host_fragment_main)
+        navController.navigate(R.id.selectFoodTypeFragment)
+    }
+
 
 }

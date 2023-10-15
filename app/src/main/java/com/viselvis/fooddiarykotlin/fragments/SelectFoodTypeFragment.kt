@@ -9,12 +9,18 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.viselvis.fooddiarykotlin.R
+import com.viselvis.fooddiarykotlin.adapter.FoodTypeAdapter
+import com.viselvis.fooddiarykotlin.database.FoodTypeModel
 import com.viselvis.fooddiarykotlin.databinding.FragmentSelectFoodTypeBinding
 
 class SelectFoodTypeFragment : Fragment() {
 
     private lateinit var binding: FragmentSelectFoodTypeBinding
-
+    private val adapter = FoodTypeAdapter()
+    private val initialList = listOf (
+        FoodTypeModel("Add food item", ""),
+        FoodTypeModel("Add medicine taken", "")
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -31,6 +37,7 @@ class SelectFoodTypeFragment : Fragment() {
 
     private fun loadView() {
         binding.rcvFoodTypes.adapter = adapter
+        adapter.submitList(initialList)
         binding.rcvFoodTypes.layoutManager = GridLayoutManager(activity, 3)
     }
 

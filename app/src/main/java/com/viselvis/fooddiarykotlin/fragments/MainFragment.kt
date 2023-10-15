@@ -39,8 +39,9 @@ class MainFragment : Fragment() {
 
         binding.lltAddFoodItem.setOnClickListener {
             // call an activity here
-            val intentToAddFoodItem = Intent(activity, AddFoodItemActivity::class.java)
-            startActivity(intentToAddFoodItem)
+//            val intentToAddFoodItem = Intent(activity, AddFoodItemActivity::class.java)
+//            startActivity(intentToAddFoodItem)
+
         }
 
         binding.cdvViewHistory.setOnClickListener {
@@ -62,6 +63,10 @@ class MainFragment : Fragment() {
                 viewLifecycleOwner, Observer {
                     foodItems -> foodItems.let { adapter.submitList(it) }
         })
+    }
+
+    interface MainFragmentListener {
+        fun navigateToSelectFoodTypes()
     }
 
     companion object {
