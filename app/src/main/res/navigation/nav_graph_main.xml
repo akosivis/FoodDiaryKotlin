@@ -7,7 +7,11 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.viselvis.fooddiarykotlin.fragments.MainFragment"
-        tools:layout="@layout/fragment_main"/>
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_mainFragment_to_selectFoodTypeFragment"
+            app:destination="@id/selectFoodTypeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/printDiaryFragment"
         android:name="com.viselvis.fooddiarykotlin.fragments.PrintFoodDiaryFragment"
@@ -16,4 +20,8 @@
         android:id="@+id/settingsFragment"
         android:name="com.viselvis.fooddiarykotlin.fragments.SettingsFragment"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/selectFoodTypeFragment"
+        android:name="com.viselvis.fooddiarykotlin.fragments.SelectFoodTypeFragment"
+        tools:layout="@layout/fragment_select_food_type" />
 </navigation>
