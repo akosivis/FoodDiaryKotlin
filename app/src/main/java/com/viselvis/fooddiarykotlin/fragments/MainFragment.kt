@@ -1,5 +1,6 @@
 package com.viselvis.fooddiarykotlin.fragments
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -26,6 +27,7 @@ class MainFragment : Fragment() {
     }
 
     private val adapter = FoodItemAdapter(0)
+    private lateinit var listener : MainFragmentListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +43,7 @@ class MainFragment : Fragment() {
             // call an activity here
 //            val intentToAddFoodItem = Intent(activity, AddFoodItemActivity::class.java)
 //            startActivity(intentToAddFoodItem)
-
+            listener.navigateToSelectFoodTypes()
         }
 
         binding.cdvViewHistory.setOnClickListener {
@@ -54,6 +56,13 @@ class MainFragment : Fragment() {
         binding.rcvFoodHistory.layoutManager = LinearLayoutManager(activity)
 
         return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        when (context) {
+            is MainFragmentListener -> listener = context
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
