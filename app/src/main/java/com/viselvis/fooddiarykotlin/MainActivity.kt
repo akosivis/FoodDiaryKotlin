@@ -1,16 +1,10 @@
 package com.viselvis.fooddiarykotlin
 
 import android.content.Intent
-import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
-import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -19,11 +13,8 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.viselvis.fooddiarykotlin.activity.AddFoodItemActivity
 import com.viselvis.fooddiarykotlin.databinding.ActivityMainBinding
-import com.viselvis.fooddiarykotlin.fragments.PrintFoodDiaryFragment
 import com.viselvis.fooddiarykotlin.fragments.MainFragment
 import com.viselvis.fooddiarykotlin.fragments.SelectFoodTypeFragment
-import com.viselvis.fooddiarykotlin.fragments.SettingsFragment
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_activity_content.view.*
 
 class MainActivity : AppCompatActivity(),
@@ -68,9 +59,14 @@ class MainActivity : AppCompatActivity(),
         navController.navigate(R.id.selectFoodTypeFragment)
     }
 
-    override fun navigateToAddFoodItemFragment() {
+    override fun navigateToAddFoodItemFragment(foodTypeId: Int?) {
         val intentToAddFoodItem = Intent(this, AddFoodItemActivity::class.java)
+        intentToAddFoodItem.putExtra("foodType", foodTypeId)
         startActivity(intentToAddFoodItem)
+
+//        = Intent(this, AddFoodItemActivity::class.java)
+//        intentToAddFoodItem.
+//        startActivity(intentToAddFoodItem)
     }
 
 

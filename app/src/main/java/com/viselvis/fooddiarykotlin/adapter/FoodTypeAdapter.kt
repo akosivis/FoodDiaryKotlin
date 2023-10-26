@@ -22,9 +22,11 @@ class FoodTypeAdapter(private val listener: SelectFoodTypeFragment.SelectFoodTyp
             itemView.tv_foodTypeName.text = foodTypeItem?.foodTypeTitle
             itemView.llt_card.setOnClickListener {
                 when (foodTypeItem?.foodTypeId) {
-                    1 -> {}
+                    1 -> {
+                        listener.navigateToAddFoodItemFragment(foodTypeItem.foodTypeId)
+                    }
                     else -> {
-                        listener.navigateToAddFoodItemFragment()
+                        listener.navigateToAddFoodItemFragment(foodTypeItem?.foodTypeId)
                     }
                 }
             }

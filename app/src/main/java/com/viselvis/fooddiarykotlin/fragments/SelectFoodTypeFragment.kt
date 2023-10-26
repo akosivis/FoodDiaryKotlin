@@ -41,8 +41,8 @@ class SelectFoodTypeFragment : Fragment() {
     private fun loadView() {
         adapter = FoodTypeAdapter(
             object : SelectFoodTypeListener {
-                override fun navigateToAddFoodItemFragment() {
-                    listener.navigateToAddFoodItemFragment()
+                override fun navigateToAddFoodItemFragment(foodTypeId: Int?) {
+                    listener.navigateToAddFoodItemFragment(foodTypeId)
                 }
             }
         )
@@ -59,7 +59,7 @@ class SelectFoodTypeFragment : Fragment() {
     }
 
     interface SelectFoodTypeListener {
-        fun navigateToAddFoodItemFragment()
+        fun navigateToAddFoodItemFragment(foodTypeId: Int?)
     }
 
     companion object {
