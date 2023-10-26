@@ -23,21 +23,47 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_addFoodItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Add a food item"
                 android:textStyle="bold"
                 android:textSize="18sp"
                 android:textColor="@color/white"
+                android:visibility="gone"
                 />
 
             <TextView
+                android:id="@+id/tv_addMedItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add a medicine intake"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                />
+
+            <TextView
+                android:id="@+id/tv_whatFood"
                 android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="What have you eaten today?"
                 android:textSize="18sp"
                 android:textColor="@color/white"
+                android:visibility="gone"
+                />
+
+            <TextView
+                android:id="@+id/tv_whatMedicine"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="What medicine did you take today?"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:visibility="gone"
                 />
         </LinearLayout>
 

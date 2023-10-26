@@ -1,5 +1,6 @@
 package com.viselvis.fooddiarykotlin.activity
 
+import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
@@ -10,7 +11,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
@@ -19,7 +19,6 @@ import com.viselvis.fooddiarykotlin.databinding.ActivityAddFoodItemBinding
 import com.viselvis.fooddiarykotlin.viewmodels.AddFoodItemViewModel
 import com.viselvis.fooddiarykotlin.viewmodels.AddFoodItemViewModelFactory
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class AddFoodItemActivity : AppCompatActivity() {
@@ -28,13 +27,24 @@ class AddFoodItemActivity : AppCompatActivity() {
         AddFoodItemViewModelFactory((application as FoodItemListApplication).repository)
     }
     private var ingredientsArrayList=  arrayListOf<String>()
+    private var foodItemType: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        getBundleExtras(intent.extras)
         binding = ActivityAddFoodItemBinding.inflate(layoutInflater)
         val view = binding.root
 
+        when (foodItemType) {
+            1 -> {
+                binding.tvAddMedItem.visibility = View.VISIBLE
+                binding.tvWhatMedicine.visibility = View.VISIBLE
+            }
+            else -> {
+                binding.tvAddFoodItem.visibility = View.VISIBLE
+                binding.tvWhatFood.visibility = View.VISIBLE
+            }
+        }
         addFoodItemViewModel.isDataInserted.observe(this, Observer { isSuccess ->
             if (!isSuccess.equals(-1)) {
                 // go back to the allnotes fragment
@@ -74,10 +84,16 @@ class AddFoodItemActivity : AppCompatActivity() {
         setContentView(view)
     }
 
+    private fun getBundleExtras(extras: Bundle?) {
+        if (extras != null) {
+            foodItemType = extras.getInt("foodType")
+        }
+    }
+
     private fun insertFoodItemOnDb(name: String, details: String) {
         val dateCreated = Calendar.getInstance().time
         val dateModified = Calendar.getInstance().time
-        val newFoodItem = FoodItemModel(name, details, dateCreated, dateModified, ingredientsArrayList)
+        val newFoodItem = FoodItemModel(foodItemType, name, details, dateCreated, dateModified, ingredientsArrayList)
 
         addFoodItemViewModel.saveFoodItem(newFoodItem)
     }
