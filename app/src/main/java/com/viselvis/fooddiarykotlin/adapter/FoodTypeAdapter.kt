@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.database.FoodTypeModel
 import com.viselvis.fooddiarykotlin.fragments.SelectFoodTypeFragment
-import kotlinx.android.synthetic.main.food_type_item.view.*
+// import kotlinx.android.synthetic.main.food_type_item.view.*
 
 class FoodTypeAdapter(private val listener: SelectFoodTypeFragment.SelectFoodTypeListener) :
     ListAdapter<FoodTypeModel, FoodTypeAdapter.FoodTypeViewHolder>(FoodTypeComparator()) {

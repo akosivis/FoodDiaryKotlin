@@ -7,20 +7,11 @@ import kotlin.collections.ArrayList
 
 @Entity(tableName = "food_item_table")
 data class FoodItemModel(
-        @PrimaryKey(autoGenerate = true) val foodItemId: Long,
+        @PrimaryKey(autoGenerate = true) val foodItemId: Long = 0,
         var foodItemType: Int,
         var foodItemTitle: String,
         var foodItemDetails: String,
         var foodItemCreated: Date,
         var foodItemLastModified: Date,
         var foodItemIngredients: ArrayList<String>
-) {
-    constructor(
-            foodItemType: Int,
-            foodItemTitle: String,
-            foodItemDetails: String,
-            foodItemCreated: Date,
-            foodItemLastModified: Date,
-            foodItemIngredients: ArrayList<String>
-    ) : this(0, foodItemType, foodItemTitle, foodItemDetails, foodItemCreated, foodItemLastModified, foodItemIngredients)
-}
+)

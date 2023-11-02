@@ -15,7 +15,7 @@ import com.viselvis.fooddiarykotlin.activity.AddFoodItemActivity
 import com.viselvis.fooddiarykotlin.databinding.ActivityMainBinding
 import com.viselvis.fooddiarykotlin.fragments.MainFragment
 import com.viselvis.fooddiarykotlin.fragments.SelectFoodTypeFragment
-import kotlinx.android.synthetic.main.main_activity_content.view.*
+// import kotlinx.android.synthetic.main.main_activity_content.view.*
 
 class MainActivity : AppCompatActivity(),
     MainFragment.MainFragmentListener,
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(),
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
 
-        setSupportActionBar(mainBinding.mainContent.mainAppBarLayout.toolbar)
+        setSupportActionBar(mainBinding.mainContent.toolbar)
 
         val drawerLayout: DrawerLayout = mainBinding.drawerLayout
         val navView: NavigationView = mainBinding.navigation
