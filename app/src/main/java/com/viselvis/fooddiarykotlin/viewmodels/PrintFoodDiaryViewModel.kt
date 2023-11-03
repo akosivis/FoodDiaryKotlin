@@ -36,7 +36,7 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
 }
 
 class PrintFoodDiaryViewModelFactory(private val repo: FoodItemRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(PrintFoodDiaryViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return PrintFoodDiaryViewModel(repo) as T

@@ -3,6 +3,8 @@ package com.viselvis.fooddiarykotlin.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -18,9 +20,13 @@ class FoodTypeAdapter(private val listener: SelectFoodTypeFragment.SelectFoodTyp
         itemView: View,
         private val listener: SelectFoodTypeFragment.SelectFoodTypeListener
     ) : RecyclerView.ViewHolder(itemView) {
+
         fun bind(foodTypeItem: FoodTypeModel?) {
-            itemView.tv_foodTypeName.text = foodTypeItem?.foodTypeTitle
-            itemView.llt_card.setOnClickListener {
+            val foodTypeName: TextView = itemView.findViewById(R.id.tv_foodTypeName)
+            val foodTypeLayoutCard: LinearLayout = itemView.findViewById(R.id.llt_card)
+
+            foodTypeName.text = foodTypeItem?.foodTypeTitle
+            foodTypeLayoutCard.setOnClickListener {
                 when (foodTypeItem?.foodTypeId) {
                     1 -> {
                         listener.navigateToAddFoodItemFragment(foodTypeItem.foodTypeId)
