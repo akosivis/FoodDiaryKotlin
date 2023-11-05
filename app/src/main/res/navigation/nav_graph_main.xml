@@ -23,5 +23,15 @@
     <fragment
         android:id="@+id/selectFoodTypeFragment"
         android:name="com.viselvis.fooddiarykotlin.fragments.SelectFoodTypeFragment"
-        tools:layout="@layout/fragment_select_food_type" />
+        tools:layout="@layout/fragment_select_food_type" >
+        <action
+            android:id="@+id/action_selectFoodTypeFragment_to_addFoodItemFragment"
+            app:destination="@id/addFoodItemFragment">
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/addFoodItemFragment"
+        android:name="com.viselvis.fooddiarykotlin.fragments.AddFoodItemFragment"
+        tools:layout="@layout/fragment_add_food_item" >
+    </fragment>
 </navigation>

@@ -32,7 +32,9 @@ class FoodTypeAdapter(private val listener: SelectFoodTypeFragment.SelectFoodTyp
                         listener.navigateToAddFoodItemFragment(foodTypeItem.foodTypeId)
                     }
                     else -> {
-                        listener.navigateToAddFoodItemFragment(foodTypeItem?.foodTypeId)
+                        foodTypeItem?.foodTypeId?.let { it1 ->
+                            listener.navigateToAddFoodItemFragment(it1)
+                        }
                     }
                 }
             }

@@ -15,6 +15,8 @@ import com.viselvis.fooddiarykotlin.activity.AddFoodItemActivity
 import com.viselvis.fooddiarykotlin.databinding.ActivityMainBinding
 import com.viselvis.fooddiarykotlin.fragments.MainFragment
 import com.viselvis.fooddiarykotlin.fragments.SelectFoodTypeFragment
+import com.viselvis.fooddiarykotlin.fragments.SelectFoodTypeFragmentDirections
+
 // import kotlinx.android.synthetic.main.main_activity_content.view.*
 
 class MainActivity : AppCompatActivity(),
@@ -59,15 +61,14 @@ class MainActivity : AppCompatActivity(),
         navController.navigate(R.id.selectFoodTypeFragment)
     }
 
-    override fun navigateToAddFoodItemFragment(foodTypeId: Int?) {
-        val intentToAddFoodItem = Intent(this, AddFoodItemActivity::class.java)
-        intentToAddFoodItem.putExtra("foodType", foodTypeId)
-        startActivity(intentToAddFoodItem)
-
-//        = Intent(this, AddFoodItemActivity::class.java)
-//        intentToAddFoodItem.
+    override fun navigateToAddFoodItemFragment(foodTypeId: Int) {
+//        val intentToAddFoodItem = Intent(this, AddFoodItemActivity::class.java)
+//        intentToAddFoodItem.putExtra("foodType", foodTypeId)
 //        startActivity(intentToAddFoodItem)
+        val bundle: Bundle? = Bundle()
+        bundle?.putInt("foodTypeId", foodTypeId)
+        val navController = findNavController(R.id.nav_host_fragment_main)
+        navController.navigate(R.id.addFoodItemFragment, bundle)
     }
-
 
 }
