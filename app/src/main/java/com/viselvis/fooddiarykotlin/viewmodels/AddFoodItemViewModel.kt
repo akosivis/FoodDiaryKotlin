@@ -1,5 +1,8 @@
 package com.viselvis.fooddiarykotlin.viewmodels
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import com.viselvis.fooddiarykotlin.database.FoodItemRepository
@@ -9,6 +12,11 @@ class AddFoodItemViewModel(private val repo: FoodItemRepository) : ViewModel() {
     private var _isDataInserted = MutableLiveData<Long>()
     val isDataInserted: LiveData<Long>
         get() = _isDataInserted
+
+    var itemName by mutableStateOf("")
+    var itemDetail by mutableStateOf("")
+    var itemContents by mutableStateOf(arrayListOf<String>())
+    var itemQuantity by mutableStateOf("")
 
     fun saveFoodItem(foodItem: FoodItemModel) = viewModelScope.launch {
         _isDataInserted.value = repo.insertFoodItem(foodItem)
