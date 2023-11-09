@@ -5,16 +5,153 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.dp
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import com.viselvis.fooddiarykotlin.R
+import com.viselvis.fooddiarykotlin.adapter.FoodItemAdapter
+import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
+import com.viselvis.fooddiarykotlin.database.FoodItemModel
+import com.viselvis.fooddiarykotlin.databinding.FragmentAddFoodItemBinding
+import com.viselvis.fooddiarykotlin.databinding.FragmentFoodHistoryBinding
+import com.viselvis.fooddiarykotlin.viewmodels.AddFoodItemViewModel
+import com.viselvis.fooddiarykotlin.viewmodels.AddFoodItemViewModelFactory
+import com.viselvis.fooddiarykotlin.viewmodels.FoodHistoryViewModel
+import com.viselvis.fooddiarykotlin.viewmodels.FoodHistoryViewModelFactory
+import java.text.DateFormat
+import java.util.*
 
 class FoodHistoryFragment : Fragment() {
+
+    private var binding: FragmentFoodHistoryBinding? = null
+    private val foodHistoryViewModel: FoodHistoryViewModel by viewModels {
+        FoodHistoryViewModelFactory((context?.applicationContext as FoodItemListApplication).repository)
+    }
+    private lateinit var daySelected: Calendar
+    // private val adapter = FoodItemAdapter(1)
+    private lateinit var dateToday: Calendar
+    private lateinit var dateSelected: Date
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_food_history, container, false)
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_food_history, container, false)
+        return binding?.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding?.composeView?.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                FoodHistoryPage()
+            }
+        }
+    }
+
+    private fun getFoodItemsByDate() : List<FoodItemModel> {
+        foodHistoryViewModel.allFoodItems.observe(viewLifecycleOwner) { foodItems ->
+            foodItems.let {
+                return@let foodItemsListByDate(it, daySelected)
+            }
+        }
+    }
+
+    private fun foodItemsListByDate(list: List<FoodItemModel>, date: Calendar) : List<FoodItemModel> {
+        val toReturnList = mutableListOf<FoodItemModel>()
+
+        for (model in list) {
+            val dateObject = model.foodItemCreated
+            val cal: Calendar = Calendar.getInstance()
+            cal.time = dateObject
+
+            if (compareDate(cal, date)) { // if foodItemCreated is date today
+                toReturnList.add(model)
+            }
+        }
+        showOrHide(toReturnList.size)
+        return toReturnList
+    }
+
+    private fun compareDate(dateObject: Calendar, date: Calendar): Boolean {
+        val dateFoodItemDay = dateObject.get(Calendar.DAY_OF_MONTH)
+        val dateFoodItemMonth = dateObject.get(Calendar.MONTH)
+        val dateFoodItemYear = dateObject.get(Calendar.YEAR)
+        val dateSelectedDay = date.get(Calendar.DAY_OF_MONTH)
+        val dateSelectedMonth = date.get(Calendar.MONTH)
+        val dateSelectedYear = date.get(Calendar.YEAR)
+
+        if((dateFoodItemDay == dateSelectedDay) &&
+            (dateFoodItemMonth == dateSelectedMonth) && (dateFoodItemYear == dateSelectedYear) ) {
+            return true
+        }
+        return false;
+    }
+
+    private fun getCurrentDate(): CharSequence? {
+        var date = daySelected.time
+        dateSelected = daySelected.time
+        return DateFormat.getDateInstance().format(date)
+    }
+
+    private fun showOrHide(itemCount: Int) {
+        if (itemCount == 0) {
+            binding.rcvFoodHistoryByDay.visibility = View.GONE
+            binding.tvNoItems.visibility = View.VISIBLE
+        } else {
+            binding.tvNoItems.visibility = View.GONE
+            binding.rcvFoodHistoryByDay.visibility = View.VISIBLE
+        }
+    }
+
+    @Composable
+    fun FoodHistoryPage() {
+        Column (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
+        ) {
+            Row {
+
+                Column (horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(foodHistoryViewModel.currentFoodItemListState.)
+                    Text()
+                }
+            }
+
+            if (foodHistoryViewModel.foodItemsForGivenDate.isNotEmpty()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    items(foodHistoryViewModel.foodItemsForGivenDate) { foodItem ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(foodItem.foodItemCreated.time.toString())
+                            Column {
+                                Text(text = foodItem.foodItemTitle)
+                                Text(text = foodItem.foodItemDetails)
+                            }
+                        }
+                    }
+                }
+            } else {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Text(modifier = Modifier.align(Alignment.Center), text = "No food items recorded")
+                }
+            }
+        }
     }
 
     companion object {
