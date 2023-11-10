@@ -6,10 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.materialIcon
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,14 +66,6 @@ class FoodHistoryFragment : Fragment() {
         }
     }
 
-    private fun getFoodItemsByDate() : List<FoodItemModel> {
-        foodHistoryViewModel.allFoodItems.observe(viewLifecycleOwner) { foodItems ->
-            foodItems.let {
-                return@let foodItemsListByDate(it, daySelected)
-            }
-        }
-    }
-
     private fun foodItemsListByDate(list: List<FoodItemModel>, date: Calendar) : List<FoodItemModel> {
         val toReturnList = mutableListOf<FoodItemModel>()
 
@@ -80,7 +78,7 @@ class FoodHistoryFragment : Fragment() {
                 toReturnList.add(model)
             }
         }
-        showOrHide(toReturnList.size)
+        // showOrHide(toReturnList.size)
         return toReturnList
     }
 
@@ -105,16 +103,6 @@ class FoodHistoryFragment : Fragment() {
         return DateFormat.getDateInstance().format(date)
     }
 
-    private fun showOrHide(itemCount: Int) {
-        if (itemCount == 0) {
-            binding.rcvFoodHistoryByDay.visibility = View.GONE
-            binding.tvNoItems.visibility = View.VISIBLE
-        } else {
-            binding.tvNoItems.visibility = View.GONE
-            binding.rcvFoodHistoryByDay.visibility = View.VISIBLE
-        }
-    }
-
     @Composable
     fun FoodHistoryPage() {
         Column (
@@ -123,11 +111,27 @@ class FoodHistoryFragment : Fragment() {
                 .padding(10.dp)
         ) {
             Row {
-
+                Icon(
+                    modifier = Modifier.padding(8.dp).clickable { },
+                    imageVector = Icons.Rounded.ArrowBack,
+                    contentDescription = "Previous day"
+                )
                 Column (horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(foodHistoryViewModel.currentFoodItemListState.)
-                    Text()
+                    Text("Date here")
+                    Text("Day here")
                 }
+                if (daySelected != dateToday) {
+                    Icon(
+                        modifier = Modifier.padding(8.dp).clickable { },
+                        imageVector = Icons.Rounded.ArrowForward,
+                        contentDescription = "Next day"
+                    )
+                } else {
+                    Box(
+                        modifier =
+                    )
+                }
+
             }
 
             if (foodHistoryViewModel.foodItemsForGivenDate.isNotEmpty()) {
