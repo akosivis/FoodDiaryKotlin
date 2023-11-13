@@ -15,8 +15,8 @@ class FoodItemRepository(private val foodItemDao: FoodItemDao ) {
         return foodItemDao.insertFoodItem(foodItem)
     }
 
-    suspend fun getAllFoodItems(): Flow<List<FoodItemModel>> {
-        return foodItemDao.getAllFoodItems()
+    fun getFoodItemsOnGivenDate(startDay: Long, endDay: Long): List<FoodItemModel> {
+        return foodItemDao.getFoodItemsByDate(startDay, endDay)
     }
 
     // val foodItemsByRange: Flow<List<FoodItemModel>> get() =

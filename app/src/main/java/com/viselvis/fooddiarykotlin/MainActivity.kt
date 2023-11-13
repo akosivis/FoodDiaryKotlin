@@ -61,6 +61,11 @@ class MainActivity : AppCompatActivity(),
         navController.navigate(R.id.selectFoodTypeFragment)
     }
 
+    override fun navigateToFoodHistory() {
+        val navController = findNavController(R.id.nav_host_fragment_main)
+        navController.navigate(R.id.foodHistoryFragment)
+    }
+
     override fun navigateToAddFoodItemFragment(foodTypeId: Int) {
 //        val intentToAddFoodItem = Intent(this, AddFoodItemActivity::class.java)
 //        intentToAddFoodItem.putExtra("foodType", foodTypeId)

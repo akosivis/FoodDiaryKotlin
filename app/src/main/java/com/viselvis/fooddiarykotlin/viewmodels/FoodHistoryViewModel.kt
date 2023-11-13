@@ -39,19 +39,45 @@ class FoodHistoryViewModel(private val repo: FoodItemRepository): ViewModel() {
     }
 
     private fun foodItemsListByDate(date: Calendar?) : List<FoodItemModel> {
-        val toReturnList = mutableListOf<FoodItemModel>()
+        val dateStart = date
+        val dateEnd = date
 
-        for (model in allFoodItems.value!!) {
-            val dateObject = model.foodItemCreated
-            val cal: Calendar = Calendar.getInstance()
-            cal.time = dateObject
-
-            if (date != null) {
-                if (compareDate(cal, date)) { // if foodItemCreated is date today
-                    toReturnList.add(model)
-                }
-            }
+        dateStart.apply {
+            this?.set(Calendar.HOUR_OF_DAY, 0)
+            this?.set(Calendar.MINUTE, 0)
+            this?.set(Calendar.SECOND, 0)
         }
+
+        dateEnd.apply {
+            this?.set(Calendar.HOUR_OF_DAY, 23)
+            this?.set(Calendar.MINUTE, 59)
+            this?.set(Calendar.SECOND, 59)
+        }
+
+        val toReturnList = viewModelScope.launch {
+            repo.getFoodItemsOnGivenDate(dateStart.time, dateEnd.time)
+
+            /**
+             * val dateCreated = Calendar.getInstance().time
+            val dateModified = Calendar.getInstance().time
+             */
+        }
+
+//        if (allFoodItems.value != null) {
+//            if (allFoodItems.value!!.isNotEmpty()) {
+//                for (model in allFoodItems.value!!) {
+//                    val dateObject = model.foodItemCreated
+//                    val cal: Calendar = Calendar.getInstance()
+//                    cal.time = dateObject
+//
+//                    if (date != null) {
+//                        if (compareDate(cal, date)) { // if foodItemCreated is date today
+//                            toReturnList.add(model)
+//                        }
+//                    }
+//                }
+//            }
+//        }
         // showOrHide(toReturnList.size)
         return toReturnList
     }

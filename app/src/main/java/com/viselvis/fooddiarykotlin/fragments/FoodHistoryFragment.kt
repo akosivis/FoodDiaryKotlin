@@ -42,9 +42,9 @@ class FoodHistoryFragment : Fragment() {
     private val foodHistoryViewModel: FoodHistoryViewModel by viewModels {
         FoodHistoryViewModelFactory((context?.applicationContext as FoodItemListApplication).repository)
     }
-    private lateinit var daySelected: Calendar
+    private var daySelected: Calendar = Calendar.getInstance()
     // private val adapter = FoodItemAdapter(1)
-    private lateinit var dateToday: Calendar
+    private var dateToday: Calendar = Calendar.getInstance()
     private lateinit var dateSelected: Date
 
     override fun onCreateView(
@@ -58,6 +58,9 @@ class FoodHistoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        foodHistoryViewModel.allFoodItems.observe(viewLifecycleOwner) {}
+        
         binding?.composeView?.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
@@ -127,9 +130,9 @@ class FoodHistoryFragment : Fragment() {
                         contentDescription = "Next day"
                     )
                 } else {
-                    Box(
-                        modifier =
-                    )
+//                    Box(
+//                        modifier =
+//                    )
                 }
 
             }

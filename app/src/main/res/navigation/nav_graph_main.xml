@@ -11,6 +11,9 @@
         <action
             android:id="@+id/action_mainFragment_to_selectFoodTypeFragment"
             app:destination="@id/selectFoodTypeFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_foodHistoryFragment"
+            app:destination="@id/foodHistoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/printDiaryFragment"
@@ -34,4 +37,8 @@
         android:name="com.viselvis.fooddiarykotlin.fragments.AddFoodItemFragment"
         tools:layout="@layout/fragment_add_food_item" >
     </fragment>
+    <fragment
+        android:id="@+id/foodHistoryFragment"
+        android:name="com.viselvis.fooddiarykotlin.fragments.FoodHistoryFragment"
+        android:label="FoodHistoryFragment" />
 </navigation>
