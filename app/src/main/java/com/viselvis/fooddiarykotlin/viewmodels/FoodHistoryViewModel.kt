@@ -9,7 +9,10 @@ import androidx.lifecycle.*
 import com.viselvis.fooddiarykotlin.adapter.FoodItemAdapter
 import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import com.viselvis.fooddiarykotlin.database.FoodItemRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.IllegalArgumentException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -18,7 +21,7 @@ import java.util.*
 class FoodHistoryViewModel(private val repo: FoodItemRepository): ViewModel() {
     val allFoodItems: LiveData<List<FoodItemModel>> = repo.allFoodItems.asLiveData()
     // val foodItemsByDate: LiveData<List<FoodItemModel>> = repo.byDateFoodItems.asLive
-    val foodItemsForGivenDate by mutableStateOf(listOf<FoodItemModel>())
+    var foodItemsForGivenDate by mutableStateOf(listOf<FoodItemModel>())
     var daySelected by mutableStateOf(Calendar.getInstance())
     var dateToday by mutableStateOf(Calendar.getInstance())
     var dateToDisplay by mutableStateOf("")
@@ -33,53 +36,41 @@ class FoodHistoryViewModel(private val repo: FoodItemRepository): ViewModel() {
     init {
         currentFoodItemListState.let {
             it.givenCalendarInstance = Calendar.getInstance()
-            it.foodItems = foodItemsListByDate(it.givenCalendarInstance)
+            it.foodItems = emptyList()
+            // it.foodItems = foodItemsListByDate(it.givenCalendarInstance)
         }
         getDayDetails()
+        currentFoodItemListState.givenCalendarInstance
+        foodItemsListByDate(currentFoodItemListState.givenCalendarInstance)
     }
 
-    private fun foodItemsListByDate(date: Calendar?) : List<FoodItemModel> {
+    private fun foodItemsListByDate(date: Calendar) {
         val dateStart = date
         val dateEnd = date
 
         dateStart.apply {
-            this?.set(Calendar.HOUR_OF_DAY, 0)
-            this?.set(Calendar.MINUTE, 0)
-            this?.set(Calendar.SECOND, 0)
+            this.set(Calendar.HOUR_OF_DAY, 0)
+            this.set(Calendar.MINUTE, 0)
+            this.set(Calendar.SECOND, 0)
         }
 
         dateEnd.apply {
-            this?.set(Calendar.HOUR_OF_DAY, 23)
-            this?.set(Calendar.MINUTE, 59)
-            this?.set(Calendar.SECOND, 59)
+            this.set(Calendar.HOUR_OF_DAY, 23)
+            this.set(Calendar.MINUTE, 59)
+            this.set(Calendar.SECOND, 59)
         }
 
-        val toReturnList = viewModelScope.launch {
-            repo.getFoodItemsOnGivenDate(dateStart.time, dateEnd.time)
-
-            /**
-             * val dateCreated = Calendar.getInstance().time
-            val dateModified = Calendar.getInstance().time
-             */
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.getFoodItemsOnGivenDate(dateStart.timeInMillis, dateEnd.timeInMillis).apply {
+                try {
+                    currentFoodItemListState = currentFoodItemListState.copy(foodItems = this)
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        currentFoodItemListState = currentFoodItemListState.copy(foodItems = emptyList())
+                    }
+                }
+            }
         }
-
-//        if (allFoodItems.value != null) {
-//            if (allFoodItems.value!!.isNotEmpty()) {
-//                for (model in allFoodItems.value!!) {
-//                    val dateObject = model.foodItemCreated
-//                    val cal: Calendar = Calendar.getInstance()
-//                    cal.time = dateObject
-//
-//                    if (date != null) {
-//                        if (compareDate(cal, date)) { // if foodItemCreated is date today
-//                            toReturnList.add(model)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-        // showOrHide(toReturnList.size)
-        return toReturnList
     }
 
     private fun compareDate(dateObject: Calendar, date: Calendar): Boolean {
@@ -129,7 +120,7 @@ class FoodHistoryViewModel(private val repo: FoodItemRepository): ViewModel() {
 }
 
 data class FoodItemListState (
-    var givenCalendarInstance: Calendar? = null,
+    var givenCalendarInstance: Calendar,
     var foodItems: List<FoodItemModel>,
 
 //    fun getGivenDate(): CharSequence? {

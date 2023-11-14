@@ -15,14 +15,13 @@ class FoodItemRepository(private val foodItemDao: FoodItemDao ) {
         return foodItemDao.insertFoodItem(foodItem)
     }
 
-    fun getFoodItemsOnGivenDate(startDay: Long, endDay: Long): List<FoodItemModel> {
-        return foodItemDao.getFoodItemsByDate(startDay, endDay)
-    }
-
     // val foodItemsByRange: Flow<List<FoodItemModel>> get() =
 
     fun getFoodItemsByRange(startDate: Long, endDate: Long): Flow<List<FoodItemModel>> {
         return foodItemDao.getFoodItemsByDateRange(startDate, endDate)
     }
 
+    fun getFoodItemsOnGivenDate(startDay: Long, endDay: Long): List<FoodItemModel> {
+        return foodItemDao.getFoodItemsByDate(startDay, endDay)
+    }
 }

@@ -40,5 +40,5 @@
     <fragment
         android:id="@+id/foodHistoryFragment"
         android:name="com.viselvis.fooddiarykotlin.fragments.FoodHistoryFragment"
-        android:label="FoodHistoryFragment" />
+        tools:layout="@layout/fragment_food_history" />
 </navigation>

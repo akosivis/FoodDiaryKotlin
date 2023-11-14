@@ -1,5 +1,6 @@
 package com.viselvis.fooddiarykotlin.fragments
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,6 +18,9 @@ import androidx.compose.material.icons.materialIcon
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -43,9 +47,8 @@ class FoodHistoryFragment : Fragment() {
         FoodHistoryViewModelFactory((context?.applicationContext as FoodItemListApplication).repository)
     }
     private var daySelected: Calendar = Calendar.getInstance()
-    // private val adapter = FoodItemAdapter(1)
     private var dateToday: Calendar = Calendar.getInstance()
-    private lateinit var dateSelected: Date
+    // private lateinit var dateSelected: Date
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,8 +62,6 @@ class FoodHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        foodHistoryViewModel.allFoodItems.observe(viewLifecycleOwner) {}
-        
         binding?.composeView?.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
@@ -69,20 +70,17 @@ class FoodHistoryFragment : Fragment() {
         }
     }
 
-    private fun foodItemsListByDate(list: List<FoodItemModel>, date: Calendar) : List<FoodItemModel> {
-        val toReturnList = mutableListOf<FoodItemModel>()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
 
-        for (model in list) {
-            val dateObject = model.foodItemCreated
-            val cal: Calendar = Calendar.getInstance()
-            cal.time = dateObject
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+//        when (context) {
+//            is SelectFoodTypeFragment.SelectFoodTypeListener -> listener = context
+//        }
 
-            if (compareDate(cal, date)) { // if foodItemCreated is date today
-                toReturnList.add(model)
-            }
-        }
-        // showOrHide(toReturnList.size)
-        return toReturnList
     }
 
     private fun compareDate(dateObject: Calendar, date: Calendar): Boolean {
@@ -100,11 +98,6 @@ class FoodHistoryFragment : Fragment() {
         return false;
     }
 
-    private fun getCurrentDate(): CharSequence? {
-        var date = daySelected.time
-        dateSelected = daySelected.time
-        return DateFormat.getDateInstance().format(date)
-    }
 
     @Composable
     fun FoodHistoryPage() {
@@ -137,11 +130,11 @@ class FoodHistoryFragment : Fragment() {
 
             }
 
-            if (foodHistoryViewModel.foodItemsForGivenDate.isNotEmpty()) {
+            if (foodHistoryViewModel.currentFoodItemListState.foodItems.isNotEmpty()) {
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    items(foodHistoryViewModel.foodItemsForGivenDate) { foodItem ->
+                    items(foodHistoryViewModel.currentFoodItemListState.foodItems) { foodItem ->
                         Row(
                             modifier = Modifier.fillMaxWidth()
                         ) {
