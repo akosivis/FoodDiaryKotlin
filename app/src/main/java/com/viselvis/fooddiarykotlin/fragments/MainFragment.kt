@@ -47,8 +47,9 @@ class MainFragment : Fragment() {
         }
 
         binding.cdvViewHistory.setOnClickListener {
-            val intentToFoodHistory = Intent(activity, FoodHistoryActivity::class.java)
-            startActivity(intentToFoodHistory)
+            // val intentToFoodHistory = Intent(activity, FoodHistoryActivity::class.java)
+            // startActivity(intentToFoodHistory)
+            listener.navigateToFoodHistory()
         }
 
         // declare adapter here
@@ -76,6 +77,7 @@ class MainFragment : Fragment() {
 
     interface MainFragmentListener {
         fun navigateToSelectFoodTypes()
+        fun navigateToFoodHistory()
     }
 
     companion object {
