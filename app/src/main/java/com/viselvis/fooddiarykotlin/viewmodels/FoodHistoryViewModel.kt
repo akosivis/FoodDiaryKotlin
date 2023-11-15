@@ -1,19 +1,17 @@
 package com.viselvis.fooddiarykotlin.viewmodels
 
 import android.annotation.SuppressLint
-import android.view.View
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
-import com.viselvis.fooddiarykotlin.adapter.FoodItemAdapter
 import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import com.viselvis.fooddiarykotlin.database.FoodItemRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.IllegalArgumentException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -26,47 +24,51 @@ class FoodHistoryViewModel(private val repo: FoodItemRepository): ViewModel() {
     var dateToday by mutableStateOf(Calendar.getInstance())
     var dateToDisplay by mutableStateOf("")
     var dayToDisplay by mutableStateOf("")
-    var currentFoodItemListState by mutableStateOf(
+    private val currentFoodItemListState = MutableStateFlow(
         FoodItemListState(
             givenCalendarInstance = Calendar.getInstance(),
             foodItems = emptyList(),
         )
     )
+    val uiState = currentFoodItemListState
+//    var currentFoodItemListState by mutableStateOf(
+//        FoodItemListState(
+//            givenCalendarInstance = Calendar.getInstance(),
+//            foodItems = emptyList(),
+//        )
+//    )
 
     init {
-        currentFoodItemListState.let {
-            it.givenCalendarInstance = Calendar.getInstance()
-            it.foodItems = emptyList()
-            // it.foodItems = foodItemsListByDate(it.givenCalendarInstance)
-        }
         getDayDetails()
-        currentFoodItemListState.givenCalendarInstance
-        foodItemsListByDate(currentFoodItemListState.givenCalendarInstance)
+        foodItemsListByDate(currentFoodItemListState.value.givenCalendarInstance)
     }
 
-    private fun foodItemsListByDate(date: Calendar) {
-        val dateStart = date
-        val dateEnd = date
-
-        dateStart.apply {
-            this.set(Calendar.HOUR_OF_DAY, 0)
-            this.set(Calendar.MINUTE, 0)
-            this.set(Calendar.SECOND, 0)
+    private fun foodItemsListByDate(dateInstance: Calendar) {
+        val dateStart = dateInstance.clone() as Calendar
+        dateStart.let {
+            it.set(Calendar.HOUR_OF_DAY, 0)
+            it.set(Calendar.MINUTE, 0)
+            it.set(Calendar.SECOND, 0)
         }
 
-        dateEnd.apply {
-            this.set(Calendar.HOUR_OF_DAY, 23)
-            this.set(Calendar.MINUTE, 59)
-            this.set(Calendar.SECOND, 59)
+        val dateEnd = dateInstance.clone() as Calendar
+        dateEnd.let {
+            it.set(Calendar.HOUR_OF_DAY, 23)
+            it.set(Calendar.MINUTE, 59)
+            it.set(Calendar.SECOND, 59)
         }
 
         viewModelScope.launch(Dispatchers.IO) {
             repo.getFoodItemsOnGivenDate(dateStart.timeInMillis, dateEnd.timeInMillis).apply {
                 try {
-                    currentFoodItemListState = currentFoodItemListState.copy(foodItems = this)
+                    currentFoodItemListState.update {
+                        it.copy(foodItems = this)
+                    }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        currentFoodItemListState = currentFoodItemListState.copy(foodItems = emptyList())
+                        currentFoodItemListState.update {
+                            it.copy(foodItems = emptyList())
+                        }
                     }
                 }
             }
@@ -89,15 +91,15 @@ class FoodHistoryViewModel(private val repo: FoodItemRepository): ViewModel() {
     }
 
     fun getPreviousDay() {
-        daySelected.add(Calendar.DAY_OF_YEAR, -1)
+        currentFoodItemListState.value.givenCalendarInstance.add(Calendar.DAY_OF_YEAR, -1)
         getDayDetails()
-        // binding.rltNextDate.isEnabled = true
-        // binding.rltNextDate.visibility = View.VISIBLE
+        foodItemsListByDate(currentFoodItemListState.value.givenCalendarInstance)
     }
 
     fun getNextDay() {
-        daySelected.add(Calendar.DAY_OF_YEAR, 1)
+        currentFoodItemListState.value.givenCalendarInstance.add(Calendar.DAY_OF_YEAR, 1)
         getDayDetails()
+        foodItemsListByDate(currentFoodItemListState.value.givenCalendarInstance)
     }
 
     private fun getDayDetails() {
@@ -108,13 +110,12 @@ class FoodHistoryViewModel(private val repo: FoodItemRepository): ViewModel() {
     @SuppressLint("SimpleDateFormat")
     private fun getCurrentDay(): CharSequence? {
         val sdf = SimpleDateFormat("EEEE")
-        val date = currentFoodItemListState.givenCalendarInstance?.time
+        val date = currentFoodItemListState.value.givenCalendarInstance.time
         return date.let { sdf.format(it) }
     }
 
     private fun getCurrentDate(): CharSequence? {
-        var date = daySelected.time
-        // currentFoodItemListState.givenCalendarInstance = daySelected.time
+        var date = currentFoodItemListState.value.givenCalendarInstance.time
         return DateFormat.getDateInstance().format(date)
     }
 }

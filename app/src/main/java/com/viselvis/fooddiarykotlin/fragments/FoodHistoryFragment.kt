@@ -17,10 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.materialIcon
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowForward
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -46,8 +43,7 @@ class FoodHistoryFragment : Fragment() {
     private val foodHistoryViewModel: FoodHistoryViewModel by viewModels {
         FoodHistoryViewModelFactory((context?.applicationContext as FoodItemListApplication).repository)
     }
-    private var daySelected: Calendar = Calendar.getInstance()
-    private var dateToday: Calendar = Calendar.getInstance()
+    // private var dateToday: Calendar = Calendar.getInstance()
     // private lateinit var dateSelected: Date
 
     override fun onCreateView(
@@ -101,6 +97,8 @@ class FoodHistoryFragment : Fragment() {
 
     @Composable
     fun FoodHistoryPage() {
+        val uiState by foodHistoryViewModel.uiState.collectAsState()
+
         Column (
             modifier = Modifier
                 .fillMaxSize()
@@ -108,17 +106,25 @@ class FoodHistoryFragment : Fragment() {
         ) {
             Row {
                 Icon(
-                    modifier = Modifier.padding(8.dp).clickable { },
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clickable {
+                            foodHistoryViewModel.getPreviousDay()
+                        },
                     imageVector = Icons.Rounded.ArrowBack,
                     contentDescription = "Previous day"
                 )
                 Column (horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Date here")
-                    Text("Day here")
+                    Text(foodHistoryViewModel.dateToDisplay)
+                    Text(foodHistoryViewModel.dayToDisplay)
                 }
-                if (daySelected != dateToday) {
+                if (uiState.givenCalendarInstance != foodHistoryViewModel.dateToday) {
                     Icon(
-                        modifier = Modifier.padding(8.dp).clickable { },
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clickable {
+                                foodHistoryViewModel.getNextDay()
+                            },
                         imageVector = Icons.Rounded.ArrowForward,
                         contentDescription = "Next day"
                     )
@@ -130,15 +136,17 @@ class FoodHistoryFragment : Fragment() {
 
             }
 
-            if (foodHistoryViewModel.currentFoodItemListState.foodItems.isNotEmpty()) {
+            if (uiState.foodItems.isNotEmpty()) {
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    items(foodHistoryViewModel.currentFoodItemListState.foodItems) { foodItem ->
+                    items(uiState.foodItems) { foodItem ->
                         Row(
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(foodItem.foodItemCreated.time.toString())
+                            Text(
+                                foodItem.foodItemCreated.time.toString()
+                            )
                             Column {
                                 Text(text = foodItem.foodItemTitle)
                                 Text(text = foodItem.foodItemDetails)
