@@ -118,6 +118,12 @@ class FoodHistoryViewModel(private val repo: FoodItemRepository): ViewModel() {
         var date = currentFoodItemListState.value.givenCalendarInstance.time
         return DateFormat.getDateInstance().format(date)
     }
+
+    fun getTimeFromLong(foodItemCreated: Long): CharSequence? {
+        val date = Date(foodItemCreated)
+        val format = SimpleDateFormat("HH:mm")
+        return format.format(date)
+    }
 }
 
 data class FoodItemListState (
