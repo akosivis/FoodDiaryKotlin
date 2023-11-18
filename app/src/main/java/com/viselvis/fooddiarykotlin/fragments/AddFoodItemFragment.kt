@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.databinding.DataBindingUtil
@@ -24,6 +25,7 @@ import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
 import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import com.viselvis.fooddiarykotlin.databinding.FragmentAddFoodItemBinding
+import com.viselvis.fooddiarykotlin.utils.BaseChip
 import com.viselvis.fooddiarykotlin.utils.BaseTextField
 import com.viselvis.fooddiarykotlin.viewmodels.AddFoodItemViewModel
 import com.viselvis.fooddiarykotlin.viewmodels.AddFoodItemViewModelFactory
@@ -71,6 +73,7 @@ class AddFoodItemFragment : Fragment() {
         binding = null
     }
 
+    @OptIn(ExperimentalLayoutApi::class)
     @Composable
     @Preview
     fun AddFoodItemPage() {
@@ -106,7 +109,26 @@ class AddFoodItemFragment : Fragment() {
                 0 -> {
                     Text("Contains: ")
                     Spacer(modifier = Modifier.height(5.dp))
-                    /* TODO : Apply FlexBox here */
+                    Box (
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        com.viselvis.fooddiarykotlin.utils.FlowRow(
+                            horizontalGap = 8.dp,
+                            verticalGap = 8.dp,
+                        ) {
+                            BaseTextField(
+                                text = addFoodItemViewModel.itemIngredient,
+                                onTextChanged = { addFoodItemViewModel.itemIngredient = it },
+                                placeholderText = stringResource(R.string.ingredients_hint)
+                            )
+                            repeat(17) { index ->
+                                BaseChip(
+                                    text = index.toString(),
+                                    clickable = {}
+                                )
+                            }
+                        }
+                    }
                 }
                 else -> {}
             }
