@@ -23,7 +23,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import com.viselvis.fooddiarykotlin.R
@@ -110,36 +112,52 @@ class FoodHistoryFragment : Fragment() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Icon(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .clickable {
-                            foodHistoryViewModel.getPreviousDay()
-                        },
-                    imageVector = Icons.Rounded.ArrowBack,
-                    contentDescription = "Previous day"
-                )
-                Column (horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(foodHistoryViewModel.dateToDisplay)
-                    Text(foodHistoryViewModel.dayToDisplay)
-                }
-                if (uiState.givenCalendarInstance != foodHistoryViewModel.dateToday) {
+                Box(modifier = Modifier.fillMaxWidth()) {
                     Icon(
                         modifier = Modifier
+                            .align(Alignment.CenterStart)
                             .padding(8.dp)
                             .clickable {
-                                foodHistoryViewModel.getNextDay()
+                                foodHistoryViewModel.getPreviousDay()
                             },
-                        imageVector = Icons.Rounded.ArrowForward,
-                        contentDescription = "Next day"
+                        imageVector = Icons.Rounded.ArrowBack,
+                        contentDescription = "Previous day"
                     )
-                } else {
+                    Column (
+                        modifier = Modifier.align(Alignment.Center),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = foodHistoryViewModel.dateToDisplay,
+                            fontSize = 16.sp
+                        )
+                        Text(
+                            text = foodHistoryViewModel.dayToDisplay,
+                            fontSize = 16.sp
+                        )
+                    }
+                    if (uiState.givenCalendarInstance != foodHistoryViewModel.dateToday) {
+                        Icon(
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .padding(8.dp)
+                                .clickable {
+                                    foodHistoryViewModel.getNextDay()
+                                },
+                            imageVector = Icons.Rounded.ArrowForward,
+                            contentDescription = "Next day"
+                        )
+                    } else {
 //                    Box(
 //                        modifier =
 //                    )
+                    }
                 }
-
             }
+
+            Spacer(
+                modifier = Modifier.height(8.dp)
+            )
 
             if (uiState.foodItems.isNotEmpty()) {
                 LazyColumn(
@@ -169,7 +187,11 @@ class FoodHistoryFragment : Fragment() {
                 }
             } else {
                 Box(modifier = Modifier.fillMaxSize()) {
-                    Text(modifier = Modifier.align(Alignment.Center), text = "No food items recorded")
+                    Text(
+                        modifier = Modifier.align(Alignment.Center),
+                        text = "No food items recorded",
+                        fontSize = 20.sp
+                    )
                 }
             }
         }
