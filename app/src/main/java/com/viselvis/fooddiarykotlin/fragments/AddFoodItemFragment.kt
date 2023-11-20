@@ -14,6 +14,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -116,17 +119,29 @@ class AddFoodItemFragment : Fragment() {
                             horizontalGap = 8.dp,
                             verticalGap = 8.dp,
                         ) {
-                            BaseTextField(
-                                text = addFoodItemViewModel.itemIngredient,
-                                onTextChanged = { addFoodItemViewModel.itemIngredient = it },
-                                placeholderText = stringResource(R.string.ingredients_hint)
-                            )
-                            repeat(17) { index ->
-                                BaseChip(
-                                    text = index.toString(),
+                            for (ingredient in addFoodItemViewModel.itemIngredientsList) {
+                                BaseChip (
+                                    text = ingredient,
                                     clickable = {}
                                 )
                             }
+
+                            BaseTextField(
+                                givenModifier = Modifier.fillMaxWidth().onKeyEvent { event ->
+                                    if (event.key == Key.Enter) {
+                                        val input = addFoodItemViewModel.itemIngredientInput
+                                        if (input.isNotEmpty()) {
+                                            addFoodItemViewModel.insertIngredient(input)
+                                        }
+                                        true
+                                    }
+                                    false
+                                },
+                                text = addFoodItemViewModel.itemIngredientInput,
+                                onTextChanged = {
+                                    addFoodItemViewModel.itemIngredientInput = it },
+                                placeholderText = stringResource(R.string.ingredients_hint)
+                            )
                         }
                     }
                 }
@@ -162,7 +177,7 @@ class AddFoodItemFragment : Fragment() {
             foodItemDetails = addFoodItemViewModel.itemDetail,
             foodItemCreated = dateCreated,
             foodItemLastModified = dateModified,
-            foodItemIngredients = arrayListOf()
+            foodItemIngredients = addFoodItemViewModel.itemIngredientsList
         )
 
         addFoodItemViewModel.saveFoodItem(newFoodItem)
