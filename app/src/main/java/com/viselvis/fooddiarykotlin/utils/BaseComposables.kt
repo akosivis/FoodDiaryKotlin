@@ -1,15 +1,22 @@
 package com.viselvis.fooddiarykotlin.utils
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.InputChip
+import androidx.compose.material3.InputChipDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Placeable
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
 import kotlin.math.roundToInt
 
@@ -17,10 +24,11 @@ import kotlin.math.roundToInt
 fun BaseTextField(
     text: String,
     onTextChanged: (String) -> Unit,
-    placeholderText: String
+    placeholderText: String,
+    givenModifier: Modifier =  Modifier.fillMaxWidth()
 ) {
     TextField(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = givenModifier,
         value = text,
         onValueChange = onTextChanged,
         shape = RoundedCornerShape(16.dp),
@@ -92,7 +100,7 @@ private class Row(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BaseChip (
     text: String,
@@ -100,16 +108,21 @@ fun BaseChip (
 //    contentColor: Color = Color.,
 //    contentColor: Color = Color.White
 ) {
-    Chip(
+    InputChip (
         onClick = clickable,
-        colors = ChipDefaults.chipColors(
-            backgroundColor = Color.Blue,
-            contentColor = Color.White
-        )
-    ) {
-        Text (
-            text = text,
-            fontSize = 16.sp
-        )
-    }
+        selected = true,
+        label = {
+            Text (
+                text = text
+            )
+        },
+        trailingIcon = {
+            Icon(
+                Icons.Default.Close,
+                contentDescription = "Close this chip",
+                Modifier.size(InputChipDefaults.AvatarSize)
+            )
+        },
+    )
+
 }
