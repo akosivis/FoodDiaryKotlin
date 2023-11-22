@@ -19,6 +19,7 @@ class AddFoodItemViewModel(private val repo: FoodItemRepository) : ViewModel() {
     var itemIngredientsList by mutableStateOf(arrayListOf<String>())
     var itemQuantity by mutableStateOf("")
     var itemIsSaved by mutableStateOf(false)
+    var isItemNameValid by mutableStateOf(itemDetail.isNotEmpty())
 
     fun saveFoodItem(foodItem: FoodItemModel) = viewModelScope.launch {
         _isDataInserted.value = repo.insertFoodItem(foodItem)
