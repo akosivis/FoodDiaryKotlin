@@ -7,6 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.util.Pair
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -38,8 +47,6 @@ class PrintFoodDiaryFragment : Fragment() {
     private val printFoodDiaryViewModel: PrintFoodDiaryViewModel by viewModels {
         PrintFoodDiaryViewModelFactory((activity?.application as FoodItemListApplication).repository)
     }
-    private var fromDateSelected: Long? = null
-    private var toDateSelected: Long? = null
     private var foodItemListByRange: List<FoodItemModel> = emptyList()
 
     override fun onCreateView(
@@ -53,15 +60,25 @@ class PrintFoodDiaryFragment : Fragment() {
         initializePicker()
 //        initializeObserver()
 
-        binding.btnSelectDate.setOnClickListener {
-            showDateRangePicker()
-        }
-
-        binding.btnGeneratePdf.setOnClickListener {
-            getAllFoodItemsFromGivenRange()
-        }
+//        binding.btnSelectDate.setOnClickListener {
+//            showDateRangePicker()
+//        }
+//
+//        binding.btnGeneratePdf.setOnClickListener {
+//            getAllFoodItemsFromGivenRange()
+//        }
 
         return binding.root;
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.composeView.apply {
+            setContent {
+                PrintFoodDiaryPage()
+            }
+        }
     }
 
 //    private fun initializeObserver() {
@@ -74,23 +91,6 @@ class PrintFoodDiaryFragment : Fragment() {
 //        })
 //    }
 
-    private fun getAllFoodItemsFromGivenRange() {
-        if (fromDateSelected != null && toDateSelected != null) {
-            lifecycle.coroutineScope.launch {
-                printFoodDiaryViewModel.getFoodItemsByRange(fromDateSelected!!, toDateSelected!!).collect {
-                    foodItemListByRange = it
-
-                    for (i in foodItemListByRange) {
-                        Log.d(TAG, "Food item: ${i.foodItemTitle}")
-                    }
-                    // Toast.makeText(activity, "Size is ${foodItemListByRange.size}", Toast.LENGTH_SHORT).show()
-                }
-            }
-        } else {
-            Toast.makeText(context, "Problem!", Toast.LENGTH_SHORT).show()
-        }
-    }
-
     private fun initializePicker() {
         pickerBuilder = MaterialDatePicker.Builder.dateRangePicker()
         val now = Calendar.getInstance()
@@ -100,69 +100,55 @@ class PrintFoodDiaryFragment : Fragment() {
         picker = pickerBuilder.build()
         picker.addOnNegativeButtonClickListener { picker.dismiss() }
         picker.addOnPositiveButtonClickListener {
-            setSelectedDates(it.first, it.second)
+            // setSelectedDates(it.first, it.second)
         }
     }
 
-    private fun setSelectedDates(fromDate: Long?, toDate: Long?) {
-
-        // val calendar = Calendar.getInstance()
-        // calendar.time = Date() // Set your date object here
-
-//        calendar.set(Calendar.HOUR_OF_DAY, 23)
-//        calendar.set(Calendar.MINUTE, 59)
-//        calendar.set(Calendar.SECOND, 59)
-//        calendar.time // Your changed date o
-
-        val calendar = Calendar.getInstance()
-        calendar.time = toDate?.let { Date(it) }
-        calendar.set(Calendar.HOUR_OF_DAY, 23)
-        calendar.set(Calendar.MINUTE, 59)
-        calendar.set(Calendar.SECOND, 59)
-        calendar.time
-
-//        val toDateEditHours = toDate?.let { Date(it) }
-//        toDateEditHours.let {
-//            it
-//        }set(Calendar.HOUR_OF_DAY, 23)
-//        toDateEditHours.set(Calendar.MINUTE, 59)
-//        toDateEditHours.set(Calendar.SECOND, 59)
-//        calendar.time
-
-
-        fromDateSelected = fromDate
-        toDateSelected = calendar.timeInMillis
-        // toDateSelected = toDate?.let { Date(it) }
-
-        if (fromDate != null) {
-            binding.tvFromDate.text = longToStringDisplay(fromDate)
+    @Composable
+    fun PrintFoodDiaryPage() {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text("Select a date range ", fontSize = 24.sp)
+            Spacer(modifier = Modifier.height(40.dp))
+            Row {
+                Text(text = "from: ", fontSize = 24.sp)
+                Spacer(modifier = Modifier.width(15.dp))
+                Text(
+                    modifier = Modifier
+                        .alignByBaseline()
+                        .clickable {  },
+                    text = printFoodDiaryViewModel.fromDateSelected.toString(),
+                    fontSize = 24.sp
+                )
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            Row {
+                Text(text = "to: ", fontSize = 24.sp)
+                Spacer(modifier = Modifier.width(15.dp))
+                Text(
+                    modifier = Modifier
+                        .alignByBaseline()
+                        .clickable {  },
+                    text = printFoodDiaryViewModel.toDateSelected.toString(),
+                    fontSize = 24.sp
+                )
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            Button (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp),
+                enabled = false,
+                onClick = {},
+                shape = RoundedCornerShape(45.dp),
+            ) {
+                Text("Generate PDF", fontSize = 20.sp)
+            }
         }
-        if (toDate != null) {
-            binding.tvToDate.text = longToStringDisplay(toDate)
-        }
-
-//        this.lifecycleScope.launch {
-//            viewMo
-//        }
-    }
-
-    private fun longToStringDisplay(date: Long): CharSequence {
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = date
-
-        val mMonth = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
-        val mDay = calendar[Calendar.DAY_OF_MONTH]
-
-        return "$mDay $mMonth"
-    }
-
-    private fun showDateRangePicker() {
-        picker.show(activity?.supportFragmentManager!!, picker.toString())
-    }
-
-    fun convertDateToLong(date: String): Long {
-        val df = SimpleDateFormat("yyyy.MM.dd HH:mm")
-        return df.parse(date).time
     }
 
     companion object {
