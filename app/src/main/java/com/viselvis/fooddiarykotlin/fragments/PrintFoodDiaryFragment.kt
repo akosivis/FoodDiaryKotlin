@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
@@ -12,8 +13,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.util.Pair
@@ -104,8 +107,50 @@ class PrintFoodDiaryFragment : Fragment() {
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun PrintFoodDiaryPage() {
+        val calendar = Calendar.getInstance()
+        val mContext = LocalContext.current
+        var fromDateSelected by remember {
+            mutableStateOf(calendar.timeInMillis) // or use mutableStateOf(calendar.timeInMillis)
+        }
+        var toDateSelected by remember {
+            mutableStateOf(calendar.timeInMillis) // or use mutableStateOf(calendar.timeInMillis)
+        }
+        val dateRangePickerState = rememberDateRangePickerState(
+            initialSelectedStartDateMillis = fromDateSelected,
+            initialSelectedEndDateMillis = toDateSelected
+        )
+
+        if (printFoodDiaryViewModel.showDatePicker) {
+            DatePickerDialog(
+                onDismissRequest = {
+                    printFoodDiaryViewModel.showDatePicker = false
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        printFoodDiaryViewModel.showDatePicker = false
+                        fromDateSelected = dateRangePickerState.selectedStartDateMillis!!
+                        toDateSelected = dateRangePickerState.selectedEndDateMillis!!
+                    }) {
+                        Text(text = "Confirm")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        printFoodDiaryViewModel.showDatePicker = false
+                    }) {
+                        Text(text = "Cancel")
+                    }
+                }
+            ) {
+                DateRangePicker(
+                    state = dateRangePickerState
+                )
+            }
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -120,8 +165,11 @@ class PrintFoodDiaryFragment : Fragment() {
                 Text(
                     modifier = Modifier
                         .alignByBaseline()
-                        .clickable {  },
-                    text = printFoodDiaryViewModel.fromDateSelected.toString(),
+                        .clickable {
+                            printFoodDiaryViewModel.showDatePicker = true
+                            printFoodDiaryViewModel.dateDisplayClicked = 0
+                                   },
+                    text = printFoodDiaryViewModel.longToStringDisplay(fromDateSelected).toString(),
                     fontSize = 24.sp
                 )
             }
@@ -132,8 +180,10 @@ class PrintFoodDiaryFragment : Fragment() {
                 Text(
                     modifier = Modifier
                         .alignByBaseline()
-                        .clickable {  },
-                    text = printFoodDiaryViewModel.toDateSelected.toString(),
+                        .clickable {
+                            printFoodDiaryViewModel.showDatePicker = true
+                            printFoodDiaryViewModel.dateDisplayClicked = 1 },
+                    text = printFoodDiaryViewModel.longToStringDisplay(toDateSelected).toString(),
                     fontSize = 24.sp
                 )
             }
@@ -142,8 +192,13 @@ class PrintFoodDiaryFragment : Fragment() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(5.dp),
-                enabled = false,
-                onClick = {},
+                enabled = printFoodDiaryViewModel.allowGeneratePDF,
+                onClick = {
+                    printFoodDiaryViewModel.getFoodItems(
+                        fromDateSelected,
+                        toDateSelected
+                    )
+                },
                 shape = RoundedCornerShape(45.dp),
             ) {
                 Text("Generate PDF", fontSize = 20.sp)

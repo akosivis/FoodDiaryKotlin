@@ -17,14 +17,22 @@ import java.util.*
 
 class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel() {
 
-    private var dateToday: Calendar = Calendar.getInstance()
-    var fromDateSelected by mutableStateOf(
-        longToStringDisplay(dateToday.timeInMillis)
-    )
-    var toDateSelected by mutableStateOf(
-        longToStringDisplay(dateToday.timeInMillis)
-    )
+    var showDatePicker by mutableStateOf(false)
+    var dateToday: Calendar = Calendar.getInstance()
+    var fromDateSelected by mutableStateOf(0L)
+    var toDateSelected by mutableStateOf(0L)
+    var dateSelected by mutableStateOf(dateToday.timeInMillis)
 
+    // 0 - from Date display is clicked,
+    // 1 - to Date display is clicked
+    var dateDisplayClicked by mutableStateOf(-1)
+    var fromDateStringDisplay by mutableStateOf(
+        longToStringDisplay(fromDateSelected)
+    )
+    var toDateStringDisplay by mutableStateOf(
+        longToStringDisplay(toDateSelected)
+    )
+    var allowGeneratePDF by mutableStateOf(true)
 
     private fun setSelectedDates(fromDate: Long, toDate: Long) {
 
@@ -56,22 +64,23 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
         // toDateSelected = calendar.timeInMillis
         // toDateSelected = toDate?.let { Date(it) }
 
-        fromDateSelected = longToStringDisplay(fromDate) as String
-        toDateSelected = longToStringDisplay(toDate) as String
+        fromDateStringDisplay = longToStringDisplay(fromDate) as String
+        toDateStringDisplay = longToStringDisplay(toDate) as String
 
 //        this.lifecycleScope.launch {
 //            viewMo
 //        }
     }
 
-    private fun longToStringDisplay(date: Long): CharSequence {
+    fun longToStringDisplay(date: Long): CharSequence {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = date
 
         val mMonth = calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
         val mDay = calendar[Calendar.DAY_OF_MONTH]
+        val mYear = calendar[Calendar.YEAR]
 
-        return "$mDay $mMonth"
+        return "$mDay $mMonth $mYear"
     }
 
     private fun showDateRangePicker() {
@@ -102,6 +111,13 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
 
     fun getFoodItemsByRange(fromDate: Long, toDate: Long): Flow<List<FoodItemModel>> = repo.getFoodItemsByRange(fromDate, toDate)
 
+    fun getFoodItems(fromDate: Long, toDate: Long) {
+        Log.d(TAG, "getFoodItems: $fromDate and $toDate")
+    }
+
+    companion object {
+        private const val TAG = "PrintFoodDiaryViewModel"
+    }
 }
 
 class PrintFoodDiaryViewModelFactory(private val repo: FoodItemRepository) : ViewModelProvider.Factory {
