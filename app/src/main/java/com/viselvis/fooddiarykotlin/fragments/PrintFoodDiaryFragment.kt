@@ -60,7 +60,7 @@ class PrintFoodDiaryFragment : Fragment() {
         // return inflater.inflate(R.layout.fragment_print, container, false)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_print, container, false)
 
-        initializePicker()
+        // initializePicker()
 //        initializeObserver()
 
 //        binding.btnSelectDate.setOnClickListener {
@@ -111,7 +111,8 @@ class PrintFoodDiaryFragment : Fragment() {
     @Composable
     fun PrintFoodDiaryPage() {
         val calendar = Calendar.getInstance()
-        val mContext = LocalContext.current
+        val context = LocalContext.current
+
         var fromDateSelected by remember {
             mutableStateOf(calendar.timeInMillis) // or use mutableStateOf(calendar.timeInMillis)
         }
@@ -149,6 +150,11 @@ class PrintFoodDiaryFragment : Fragment() {
                     state = dateRangePickerState
                 )
             }
+        }
+
+        if (printFoodDiaryViewModel.isPrintListEmpty) {
+            Toast.makeText(context, "There's no items to print with the given dates", Toast.LENGTH_LONG).show()
+            printFoodDiaryViewModel.isPrintListEmpty = false
         }
 
         Column(
@@ -198,6 +204,7 @@ class PrintFoodDiaryFragment : Fragment() {
                         fromDateSelected,
                         toDateSelected
                     )
+                    // TODO: Show loading screen
                 },
                 shape = RoundedCornerShape(45.dp),
             ) {

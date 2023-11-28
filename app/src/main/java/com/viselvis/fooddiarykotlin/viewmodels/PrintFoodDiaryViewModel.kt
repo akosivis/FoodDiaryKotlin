@@ -1,7 +1,6 @@
 package com.viselvis.fooddiarykotlin.viewmodels
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,9 +10,9 @@ import com.viselvis.fooddiarykotlin.database.FoodItemRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel() {
 
@@ -33,6 +32,8 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
         longToStringDisplay(toDateSelected)
     )
     var allowGeneratePDF by mutableStateOf(true)
+    // var itemsToPrint by mutableStateOf(emptyList<FoodItemModel>())
+    var isPrintListEmpty by mutableStateOf(false)
 
     private fun setSelectedDates(fromDate: Long, toDate: Long) {
 
@@ -113,6 +114,17 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
 
     fun getFoodItems(fromDate: Long, toDate: Long) {
         Log.d(TAG, "getFoodItems: $fromDate and $toDate")
+
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.getFoodItemsOnGivenDate(fromDate, toDate).apply {
+                if (this.isNotEmpty()) {
+                    // renderPDF(this)
+                    isPrintListEmpty = false
+                } else {
+                    isPrintListEmpty = true
+                }
+            }
+        }
     }
 
     companion object {
