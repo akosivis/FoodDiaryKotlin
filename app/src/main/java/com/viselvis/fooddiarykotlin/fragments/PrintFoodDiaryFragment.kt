@@ -1,13 +1,14 @@
 package com.viselvis.fooddiarykotlin.fragments
 
+import android.content.Context
+import android.graphics.*
+import android.graphics.pdf.PdfDocument
 import android.os.Bundle
-import android.util.Log
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.DatePicker
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -27,16 +29,11 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
 import com.viselvis.fooddiarykotlin.databinding.FragmentPrintBinding
-import com.viselvis.fooddiarykotlin.viewmodels.AddFoodItemViewModel
-import com.viselvis.fooddiarykotlin.viewmodels.AddFoodItemViewModelFactory
 import com.viselvis.fooddiarykotlin.viewmodels.PrintFoodDiaryViewModel
 import com.viselvis.fooddiarykotlin.viewmodels.PrintFoodDiaryViewModelFactory
-import kotlinx.coroutines.launch
-import androidx.lifecycle.Observer
-import androidx.lifecycle.coroutineScope
 import com.viselvis.fooddiarykotlin.database.FoodItemModel
-import kotlinx.coroutines.flow.collect
-import java.text.SimpleDateFormat
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 
 class PrintFoodDiaryFragment : Fragment() {
@@ -44,8 +41,6 @@ class PrintFoodDiaryFragment : Fragment() {
     private val TAG = "PrintFoodDiaryFragment"
     private lateinit var binding: FragmentPrintBinding
     private lateinit var pickerBuilder : MaterialDatePicker.Builder<Pair<Long, Long>>
-        // (MaterialDatePicker.Builder<Pair<Long, Long>>)()
-    //    MaterialDatePicker.Builder<Pair<Long, Long>> materialDateBuilder = MaterialDatePicker.Builder.dateRangePicker();
     private lateinit var picker : MaterialDatePicker<Pair<Long, Long>>
     private val printFoodDiaryViewModel: PrintFoodDiaryViewModel by viewModels {
         PrintFoodDiaryViewModelFactory((activity?.application as FoodItemListApplication).repository)
@@ -60,17 +55,6 @@ class PrintFoodDiaryFragment : Fragment() {
         // return inflater.inflate(R.layout.fragment_print, container, false)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_print, container, false)
 
-        // initializePicker()
-//        initializeObserver()
-
-//        binding.btnSelectDate.setOnClickListener {
-//            showDateRangePicker()
-//        }
-//
-//        binding.btnGeneratePdf.setOnClickListener {
-//            getAllFoodItemsFromGivenRange()
-//        }
-
         return binding.root;
     }
 
@@ -81,29 +65,6 @@ class PrintFoodDiaryFragment : Fragment() {
             setContent {
                 PrintFoodDiaryPage()
             }
-        }
-    }
-
-//    private fun initializeObserver() {
-//        printFoodDiaryViewModel.foodItemsByRange.observe(viewLifecycleOwner, Observer { isSuccess ->
-//            if (!isSuccess.equals(-1)) {
-//                Toast.makeText(context, "There are ${printFoodDiaryViewModel.foodItemsByRange.value?.size ?: 0} items", Toast.LENGTH_LONG).show()
-//            } else {
-//                Toast.makeText(context, "Insertion is not successful", Toast.LENGTH_LONG).show()
-//            }
-//        })
-//    }
-
-    private fun initializePicker() {
-        pickerBuilder = MaterialDatePicker.Builder.dateRangePicker()
-        val now = Calendar.getInstance()
-        pickerBuilder.setSelection(Pair(now.timeInMillis, now.timeInMillis))
-        pickerBuilder.setTheme(R.style.DateRangePickerCustomTheme)
-
-        picker = pickerBuilder.build()
-        picker.addOnNegativeButtonClickListener { picker.dismiss() }
-        picker.addOnPositiveButtonClickListener {
-            // setSelectedDates(it.first, it.second)
         }
     }
 
@@ -123,6 +84,10 @@ class PrintFoodDiaryFragment : Fragment() {
             initialSelectedStartDateMillis = fromDateSelected,
             initialSelectedEndDateMillis = toDateSelected
         )
+
+        if (printFoodDiaryViewModel.itemsToPrint.isNotEmpty()) {
+            renderPdf(context)
+        }
 
         if (printFoodDiaryViewModel.showDatePicker) {
             DatePickerDialog(
@@ -211,6 +176,116 @@ class PrintFoodDiaryFragment : Fragment() {
                 Text("Generate PDF", fontSize = 20.sp)
             }
         }
+    }
+
+    private fun renderPdf(context: Context) {
+        // declaring width and height
+        // for our PDF file.
+        var pageHeight = 1120
+        var pageWidth = 792
+
+        // creating a bitmap variable
+        // for storing our images
+        lateinit var bmp: Bitmap
+        lateinit var scaledbmp: Bitmap
+
+        // creating an object variable
+        // for our PDF document.
+        var pdfDocument: PdfDocument = PdfDocument()
+
+        // two variables for paint "paint" is used
+        // for drawing shapes and we will use "title"
+        // for adding text in our PDF file.
+        var paint: Paint = Paint()
+        var title: Paint = Paint()
+        var baseY = 150F
+
+        // on below line we are initializing our bitmap and scaled bitmap.
+        // bmp = BitmapFactory.decodeResource(context.resources, R.drawable.connector_shape)
+        // scaledbmp = Bitmap.createScaledBitmap(bmp, 140, 140, false)
+
+
+        // we are adding page info to our PDF file
+        // in which we will be passing our pageWidth,
+        // pageHeight and number of pages and after that
+        // we are calling it to create our PDF.
+        var myPageInfo: PdfDocument.PageInfo? =
+            PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 1).create()
+
+        // below line is used for setting
+        // start page for our PDF file.
+        var myPage: PdfDocument.Page = pdfDocument.startPage(myPageInfo)
+
+        // creating a variable for canvas
+        // from our page of PDF.
+        var canvas: Canvas = myPage.canvas
+
+        // below line is used to draw our image on our PDF file.
+        // the first parameter of our drawbitmap method is
+        // our bitmap
+        // second parameter is position from left
+        // third parameter is position from top and last
+        // one is our variable for paint.
+        // canvas.drawBitmap(scaledbmp, 56F, 40F, paint)
+
+        // below line is used for adding typeface for
+        // our text which we will be adding in our PDF file.
+        title.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+
+        // below line is used for setting text size
+        // which we will be displaying in our PDF file.
+        title.textSize = 15F
+
+        // below line is sued for setting color
+        // of our text inside our PDF file.
+        title.color = ContextCompat.getColor(context, R.color.purple_200)
+
+        // below line is used to draw text in our PDF file.
+        // the first parameter is our text, second parameter
+        // is position from start, third parameter is position from top
+        // and then we are passing our variable of paint which is title.
+        canvas.drawText("A portal for IT professionals.", 209F, 100F, title)
+        canvas.drawText("Geeks for Geeks", 209F, 80F, title)
+        title.typeface = Typeface.defaultFromStyle(Typeface.NORMAL)
+        title.color = ContextCompat.getColor(context, R.color.purple_200)
+        title.textSize = 15F
+
+        // below line is used for setting
+        // our text to center of PDF.
+        title.textAlign = Paint.Align.CENTER
+        for (i in printFoodDiaryViewModel.itemsToPrint) {
+            canvas.drawText(i.foodItemTitle, 15F, baseY, title)
+            canvas.drawText(i.foodItemTitle, 100F, baseY, title)
+            baseY += 25F
+        }
+
+        // after adding all attributes to our
+        // PDF file we will be finishing our page.
+        pdfDocument.finishPage(myPage)
+
+        // below line is used to set the name of
+        // our PDF file and its path.
+        val file = File(context.getExternalFilesDir(null)?.absolutePath, "FoodDiary-${Calendar.getInstance().timeInMillis}.pdf")
+
+        try {
+            // after creating a file name we will
+            // write our PDF file to that location.
+            pdfDocument.writeTo(FileOutputStream(file))
+
+            // on below line we are displaying a toast message as PDF file generated..
+            Toast.makeText(context, "PDF file generated in ${context.getExternalFilesDir(null)?.absolutePath}", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            // below line is used
+            // to handle error
+            e.printStackTrace()
+
+            // on below line we are displaying a toast message as fail to generate PDF
+            Toast.makeText(context, "Fail to generate PDF file..", Toast.LENGTH_SHORT)
+                .show()
+        }
+        // after storing our pdf to that
+        // location we are closing our PDF file.
+        pdfDocument.close()
     }
 
     companion object {
