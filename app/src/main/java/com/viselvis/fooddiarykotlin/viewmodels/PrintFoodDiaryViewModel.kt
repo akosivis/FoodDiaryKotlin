@@ -32,7 +32,7 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
         longToStringDisplay(toDateSelected)
     )
     var allowGeneratePDF by mutableStateOf(true)
-    // var itemsToPrint by mutableStateOf(emptyList<FoodItemModel>())
+    var itemsToPrint by mutableStateOf(emptyList<FoodItemModel>())
     var isPrintListEmpty by mutableStateOf(false)
 
     private fun setSelectedDates(fromDate: Long, toDate: Long) {
@@ -118,7 +118,8 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
         viewModelScope.launch(Dispatchers.IO) {
             repo.getFoodItemsOnGivenDate(fromDate, toDate).apply {
                 if (this.isNotEmpty()) {
-                    // renderPDF(this)
+                    itemsToPrint = emptyList<FoodItemModel>()
+                    itemsToPrint = this
                     isPrintListEmpty = false
                 } else {
                     isPrintListEmpty = true
