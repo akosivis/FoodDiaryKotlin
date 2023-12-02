@@ -23,3 +23,8 @@ fun convertDateToText(dateInput: Date, outputType: Int = 0): String {
         else -> "MMM dd, yyyy" }, Locale.getDefault())
     return format.format(dateInput)
 }
+
+fun convertDateToFileName(dateInput: Date): String {
+    val format = SimpleDateFormat("yyyyMMddHHmm", Locale.getDefault())
+    return format.format(dateInput)
+}
