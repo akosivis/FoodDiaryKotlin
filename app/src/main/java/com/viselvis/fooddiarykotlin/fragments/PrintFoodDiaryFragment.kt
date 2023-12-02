@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.graphics.pdf.PdfDocument
 import android.os.Bundle
-import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,13 +28,16 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
+import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import com.viselvis.fooddiarykotlin.databinding.FragmentPrintBinding
+import com.viselvis.fooddiarykotlin.utils.areDatesTheSame
+import com.viselvis.fooddiarykotlin.utils.convertDateToText
 import com.viselvis.fooddiarykotlin.viewmodels.PrintFoodDiaryViewModel
 import com.viselvis.fooddiarykotlin.viewmodels.PrintFoodDiaryViewModelFactory
-import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
+import kotlin.properties.Delegates
 
 class PrintFoodDiaryFragment : Fragment() {
 
@@ -49,7 +52,7 @@ class PrintFoodDiaryFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
         // return inflater.inflate(R.layout.fragment_print, container, false)
@@ -86,7 +89,7 @@ class PrintFoodDiaryFragment : Fragment() {
         )
 
         if (printFoodDiaryViewModel.itemsToPrint.isNotEmpty()) {
-            renderPdf(context)
+            renderPdf(fromDateSelected, toDateSelected, context)
         }
 
         if (printFoodDiaryViewModel.showDatePicker) {
@@ -139,7 +142,7 @@ class PrintFoodDiaryFragment : Fragment() {
                         .clickable {
                             printFoodDiaryViewModel.showDatePicker = true
                             printFoodDiaryViewModel.dateDisplayClicked = 0
-                                   },
+                        },
                     text = printFoodDiaryViewModel.longToStringDisplay(fromDateSelected).toString(),
                     fontSize = 24.sp
                 )
@@ -153,7 +156,8 @@ class PrintFoodDiaryFragment : Fragment() {
                         .alignByBaseline()
                         .clickable {
                             printFoodDiaryViewModel.showDatePicker = true
-                            printFoodDiaryViewModel.dateDisplayClicked = 1 },
+                            printFoodDiaryViewModel.dateDisplayClicked = 1
+                        },
                     text = printFoodDiaryViewModel.longToStringDisplay(toDateSelected).toString(),
                     fontSize = 24.sp
                 )
@@ -178,37 +182,24 @@ class PrintFoodDiaryFragment : Fragment() {
         }
     }
 
-    private fun renderPdf(context: Context) {
-        // declaring width and height
-        // for our PDF file.
-        var pageHeight = 1120
-        var pageWidth = 792
-
-        // creating a bitmap variable
-        // for storing our images
-        lateinit var bmp: Bitmap
-        lateinit var scaledbmp: Bitmap
-
-        // creating an object variable
-        // for our PDF document.
-        var pdfDocument: PdfDocument = PdfDocument()
+    private fun renderPdf(
+        fromDate: Long,
+        toDate: Long,
+        context: Context
+    ) {
+        val pageHeight = 792
+        val pageWidth = 612
+        var pdfDocument = PdfDocument()
+        var dateToPrint: Date? = null
 
         // two variables for paint "paint" is used
         // for drawing shapes and we will use "title"
         // for adding text in our PDF file.
         var paint: Paint = Paint()
         var title: Paint = Paint()
+        var printFoodItem = Paint()
+        var printIngredients = Paint()
         var baseY = 150F
-
-        // on below line we are initializing our bitmap and scaled bitmap.
-        // bmp = BitmapFactory.decodeResource(context.resources, R.drawable.connector_shape)
-        // scaledbmp = Bitmap.createScaledBitmap(bmp, 140, 140, false)
-
-
-        // we are adding page info to our PDF file
-        // in which we will be passing our pageWidth,
-        // pageHeight and number of pages and after that
-        // we are calling it to create our PDF.
         var myPageInfo: PdfDocument.PageInfo? =
             PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 1).create()
 
@@ -219,43 +210,45 @@ class PrintFoodDiaryFragment : Fragment() {
         // creating a variable for canvas
         // from our page of PDF.
         var canvas: Canvas = myPage.canvas
+        val xPosCentered = canvas.width / 2F
+        title.apply {
+            this.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            this.textSize = 20F
+            this.color = ContextCompat.getColor(context, R.color.black)
+            this.textAlign = Paint.Align.CENTER
+        }
+        printFoodItem.apply {
+            this.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+            this.textSize = 20F
+            this.color = ContextCompat.getColor(context, R.color.black)
+            this.textAlign = Paint.Align.LEFT
+        }
+        printIngredients.apply {
+            this.typeface = Typeface.create(Typeface.DEFAULT, Typeface.ITALIC)
+            this.textSize = 15F
+            this.color = ContextCompat.getColor(context, R.color.black)
+            this.textAlign = Paint.Align.LEFT
+        }
 
-        // below line is used to draw our image on our PDF file.
-        // the first parameter of our drawbitmap method is
-        // our bitmap
-        // second parameter is position from left
-        // third parameter is position from top and last
-        // one is our variable for paint.
-        // canvas.drawBitmap(scaledbmp, 56F, 40F, paint)
+        canvas.drawText("Food Diary", xPosCentered, 90F, title)
+        canvas.drawText("Records from ${convertDateToText(Date(fromDate))} " +
+                "to ${convertDateToText(Date(toDate))}", xPosCentered, 110F, title)
 
-        // below line is used for adding typeface for
-        // our text which we will be adding in our PDF file.
-        title.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+        title.textAlign = Paint.Align.LEFT
+        for (item in printFoodDiaryViewModel.itemsToPrint) {
+            Log.d(TAG, "renderPdf() item to render is ${item.foodItemTitle}")
+            if (!areDatesTheSame(dateToPrint, item.foodItemLastModified)) {
+                dateToPrint = item.foodItemLastModified
+                canvas.drawText(convertDateToText(item.foodItemLastModified), 25F, baseY, title)
+                baseY += 25F
+            }
 
-        // below line is used for setting text size
-        // which we will be displaying in our PDF file.
-        title.textSize = 15F
-
-        // below line is sued for setting color
-        // of our text inside our PDF file.
-        title.color = ContextCompat.getColor(context, R.color.purple_200)
-
-        // below line is used to draw text in our PDF file.
-        // the first parameter is our text, second parameter
-        // is position from start, third parameter is position from top
-        // and then we are passing our variable of paint which is title.
-        canvas.drawText("A portal for IT professionals.", 209F, 100F, title)
-        canvas.drawText("Geeks for Geeks", 209F, 80F, title)
-        title.typeface = Typeface.defaultFromStyle(Typeface.NORMAL)
-        title.color = ContextCompat.getColor(context, R.color.purple_200)
-        title.textSize = 15F
-
-        // below line is used for setting
-        // our text to center of PDF.
-        title.textAlign = Paint.Align.CENTER
-        for (i in printFoodDiaryViewModel.itemsToPrint) {
-            canvas.drawText(i.foodItemTitle, 15F, baseY, title)
-            canvas.drawText(i.foodItemTitle, 100F, baseY, title)
+            canvas.drawText(convertDateToText(item.foodItemLastModified, 1), 60F, baseY, printFoodItem)
+            canvas.drawText(item.foodItemTitle, 140F, baseY, printFoodItem)
+            if (item.foodItemIngredients.isNotEmpty()) {
+                baseY += 20F
+                canvas.drawText("contains ${item.foodItemIngredients.joinToString(", ")}", 140F, baseY, printIngredients)
+            }
             baseY += 25F
         }
 
