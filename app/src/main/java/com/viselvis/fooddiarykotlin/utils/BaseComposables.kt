@@ -1,7 +1,7 @@
 package com.viselvis.fooddiarykotlin.utils
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
+import android.content.Context
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Placeable
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
 import kotlin.math.roundToInt
 
@@ -125,4 +124,14 @@ fun BaseChip (
         },
     )
 
+}
+
+@Composable
+fun BaseLoadingIndicator() {
+    Box(
+        modifier = Modifier.fillMaxSize()
+            .wrapContentSize(Alignment.Center)
+    ) {
+        CircularProgressIndicator()
+    }
 }

@@ -1,77 +1,40 @@
 package com.viselvis.fooddiarykotlin.viewmodels
 
+import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Typeface
+import android.graphics.pdf.PdfDocument
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
+import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import com.viselvis.fooddiarykotlin.database.FoodItemRepository
+import com.viselvis.fooddiarykotlin.utils.areDatesTheSame
+import com.viselvis.fooddiarykotlin.utils.convertDateToFileName
+import com.viselvis.fooddiarykotlin.utils.convertDateToText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
-
 
 class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel() {
 
     var showDatePicker by mutableStateOf(false)
     var dateToday: Calendar = Calendar.getInstance()
-    var fromDateSelected by mutableStateOf(0L)
-    var toDateSelected by mutableStateOf(0L)
-    var dateSelected by mutableStateOf(dateToday.timeInMillis)
-
     // 0 - from Date display is clicked,
     // 1 - to Date display is clicked
     var dateDisplayClicked by mutableStateOf(-1)
-    var fromDateStringDisplay by mutableStateOf(
-        longToStringDisplay(fromDateSelected)
-    )
-    var toDateStringDisplay by mutableStateOf(
-        longToStringDisplay(toDateSelected)
-    )
     var allowGeneratePDF by mutableStateOf(true)
     var itemsToPrint by mutableStateOf(emptyList<FoodItemModel>())
-    var isPrintListEmpty by mutableStateOf(false)
-
-    private fun setSelectedDates(fromDate: Long, toDate: Long) {
-
-        // val calendar = Calendar.getInstance()
-        // calendar.time = Date() // Set your date object here
-
-//        calendar.set(Calendar.HOUR_OF_DAY, 23)
-//        calendar.set(Calendar.MINUTE, 59)
-//        calendar.set(Calendar.SECOND, 59)
-//        calendar.time // Your changed date o
-
-        val calendar = Calendar.getInstance()
-        calendar.time = toDate?.let { Date(it) }
-        calendar.set(Calendar.HOUR_OF_DAY, 23)
-        calendar.set(Calendar.MINUTE, 59)
-        calendar.set(Calendar.SECOND, 59)
-        calendar.time
-
-//        val toDateEditHours = toDate?.let { Date(it) }
-//        toDateEditHours.let {
-//            it
-//        }set(Calendar.HOUR_OF_DAY, 23)
-//        toDateEditHours.set(Calendar.MINUTE, 59)
-//        toDateEditHours.set(Calendar.SECOND, 59)
-//        calendar.time
-
-
-        // fromDateSelected = fromDate
-        // toDateSelected = calendar.timeInMillis
-        // toDateSelected = toDate?.let { Date(it) }
-
-        fromDateStringDisplay = longToStringDisplay(fromDate) as String
-        toDateStringDisplay = longToStringDisplay(toDate) as String
-
-//        this.lifecycleScope.launch {
-//            viewMo
-//        }
-    }
+    var toastMessage by mutableStateOf("")
+    var isLoading by mutableStateOf(false)
 
     fun longToStringDisplay(date: Long): CharSequence {
         val calendar = Calendar.getInstance()
@@ -84,48 +47,102 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
         return "$mDay $mMonth $mYear"
     }
 
-    private fun showDateRangePicker() {
-        // picker.show(activity?.supportFragmentManager!!, picker.toString())
-    }
-
-    fun convertDateToLong(date: String): Long {
-        val df = SimpleDateFormat("yyyy.MM.dd HH:mm")
-        return df.parse(date).time
-    }
-
-    private fun getAllFoodItemsFromGivenRange() {
-        if (fromDateSelected != null && toDateSelected != null) {
-            viewModelScope.launch {
-//                printFoodDiaryViewModel.getFoodItemsByRange(fromDateSelected!!, toDateSelected!!).collect {
-//                    foodItemListByRange = it
-//
-//                    for (i in foodItemListByRange) {
-//                        Log.d(TAG, "Food item: ${i.foodItemTitle}")
-//                    }
-//                    // Toast.makeText(activity, "Size is ${foodItemListByRange.size}", Toast.LENGTH_SHORT).show()
-//                }
-            }
-        } else {
-            // Toast.makeText(context, "Problem!", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    fun getFoodItemsByRange(fromDate: Long, toDate: Long): Flow<List<FoodItemModel>> = repo.getFoodItemsByRange(fromDate, toDate)
-
-    fun getFoodItems(fromDate: Long, toDate: Long) {
+    fun getFoodItems(fromDate: Long, toDate: Long, context: Context) {
+        isLoading = true
         Log.d(TAG, "getFoodItems: $fromDate and $toDate")
-
         viewModelScope.launch(Dispatchers.IO) {
             repo.getFoodItemsOnGivenDate(fromDate, toDate).apply {
                 if (this.isNotEmpty()) {
-                    itemsToPrint = emptyList<FoodItemModel>()
                     itemsToPrint = this
-                    isPrintListEmpty = false
+                    renderToPdf(fromDate, toDate, context)
                 } else {
-                    isPrintListEmpty = true
+                    toastMessage = "There's no items to print for the given date range"
                 }
             }
+            isLoading = false
         }
+    }
+
+    private fun renderToPdf(
+        fromDate: Long,
+        toDate: Long,
+        context: Context
+    ) {
+        val pageHeight = 792
+        val pageWidth = 612
+        val pdfDocument = PdfDocument()
+        var dateToPrint: Date? = null
+
+        val title: Paint = Paint()
+        val printFoodItem = Paint()
+        val printIngredients = Paint()
+
+        var baseY = 150F
+        val myPageInfo: PdfDocument.PageInfo? =
+            PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 1).create()
+        val myPage: PdfDocument.Page = pdfDocument.startPage(myPageInfo)
+
+        val canvas: Canvas = myPage.canvas
+        val xPosCentered = canvas.width / 2F
+        title.apply {
+            this.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            this.textSize = 20F
+            this.color = ContextCompat.getColor(context, R.color.black)
+            this.textAlign = Paint.Align.CENTER
+        }
+        printFoodItem.apply {
+            this.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+            this.textSize = 20F
+            this.color = ContextCompat.getColor(context, R.color.black)
+            this.textAlign = Paint.Align.LEFT
+        }
+        printIngredients.apply {
+            this.typeface = Typeface.create(Typeface.DEFAULT, Typeface.ITALIC)
+            this.textSize = 15F
+            this.color = ContextCompat.getColor(context, R.color.black)
+            this.textAlign = Paint.Align.LEFT
+        }
+
+        canvas.drawText("Food Diary", xPosCentered, 90F, title)
+        canvas.drawText("Records from ${convertDateToText(Date(fromDate))} " +
+                "to ${convertDateToText(Date(toDate))}", xPosCentered, 110F, title)
+
+        title.textAlign = Paint.Align.LEFT
+        for (item in itemsToPrint) {
+            Log.d(TAG, "renderPdf() item to render is ${item.foodItemTitle}")
+            if (!areDatesTheSame(dateToPrint, item.foodItemLastModified)) {
+                dateToPrint = item.foodItemLastModified
+                canvas.drawText(convertDateToText(item.foodItemLastModified), 25F, baseY, title)
+                baseY += 25F
+            }
+
+            canvas.drawText(convertDateToText(item.foodItemLastModified, 1), 60F, baseY, printFoodItem)
+            canvas.drawText(item.foodItemTitle, 140F, baseY, printFoodItem)
+            if (item.foodItemIngredients.isNotEmpty()) {
+                baseY += 20F
+                canvas.drawText("contains ${item.foodItemIngredients.joinToString(", ")}", 140F, baseY, printIngredients)
+            }
+            baseY += 25F
+        }
+
+        pdfDocument.finishPage(myPage)
+
+        val file = File(context.getExternalFilesDir(null)?.absolutePath,
+            "FoodDiary-${convertDateToFileName(Date(Calendar.getInstance().timeInMillis))}.pdf")
+
+        try {
+            pdfDocument.writeTo(FileOutputStream(file))
+            toastMessage = "PDF file generated in ${context.getExternalFilesDir(null)?.absolutePath}"
+        } catch (e: Exception) {
+            e.printStackTrace()
+            toastMessage = "Failed to generate PDF file.."
+        }
+
+        pdfDocument.close()
+    }
+
+    fun emptyToastMessage() {
+        toastMessage = ""
     }
 
     companion object {
