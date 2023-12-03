@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Placeable
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.*
 import kotlin.math.roundToInt
 
@@ -24,13 +25,16 @@ fun BaseTextField(
     text: String,
     onTextChanged: (String) -> Unit,
     placeholderText: String,
-    givenModifier: Modifier =  Modifier.fillMaxWidth()
+    givenModifier: Modifier = Modifier.fillMaxWidth(),
+    isSingleLine: Boolean = false
 ) {
     TextField(
         modifier = givenModifier,
         value = text,
         onValueChange = onTextChanged,
+        textStyle = TextStyle(fontSize = 16.sp),
         shape = RoundedCornerShape(16.dp),
+        singleLine = isSingleLine,
         placeholder = { Text(placeholderText) },
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = Color.White,
@@ -112,7 +116,8 @@ fun BaseChip (
         selected = true,
         label = {
             Text (
-                text = text
+                text = text,
+                fontSize = 16.sp
             )
         },
         trailingIcon = {

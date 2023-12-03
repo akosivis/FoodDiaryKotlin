@@ -19,8 +19,11 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -87,13 +90,29 @@ class AddFoodItemFragment : Fragment() {
         ) {
             BaseTextField(
                 text = addFoodItemViewModel.itemName,
-                onTextChanged = { addFoodItemViewModel.itemName = it },
+                onTextChanged = {
+                    addFoodItemViewModel.itemName = it
+                    if (addFoodItemViewModel.itemName.isNotEmpty()) {
+                        addFoodItemViewModel.errorMessage = ""
+                    } },
                 placeholderText = if (foodItemType == 1) {
                     "Medicine item name"
                 } else {
                     "Food item name"
-                }
+                },
             )
+
+            if (addFoodItemViewModel.errorMessage.isNotEmpty()) {
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = addFoodItemViewModel.errorMessage,
+                        fontSize = 14.sp,
+                        fontStyle = FontStyle.Normal,
+                        color = Color.Red,
+                        textAlign = TextAlign.Start
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -127,20 +146,23 @@ class AddFoodItemFragment : Fragment() {
                             }
 
                             BaseTextField(
-                                givenModifier = Modifier.fillMaxWidth().onKeyEvent { event ->
-                                    if (event.key == Key.Enter) {
-                                        val input = addFoodItemViewModel.itemIngredientInput
-                                        if (input.isNotEmpty()) {
-                                            addFoodItemViewModel.insertIngredient(input)
+                                givenModifier = Modifier
+                                    .fillMaxWidth()
+                                    .onKeyEvent { event ->
+                                        if (event.key == Key.Enter) {
+                                            val input = addFoodItemViewModel.itemIngredientInput
+                                            if (input.isNotEmpty()) {
+                                                addFoodItemViewModel.insertIngredient(input)
+                                            }
+                                            true
                                         }
-                                        true
-                                    }
-                                    false
-                                },
+                                        false
+                                    },
                                 text = addFoodItemViewModel.itemIngredientInput,
                                 onTextChanged = {
                                     addFoodItemViewModel.itemIngredientInput = it },
-                                placeholderText = stringResource(R.string.ingredients_hint)
+                                placeholderText = stringResource(R.string.ingredients_hint),
+                                isSingleLine = true
                             )
                         }
                     }
@@ -154,7 +176,7 @@ class AddFoodItemFragment : Fragment() {
                     .padding(5.dp),
                 shape = RoundedCornerShape(45.dp),
                 onClick = {
-                    insertFoodItemOnDb()
+                    addFoodItemViewModel.insertFoodItemOnDb(foodItemType)
                 }
             ) {
                 Text (
@@ -166,21 +188,6 @@ class AddFoodItemFragment : Fragment() {
                 )
             }
         }
-    }
-
-    private fun insertFoodItemOnDb() {
-        val dateCreated = Calendar.getInstance().time
-        val dateModified = Calendar.getInstance().time
-        val newFoodItem = FoodItemModel(
-            foodItemType = foodItemType,
-            foodItemTitle = addFoodItemViewModel.itemName,
-            foodItemDetails = addFoodItemViewModel.itemDetail,
-            foodItemCreated = dateCreated,
-            foodItemLastModified = dateModified,
-            foodItemIngredients = addFoodItemViewModel.itemIngredientsList
-        )
-
-        addFoodItemViewModel.saveFoodItem(newFoodItem)
     }
 
     companion object {
