@@ -72,18 +72,11 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
         val pageWidth = 612
         val pdfDocument = PdfDocument()
         var dateToPrint: Date? = null
+        var baseY = 150F
 
-        val title: Paint = Paint()
+        val title = Paint()
         val printFoodItem = Paint()
         val printIngredients = Paint()
-
-        var baseY = 150F
-        val myPageInfo: PdfDocument.PageInfo? =
-            PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 1).create()
-        val myPage: PdfDocument.Page = pdfDocument.startPage(myPageInfo)
-
-        val canvas: Canvas = myPage.canvas
-        val xPosCentered = canvas.width / 2F
         title.apply {
             this.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             this.textSize = 20F
@@ -103,12 +96,25 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
             this.textAlign = Paint.Align.LEFT
         }
 
-        canvas.drawText("Food Diary", xPosCentered, 90F, title)
-        canvas.drawText("Records from ${convertDateToText(Date(fromDate))} " +
-                "to ${convertDateToText(Date(toDate))}", xPosCentered, 110F, title)
+        val myPageInfo: PdfDocument.PageInfo? =
+            PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 1).create()
+        var myPage: PdfDocument.Page = pdfDocument.startPage(myPageInfo)
+        var canvas: Canvas = myPage.canvas
+        val xPosCentered = canvas.width / 2F
+        drawTitle(title, canvas, xPosCentered, fromDate, toDate)
 
-        title.textAlign = Paint.Align.LEFT
         for (item in itemsToPrint) {
+            if (baseY >= 660F) {
+                pdfDocument.finishPage(myPage)
+                myPage = pdfDocument.startPage(myPageInfo)
+                canvas = myPage.canvas
+                baseY = 150F
+
+                title.textAlign = Paint.Align.CENTER
+                drawTitle(title, canvas, xPosCentered, fromDate, toDate)
+            }
+
+            title.textAlign = Paint.Align.LEFT
             Log.d(TAG, "renderPdf() item to render is ${item.foodItemTitle}")
             if (!areDatesTheSame(dateToPrint, item.foodItemLastModified)) {
                 dateToPrint = item.foodItemLastModified
@@ -123,22 +129,38 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
                 canvas.drawText("contains ${item.foodItemIngredients.joinToString(", ")}", 140F, baseY, printIngredients)
             }
             baseY += 25F
-        }
 
+        }
         pdfDocument.finishPage(myPage)
 
         val file = File(context.getExternalFilesDir(null)?.absolutePath,
             "FoodDiary-${convertDateToFileName(Date(Calendar.getInstance().timeInMillis))}.pdf")
 
-        try {
+        toastMessage = try {
             pdfDocument.writeTo(FileOutputStream(file))
-            toastMessage = "PDF file generated in ${context.getExternalFilesDir(null)?.absolutePath}"
+            "PDF file generated in ${context.getExternalFilesDir(null)?.absolutePath}"
         } catch (e: Exception) {
             e.printStackTrace()
-            toastMessage = "Failed to generate PDF file.."
+            "Failed to generate PDF file.."
         }
 
         pdfDocument.close()
+    }
+
+    private fun drawTitle(
+        title: Paint,
+        canvas: Canvas,
+        xPosCentered: Float,
+        fromDate: Long,
+        toDate: Long
+    ) {
+        canvas.drawText("Food Diary", xPosCentered, 90F, title)
+        canvas.drawText("Records from ${convertDateToText(Date(fromDate))} " +
+                "to ${convertDateToText(Date(toDate))}", xPosCentered, 110F, title)
+    }
+
+    private fun createPage() {
+        TODO("Not yet implemented")
     }
 
     fun emptyToastMessage() {
