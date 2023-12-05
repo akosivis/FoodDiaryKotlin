@@ -47,8 +47,6 @@ class FoodHistoryFragment : Fragment() {
     private val foodHistoryViewModel: FoodHistoryViewModel by viewModels {
         FoodHistoryViewModelFactory((context?.applicationContext as FoodItemListApplication).repository)
     }
-    // private var dateToday: Calendar = Calendar.getInstance()
-    // private lateinit var dateSelected: Date
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,30 +72,6 @@ class FoodHistoryFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-//        when (context) {
-//            is SelectFoodTypeFragment.SelectFoodTypeListener -> listener = context
-//        }
-
-    }
-
-    private fun compareDate(dateObject: Calendar, date: Calendar): Boolean {
-        val dateFoodItemDay = dateObject.get(Calendar.DAY_OF_MONTH)
-        val dateFoodItemMonth = dateObject.get(Calendar.MONTH)
-        val dateFoodItemYear = dateObject.get(Calendar.YEAR)
-        val dateSelectedDay = date.get(Calendar.DAY_OF_MONTH)
-        val dateSelectedMonth = date.get(Calendar.MONTH)
-        val dateSelectedYear = date.get(Calendar.YEAR)
-
-        if((dateFoodItemDay == dateSelectedDay) &&
-            (dateFoodItemMonth == dateSelectedMonth) && (dateFoodItemYear == dateSelectedYear) ) {
-            return true
-        }
-        return false;
-    }
-
 
     @Composable
     fun FoodHistoryPage() {
@@ -171,13 +145,15 @@ class FoodHistoryFragment : Fragment() {
                                 modifier = Modifier.fillMaxWidth().padding(8.dp)
                             ) {
                                 Text (
-                                    foodHistoryViewModel.getTimeFromLong(foodItem.foodItemCreated.time).toString()
+                                    text = foodHistoryViewModel.getTimeFromLong(foodItem.foodItemCreated.time).toString(),
+                                    fontSize = 16.sp
                                 )
-                                Spacer(modifier = Modifier.width(8.dp))
+                                Spacer(modifier = Modifier.width(10.dp))
                                 Column {
                                     Text(
                                         text = foodItem.foodItemTitle,
-                                        fontWeight = FontWeight.Bold
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 16.sp
                                     )
                                     Text(text = foodItem.foodItemDetails)
                                 }

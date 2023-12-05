@@ -6,6 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import com.viselvis.fooddiarykotlin.R
@@ -60,6 +67,24 @@ class SelectFoodTypeFragment : Fragment() {
 
     interface SelectFoodTypeListener {
         fun navigateToAddFoodItemFragment(foodTypeId: Int)
+    }
+
+    @Composable
+    fun SelectFoodTypePage() {
+//        Column(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(10.dp)
+//        ) {
+//            Text(
+//                text = "Select food type:",
+//                fontSize = 18.dp
+//            )
+//            Spacer(modifier = Modifier.height(8.dp))
+//            LazyVerticalGrid(columns = GridCells.FixedSize(3)) {
+//
+//            }
+//        }
     }
 
     companion object {
