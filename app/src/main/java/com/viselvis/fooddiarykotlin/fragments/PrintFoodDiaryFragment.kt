@@ -12,8 +12,6 @@ import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Text
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -27,6 +25,7 @@ import androidx.fragment.app.viewModels
 import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
 import com.viselvis.fooddiarykotlin.databinding.FragmentPrintBinding
+import com.viselvis.fooddiarykotlin.ui.theme.NoteEatTheme
 import com.viselvis.fooddiarykotlin.utils.BaseLoadingIndicator
 import com.viselvis.fooddiarykotlin.viewmodels.PrintFoodDiaryViewModel
 import com.viselvis.fooddiarykotlin.viewmodels.PrintFoodDiaryViewModelFactory
@@ -56,7 +55,9 @@ class PrintFoodDiaryFragment : Fragment() {
 
         binding.composeView.apply {
             setContent {
-                PrintFoodDiaryPage()
+                NoteEatTheme {
+                    PrintFoodDiaryPage()
+                }
             }
         }
     }

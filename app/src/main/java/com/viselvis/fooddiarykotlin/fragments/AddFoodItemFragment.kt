@@ -8,6 +8,8 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +33,7 @@ import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
 import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import com.viselvis.fooddiarykotlin.databinding.FragmentAddFoodItemBinding
+import com.viselvis.fooddiarykotlin.ui.theme.NoteEatTheme
 import com.viselvis.fooddiarykotlin.utils.BaseChip
 import com.viselvis.fooddiarykotlin.utils.BaseTextField
 import com.viselvis.fooddiarykotlin.viewmodels.AddFoodItemViewModel
@@ -83,109 +86,111 @@ class AddFoodItemFragment : Fragment() {
     @Composable
     @Preview
     fun AddFoodItemPage() {
-        Column (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp)
-        ) {
-            BaseTextField(
-                text = addFoodItemViewModel.itemName,
-                onTextChanged = {
-                    addFoodItemViewModel.itemName = it
-                    if (addFoodItemViewModel.itemName.isNotEmpty()) {
-                        addFoodItemViewModel.errorMessage = ""
-                    } },
-                placeholderText = if (foodItemType == 1) {
-                    "Medicine item name"
-                } else {
-                    "Food item name"
-                },
-            )
+        NoteEatTheme {
+            Column (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(10.dp)
+            ) {
+                BaseTextField(
+                    text = addFoodItemViewModel.itemName,
+                    onTextChanged = {
+                        addFoodItemViewModel.itemName = it
+                        if (addFoodItemViewModel.itemName.isNotEmpty()) {
+                            addFoodItemViewModel.errorMessage = ""
+                        } },
+                    placeholderText = if (foodItemType == 1) {
+                        "Medicine item name"
+                    } else {
+                        "Food item name"
+                    },
+                )
 
-            if (addFoodItemViewModel.errorMessage.isNotEmpty()) {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        text = addFoodItemViewModel.errorMessage,
-                        fontSize = 14.sp,
-                        fontStyle = FontStyle.Normal,
-                        color = Color.Red,
-                        textAlign = TextAlign.Start
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            BaseTextField(
-                text = addFoodItemViewModel.itemDetail,
-                onTextChanged = { addFoodItemViewModel.itemDetail = it },
-                placeholderText = if (foodItemType == 1) {
-                    "Medicine item details"
-                } else {
-                    "Food item details"
-                }
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
-            when (foodItemType) {
-                0 -> {
-                    Text("Contains: ")
-                    Spacer(modifier = Modifier.height(5.dp))
-                    Box (
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        com.viselvis.fooddiarykotlin.utils.FlowRow(
-                            horizontalGap = 8.dp,
-                            verticalGap = 8.dp,
-                        ) {
-                            for (ingredient in addFoodItemViewModel.itemIngredientsList) {
-                                BaseChip (
-                                    text = ingredient,
-                                    clickable = {}
-                                )
-                            }
-
-                            BaseTextField(
-                                givenModifier = Modifier
-                                    .fillMaxWidth()
-                                    .onKeyEvent { event ->
-                                        if (event.key == Key.Enter) {
-                                            val input = addFoodItemViewModel.itemIngredientInput
-                                            if (input.isNotEmpty()) {
-                                                addFoodItemViewModel.insertIngredient(input)
-                                            }
-                                            true
-                                        }
-                                        false
-                                    },
-                                text = addFoodItemViewModel.itemIngredientInput,
-                                onTextChanged = {
-                                    addFoodItemViewModel.itemIngredientInput = it },
-                                placeholderText = stringResource(R.string.ingredients_hint),
-                                isSingleLine = true
-                            )
-                        }
+                if (addFoodItemViewModel.errorMessage.isNotEmpty()) {
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = addFoodItemViewModel.errorMessage,
+                            fontSize = 14.sp,
+                            fontStyle = FontStyle.Normal,
+                            color = Color.Red,
+                            textAlign = TextAlign.Start
+                        )
                     }
                 }
-                else -> {}
-            }
-            
-            Button (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp),
-                shape = RoundedCornerShape(45.dp),
-                onClick = {
-                    addFoodItemViewModel.insertFoodItemOnDb(foodItemType)
-                }
-            ) {
-                Text (
-                    text = if (foodItemType == 1) {
-                        "Add medicine intake"
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                BaseTextField(
+                    text = addFoodItemViewModel.itemDetail,
+                    onTextChanged = { addFoodItemViewModel.itemDetail = it },
+                    placeholderText = if (foodItemType == 1) {
+                        "Medicine item details"
                     } else {
-                        "Add food item"
+                        "Food item details"
                     }
                 )
+
+                Spacer(modifier = Modifier.height(10.dp))
+                when (foodItemType) {
+                    0 -> {
+                        Text("Contains: ")
+                        Spacer(modifier = Modifier.height(5.dp))
+                        Box (
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            com.viselvis.fooddiarykotlin.utils.FlowRow(
+                                horizontalGap = 8.dp,
+                                verticalGap = 8.dp,
+                            ) {
+                                for (ingredient in addFoodItemViewModel.itemIngredientsList) {
+                                    BaseChip (
+                                        text = ingredient,
+                                        clickable = {}
+                                    )
+                                }
+
+                                BaseTextField(
+                                    givenModifier = Modifier
+                                        .fillMaxWidth()
+                                        .onKeyEvent { event ->
+                                            if (event.key == Key.Enter) {
+                                                val input = addFoodItemViewModel.itemIngredientInput
+                                                if (input.isNotEmpty()) {
+                                                    addFoodItemViewModel.insertIngredient(input)
+                                                }
+                                                true
+                                            }
+                                            false
+                                        },
+                                    text = addFoodItemViewModel.itemIngredientInput,
+                                    onTextChanged = {
+                                        addFoodItemViewModel.itemIngredientInput = it },
+                                    placeholderText = stringResource(R.string.ingredients_hint),
+                                    isSingleLine = true
+                                )
+                            }
+                        }
+                    }
+                    else -> {}
+                }
+
+                Button (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp),
+                    shape = RoundedCornerShape(45.dp),
+                    onClick = {
+                        addFoodItemViewModel.insertFoodItemOnDb(foodItemType)
+                    }
+                ) {
+                    Text (
+                        text = if (foodItemType == 1) {
+                            "Add medicine intake"
+                        } else {
+                            "Add food item"
+                        }
+                    )
+                }
             }
         }
     }

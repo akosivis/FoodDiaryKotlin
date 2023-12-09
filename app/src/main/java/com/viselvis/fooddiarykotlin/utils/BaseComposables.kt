@@ -6,9 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.InputChip
-import androidx.compose.material3.InputChipDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +18,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.*
 import kotlin.math.roundToInt
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BaseTextField(
     text: String,
@@ -37,10 +36,10 @@ fun BaseTextField(
         singleLine = isSingleLine,
         placeholder = { Text(placeholderText) },
         colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.White,
+            // backgroundColor = Color.White,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent
+            disabledIndicatorColor = Color.Transparent,
         ),
     )
 }

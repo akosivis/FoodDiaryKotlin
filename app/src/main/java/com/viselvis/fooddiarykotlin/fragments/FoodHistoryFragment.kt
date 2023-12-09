@@ -6,40 +6,31 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.materialIcon
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowForward
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import com.viselvis.fooddiarykotlin.R
-import com.viselvis.fooddiarykotlin.adapter.FoodItemAdapter
 import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
-import com.viselvis.fooddiarykotlin.database.FoodItemModel
-import com.viselvis.fooddiarykotlin.databinding.FragmentAddFoodItemBinding
 import com.viselvis.fooddiarykotlin.databinding.FragmentFoodHistoryBinding
-import com.viselvis.fooddiarykotlin.viewmodels.AddFoodItemViewModel
-import com.viselvis.fooddiarykotlin.viewmodels.AddFoodItemViewModelFactory
+import com.viselvis.fooddiarykotlin.ui.theme.NoteEatTheme
 import com.viselvis.fooddiarykotlin.viewmodels.FoodHistoryViewModel
 import com.viselvis.fooddiarykotlin.viewmodels.FoodHistoryViewModelFactory
-import java.text.DateFormat
-import java.util.*
 
 class FoodHistoryFragment : Fragment() {
 
@@ -77,97 +68,101 @@ class FoodHistoryFragment : Fragment() {
     fun FoodHistoryPage() {
         val uiState by foodHistoryViewModel.uiState.collectAsState()
 
-        Column (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp)
-        ) {
-            Row (
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+        NoteEatTheme {
+            Column (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(10.dp)
             ) {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    Icon(
-                        modifier = Modifier
-                            .align(Alignment.CenterStart)
-                            .padding(8.dp)
-                            .clickable {
-                                foodHistoryViewModel.getPreviousDay()
-                            },
-                        imageVector = Icons.Rounded.ArrowBack,
-                        contentDescription = "Previous day"
-                    )
-                    Column (
-                        modifier = Modifier.align(Alignment.Center),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = foodHistoryViewModel.dateToDisplay,
-                            fontSize = 16.sp
-                        )
-                        Text(
-                            text = foodHistoryViewModel.dayToDisplay,
-                            fontSize = 16.sp
-                        )
-                    }
-                    if (uiState.givenCalendarInstance != foodHistoryViewModel.dateToday) {
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Box(modifier = Modifier.fillMaxWidth()) {
                         Icon(
                             modifier = Modifier
-                                .align(Alignment.CenterEnd)
+                                .align(Alignment.CenterStart)
                                 .padding(8.dp)
                                 .clickable {
-                                    foodHistoryViewModel.getNextDay()
+                                    foodHistoryViewModel.getPreviousDay()
                                 },
-                            imageVector = Icons.Rounded.ArrowForward,
-                            contentDescription = "Next day"
+                            imageVector = Icons.Rounded.ArrowBack,
+                            contentDescription = "Previous day"
                         )
-                    } else {
+                        Column (
+                            modifier = Modifier.align(Alignment.Center),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = foodHistoryViewModel.dateToDisplay,
+                                fontSize = 16.sp
+                            )
+                            Text(
+                                text = foodHistoryViewModel.dayToDisplay,
+                                fontSize = 16.sp
+                            )
+                        }
+                        if (uiState.givenCalendarInstance != foodHistoryViewModel.dateToday) {
+                            Icon(
+                                modifier = Modifier
+                                    .align(Alignment.CenterEnd)
+                                    .padding(8.dp)
+                                    .clickable {
+                                        foodHistoryViewModel.getNextDay()
+                                    },
+                                imageVector = Icons.Rounded.ArrowForward,
+                                contentDescription = "Next day"
+                            )
+                        } else {
 //                    Box(
 //                        modifier =
 //                    )
+                        }
                     }
                 }
-            }
 
-            Spacer(
-                modifier = Modifier.height(8.dp)
-            )
+                Spacer(
+                    modifier = Modifier.height(8.dp)
+                )
 
-            if (uiState.foodItems.isNotEmpty()) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    items(uiState.foodItems) { foodItem ->
-                        Card (
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            Row (
-                                modifier = Modifier.fillMaxWidth().padding(8.dp)
+                if (uiState.foodItems.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        items(uiState.foodItems) { foodItem ->
+                            Card (
+                                modifier = Modifier.fillMaxWidth(),
                             ) {
-                                Text (
-                                    text = foodHistoryViewModel.getTimeFromLong(foodItem.foodItemCreated.time).toString(),
-                                    fontSize = 16.sp
-                                )
-                                Spacer(modifier = Modifier.width(10.dp))
-                                Column {
-                                    Text(
-                                        text = foodItem.foodItemTitle,
-                                        fontWeight = FontWeight.Bold,
+                                Row (
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(8.dp)
+                                ) {
+                                    Text (
+                                        text = foodHistoryViewModel.getTimeFromLong(foodItem.foodItemCreated.time).toString(),
                                         fontSize = 16.sp
                                     )
-                                    Text(text = foodItem.foodItemDetails)
+                                    Spacer(modifier = Modifier.width(10.dp))
+                                    Column {
+                                        Text(
+                                            text = foodItem.foodItemTitle,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 16.sp
+                                        )
+                                        Text(text = foodItem.foodItemDetails)
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            } else {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Text(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = "No food items recorded",
-                        fontSize = 20.sp
-                    )
+                } else {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Text(
+                            modifier = Modifier.align(Alignment.Center),
+                            text = "No food items recorded",
+                            fontSize = 20.sp
+                        )
+                    }
                 }
             }
         }
