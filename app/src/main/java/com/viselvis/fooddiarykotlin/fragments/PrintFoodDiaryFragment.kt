@@ -116,60 +116,62 @@ class PrintFoodDiaryFragment : Fragment() {
             BaseLoadingIndicator()
         }
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 15.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text("Select a date range ", fontSize = 24.sp)
-            Spacer(modifier = Modifier.height(40.dp))
-            Row {
-                Text(text = "from: ", fontSize = 24.sp)
-                Spacer(modifier = Modifier.width(15.dp))
-                Text(
-                    modifier = Modifier
-                        .alignByBaseline()
-                        .clickable {
-                            printFoodDiaryViewModel.showDatePicker = true
-                            printFoodDiaryViewModel.dateDisplayClicked = 0
-                        },
-                    text = printFoodDiaryViewModel.longToStringDisplay(fromDateSelected).toString(),
-                    fontSize = 24.sp
-                )
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-            Row {
-                Text(text = "to: ", fontSize = 24.sp)
-                Spacer(modifier = Modifier.width(15.dp))
-                Text(
-                    modifier = Modifier
-                        .alignByBaseline()
-                        .clickable {
-                            printFoodDiaryViewModel.showDatePicker = true
-                            printFoodDiaryViewModel.dateDisplayClicked = 1
-                        },
-                    text = printFoodDiaryViewModel.longToStringDisplay(toDateSelected).toString(),
-                    fontSize = 24.sp
-                )
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-            Button (
+        Surface (modifier = Modifier.fillMaxSize()) {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(5.dp),
-                enabled = printFoodDiaryViewModel.allowGeneratePDF,
-                onClick = {
-                    printFoodDiaryViewModel.getFoodItems(
-                        fromDateSelected,
-                        toDateSelected,
-                        context
-                    )
-                    // TODO: Show loading screen
-                },
-                shape = RoundedCornerShape(45.dp),
+                    .padding(horizontal = 15.dp),
+                verticalArrangement = Arrangement.Center
             ) {
-                Text("Generate PDF", fontSize = 20.sp)
+                Text("Select a date range ", fontSize = 24.sp)
+                Spacer(modifier = Modifier.height(40.dp))
+                Row {
+                    Text(text = "from: ", fontSize = 24.sp)
+                    Spacer(modifier = Modifier.width(15.dp))
+                    Text(
+                        modifier = Modifier
+                            .alignByBaseline()
+                            .clickable {
+                                printFoodDiaryViewModel.showDatePicker = true
+                                printFoodDiaryViewModel.dateDisplayClicked = 0
+                            },
+                        text = printFoodDiaryViewModel.longToStringDisplay(fromDateSelected).toString(),
+                        fontSize = 24.sp
+                    )
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                Row {
+                    Text(text = "to: ", fontSize = 24.sp)
+                    Spacer(modifier = Modifier.width(15.dp))
+                    Text(
+                        modifier = Modifier
+                            .alignByBaseline()
+                            .clickable {
+                                printFoodDiaryViewModel.showDatePicker = true
+                                printFoodDiaryViewModel.dateDisplayClicked = 1
+                            },
+                        text = printFoodDiaryViewModel.longToStringDisplay(toDateSelected).toString(),
+                        fontSize = 24.sp
+                    )
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                Button (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp),
+                    enabled = printFoodDiaryViewModel.allowGeneratePDF,
+                    onClick = {
+                        printFoodDiaryViewModel.getFoodItems(
+                            fromDateSelected,
+                            toDateSelected,
+                            context
+                        )
+                        // TODO: Show loading screen
+                    },
+                    shape = RoundedCornerShape(45.dp),
+                ) {
+                    Text("Generate PDF", fontSize = 20.sp)
+                }
             }
         }
     }
