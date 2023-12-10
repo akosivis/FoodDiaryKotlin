@@ -1,10 +1,12 @@
 package com.viselvis.fooddiarykotlin.utils
 
 import android.content.Context
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -133,9 +135,29 @@ fun BaseChip (
 @Composable
 fun BaseLoadingIndicator() {
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .wrapContentSize(Alignment.Center)
     ) {
         CircularProgressIndicator()
+    }
+}
+
+@Composable
+fun BaseClickableCard (
+    clickable: () -> Unit,
+    name: String
+) {
+    Card (
+        modifier = Modifier.clickable { clickable },
+    ) {
+        Column (
+            modifier = Modifier.padding(15.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(name)
+        }
     }
 }

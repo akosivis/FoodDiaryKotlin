@@ -7,6 +7,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -17,11 +29,13 @@ import com.viselvis.fooddiarykotlin.activity.FoodHistoryActivity
 import com.viselvis.fooddiarykotlin.adapter.FoodItemAdapter
 import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
 import com.viselvis.fooddiarykotlin.databinding.FragmentMainBinding
+import com.viselvis.fooddiarykotlin.utils.BaseClickableCard
 import com.viselvis.fooddiarykotlin.viewmodels.MainViewModel
 import com.viselvis.fooddiarykotlin.viewmodels.MainViewModelFactory
 
 class MainFragment : Fragment() {
 
+    private var binding: FragmentMainBinding? = null
     private val mainViewModel: MainViewModel by viewModels {
         MainViewModelFactory((activity?.application as FoodItemListApplication).repository)
     }
@@ -33,30 +47,8 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        // return inflater.inflate(R.layout.fragment_main, container, false)
-
-        val binding: FragmentMainBinding = DataBindingUtil.inflate(
-            inflater, R.layout.fragment_main, container, false)
-
-        binding.lltAddFoodItem.setOnClickListener {
-            // call an activity here
-//            val intentToAddFoodItem = Intent(activity, AddFoodItemActivity::class.java)
-//            startActivity(intentToAddFoodItem)
-            listener.navigateToSelectFoodTypes()
-        }
-
-        binding.cdvViewHistory.setOnClickListener {
-            // val intentToFoodHistory = Intent(activity, FoodHistoryActivity::class.java)
-            // startActivity(intentToFoodHistory)
-            listener.navigateToFoodHistory()
-        }
-
-        // declare adapter here
-        binding.rcvFoodHistory.adapter = adapter
-        binding.rcvFoodHistory.layoutManager = LinearLayoutManager(activity)
-
-        return binding.root
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
+        return binding?.root
     }
 
     override fun onAttach(context: Context) {
@@ -68,16 +60,63 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        mainViewModel.allFoodItems.observe(
-                viewLifecycleOwner, Observer {
-                    foodItems -> foodItems.let { adapter.submitList(it) }
-        })
+        binding?.composeView?.apply {
+            setContent {
+                MainFragmentPage()
+            }
+        }
     }
 
     interface MainFragmentListener {
         fun navigateToSelectFoodTypes()
         fun navigateToFoodHistory()
+    }
+
+    @Composable
+    fun MainFragmentPage(){
+        val recentFoodItems by mainViewModel.allFoodItems.observeAsState()
+
+        Column (modifier = Modifier.padding(15.dp)) {
+            Text("Hi User!")
+
+            Text(text = "What have you eaten today?")
+
+            // LazyColumn
+//            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+//                items(recentFoodItems) { item ->
+//                    Card (
+//                        modifier = Modifier.fillMaxWidth(),
+//                    ) {
+//                        Row (
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .padding(8.dp)
+//                        ) {
+//                            Column {
+//                                Text(
+//                                    text = item.foodItemTitle,
+//                                    fontWeight = FontWeight.Bold,
+//                                    fontSize = 16.sp
+//                                )
+//                                Text(text = item.foodItemDetails)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                BaseClickableCard(clickable = {
+                    listener.navigateToSelectFoodTypes()
+                }, name = "Add food item")
+                BaseClickableCard(clickable = {
+                    listener.navigateToFoodHistory()
+                }, name = "View food history")
+            }
+        }
     }
 
     companion object {
