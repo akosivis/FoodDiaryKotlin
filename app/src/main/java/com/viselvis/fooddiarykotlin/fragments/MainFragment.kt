@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,15 +22,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.viselvis.fooddiarykotlin.activity.AddFoodItemActivity
 import com.viselvis.fooddiarykotlin.R
-import com.viselvis.fooddiarykotlin.activity.FoodHistoryActivity
 import com.viselvis.fooddiarykotlin.adapter.FoodItemAdapter
 import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
 import com.viselvis.fooddiarykotlin.databinding.FragmentMainBinding
+import com.viselvis.fooddiarykotlin.ui.theme.NoteEatTheme
 import com.viselvis.fooddiarykotlin.utils.BaseClickableCard
+import com.viselvis.fooddiarykotlin.utils.BaseColumnItem
 import com.viselvis.fooddiarykotlin.viewmodels.MainViewModel
 import com.viselvis.fooddiarykotlin.viewmodels.MainViewModelFactory
 
@@ -62,7 +61,9 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding?.composeView?.apply {
             setContent {
-                MainFragmentPage()
+                NoteEatTheme() {
+                    MainFragmentPage()
+                }
             }
         }
     }
@@ -76,45 +77,51 @@ class MainFragment : Fragment() {
     fun MainFragmentPage(){
         val recentFoodItems by mainViewModel.allFoodItems.observeAsState()
 
-        Column (modifier = Modifier.padding(15.dp)) {
-            Text("Hi User!")
-
-            Text(text = "What have you eaten today?")
-
-            // LazyColumn
-//            LazyColumn(modifier = Modifier.fillMaxWidth()) {
-//                items(recentFoodItems) { item ->
-//                    Card (
-//                        modifier = Modifier.fillMaxWidth(),
-//                    ) {
-//                        Row (
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .padding(8.dp)
-//                        ) {
-//                            Column {
-//                                Text(
-//                                    text = item.foodItemTitle,
-//                                    fontWeight = FontWeight.Bold,
-//                                    fontSize = 16.sp
-//                                )
-//                                Text(text = item.foodItemDetails)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                BaseClickableCard(clickable = {
-                    listener.navigateToSelectFoodTypes()
-                }, name = "Add food item")
-                BaseClickableCard(clickable = {
-                    listener.navigateToFoodHistory()
-                }, name = "View food history")
+        Surface (
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Column (modifier = Modifier.padding(15.dp)){
+                Text("Hi User!")
+                Text(text = "What have you eaten today?")
+                Spacer(modifier = Modifier.height(15.dp))
+                if (recentFoodItems != null) {
+                    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                        items(recentFoodItems!!) { item ->
+                            BaseColumnItem(
+                                itemType = 4,
+                                content = {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(8.dp)
+                                    ) {
+                                        Column {
+                                            Text(
+                                                text = item.foodItemTitle,
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 16.sp
+                                            )
+                                            Text(text = item.foodItemDetails)
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(15.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    BaseClickableCard(
+                        clickable = { listener.navigateToSelectFoodTypes() },
+                        name = "Add food item"
+                    )
+                    BaseClickableCard(clickable = {
+                        listener.navigateToFoodHistory()
+                    }, name = "View food history")
+                }
             }
         }
     }
