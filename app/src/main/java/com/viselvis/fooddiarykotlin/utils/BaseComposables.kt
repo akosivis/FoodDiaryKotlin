@@ -17,6 +17,7 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import kotlin.math.roundToInt
 
@@ -149,15 +150,33 @@ fun BaseClickableCard (
     name: String
 ) {
     Card (
-        modifier = Modifier.clickable { clickable },
+        modifier = Modifier.clickable(onClick = clickable),
     ) {
         Column (
             modifier = Modifier.padding(15.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Spacer(modifier = Modifier.height(8.dp))
             Text(name)
         }
+    }
+}
+
+@Composable
+fun BaseColumnItem (
+    clickable: () -> Unit = {},
+    content: @Composable ColumnScope.() -> Unit,
+    itemType: Int = 0
+) {
+    Card (
+        modifier = Modifier.fillMaxWidth().clickable { clickable },
+        shape = when (itemType) {
+            1 -> RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp, bottomStart = 0.dp, bottomEnd = 0.dp)
+            2 -> RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp, bottomStart = 15.dp, bottomEnd = 15.dp)
+            3 -> RoundedCornerShape(0.dp)
+            else -> RoundedCornerShape(15.dp)
+        }
+    ) {
+        content
     }
 }
