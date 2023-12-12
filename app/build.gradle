@@ -100,4 +100,7 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
     implementation 'androidx.compose.runtime:runtime-livedata:1.6.0-beta02'
+
+    // To call setContent in activity
+    implementation 'androidx.activity:activity-compose:1.8.1'
 }

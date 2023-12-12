@@ -1,10 +1,24 @@
 package com.viselvis.fooddiarykotlin
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.Menu
+import android.view.View
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.widget.LinearLayout
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -76,4 +90,44 @@ class MainActivity : AppCompatActivity(),
         navController.navigate(R.id.addFoodItemFragment, bundle)
     }
 
+    @Composable
+    fun MainActivityView() {
+        val drawerState  = rememberDrawerState(initialValue = DrawerValue.Open)
+
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = { 
+                ModalDrawerSheet {
+                    Text("NoteEat")
+                    Divider()
+                    NavigationDrawerItem(
+                        label = { Text("Home") },
+                        selected = false,
+                        onClick = { /*TODO*/ }
+                    )
+                    NavigationDrawerItem(
+                        label = { Text("Print") },
+                        selected = false,
+                        onClick = { /*TODO*/ }
+                    )
+                    NavigationDrawerItem(
+                        label = { Text("Settings") },
+                        selected = false,
+                        onClick = { /*TODO*/ }
+                    )
+                }
+            },
+            gesturesEnabled = true
+        ) {
+            AndroidView(
+                factory = { context ->
+                    NavigationView(context).apply {
+                        layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+                        // setupWithNavController(navController)
+                    }
+                },
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+    }
 }
