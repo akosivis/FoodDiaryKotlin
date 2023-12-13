@@ -17,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.viewinterop.AndroidViewBinding
+import androidx.core.view.WindowCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -26,38 +28,30 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.viselvis.fooddiarykotlin.activity.AddFoodItemActivity
+import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
 import com.viselvis.fooddiarykotlin.databinding.ActivityMainBinding
 import com.viselvis.fooddiarykotlin.fragments.MainFragment
 import com.viselvis.fooddiarykotlin.fragments.SelectFoodTypeFragment
-import com.viselvis.fooddiarykotlin.fragments.SelectFoodTypeFragmentDirections
+import com.viselvis.fooddiarykotlin.ui.NoteEatApp
+import com.viselvis.fooddiarykotlin.ui.theme.NoteEatTheme
 
 // import kotlinx.android.synthetic.main.main_activity_content.view.*
 
-class MainActivity : AppCompatActivity(),
+class MainActivity : ComponentActivity(),
     MainFragment.MainFragmentListener,
     SelectFoodTypeFragment.SelectFoodTypeListener {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var mainBinding: ActivityMainBinding
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainBinding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(mainBinding.root)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        setSupportActionBar(mainBinding.mainContent.toolbar)
-
-        val drawerLayout: DrawerLayout = mainBinding.drawerLayout
-        val navView: NavigationView = mainBinding.navigation
-        val navController = findNavController(R.id.nav_host_fragment_main)
-
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.mainFragment, R.id.printDiaryFragment, R.id.settingsFragment
-            ), drawerLayout
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-
-        navView.setupWithNavController(navController)
+        val application: FoodItemListApplication = (application as FoodItemListApplication)
+        setContent {
+            NoteEatApp(app = application)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -65,10 +59,10 @@ class MainActivity : AppCompatActivity(),
         return true
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_main)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
+//    override fun onSupportNavigateUp(): Boolean {
+//        val navController = findNavController(R.id.nav_host_fragment_main)
+//        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+//    }
 
     override fun navigateToSelectFoodTypes() {
         val navController = findNavController(R.id.nav_host_fragment_main)
@@ -93,6 +87,10 @@ class MainActivity : AppCompatActivity(),
     @Composable
     fun MainActivityView() {
         val drawerState  = rememberDrawerState(initialValue = DrawerValue.Open)
+
+//        AndroidViewBinding(ActivityMainBinding::inflate) {
+//            navController = findNavController(mainBinding.mainContent.mainFragmentContent.root.id)
+//        }
 
         ModalNavigationDrawer(
             drawerState = drawerState,
@@ -123,7 +121,7 @@ class MainActivity : AppCompatActivity(),
                 factory = { context ->
                     NavigationView(context).apply {
                         layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
-                        // setupWithNavController(navController)
+                        setupWithNavController(navController)
                     }
                 },
                 modifier = Modifier.fillMaxSize()

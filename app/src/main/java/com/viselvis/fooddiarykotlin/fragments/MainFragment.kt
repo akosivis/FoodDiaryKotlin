@@ -62,7 +62,7 @@ class MainFragment : Fragment() {
         binding?.composeView?.apply {
             setContent {
                 NoteEatTheme() {
-                    MainFragmentPage()
+                    // MainFragmentPage()
                 }
             }
         }
@@ -74,8 +74,10 @@ class MainFragment : Fragment() {
     }
 
     @Composable
-    fun MainFragmentPage(){
-        val recentFoodItems by mainViewModel.allFoodItems.observeAsState()
+    fun HomeRoute(
+        viewModel: MainViewModel
+    ){
+        val recentFoodItems by viewModel.allFoodItems.observeAsState()
 
         Surface (
             modifier = Modifier.fillMaxSize()
