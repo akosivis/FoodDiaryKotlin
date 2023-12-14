@@ -1,6 +1,7 @@
 package com.viselvis.fooddiarykotlin.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -21,12 +22,14 @@ import com.viselvis.fooddiarykotlin.viewmodels.PrintFoodDiaryViewModelFactory
 
 @Composable
 fun NoteEatNavGraph(
+    modifier: Modifier,
     application: FoodItemListApplication,
-    openDrawer: () -> Unit,
+    openDrawer: () -> Unit = {},
     navController: NavHostController = rememberNavController(),
     startNavigation: String = NoteEatDestinations.HOME_ROUTE
 ) {
     NavHost(
+        modifier = modifier,
         navController = navController,
         startDestination = startNavigation
     ) {

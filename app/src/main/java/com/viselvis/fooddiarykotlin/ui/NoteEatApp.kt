@@ -3,7 +3,9 @@ package com.viselvis.fooddiarykotlin.ui
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
@@ -12,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -35,43 +38,40 @@ fun NoteEatApp(
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route ?: NoteEatDestinations.HOME_ROUTE
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+        val closeDrawer: () -> Unit = { coroutineScope.launch { drawerState.close() } }
 
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
                 ModalDrawerSheet {
-                    Text("NoteEat")
-                    Divider()
-                    NavigationDrawerItem(
-                        label = { Text("Home") },
-                        selected = currentRoute == NoteEatDestinations.HOME_ROUTE,
-                        onClick = {
-                            navigationActions.navigateToHome
-                            coroutineScope.launch {
-                                drawerState.close()
+                    Column(modifier = Modifier.fillMaxSize().padding(15.dp)) {
+                        Text("NoteEat")
+                        Divider()
+                        NavigationDrawerItem(
+                            label = { Text("Home") },
+                            selected = currentRoute == NoteEatDestinations.HOME_ROUTE,
+                            onClick = {
+                                navigationActions.navigateToHome()
+                                closeDrawer()
                             }
-                        }
-                    )
-                    NavigationDrawerItem(
-                        label = { Text("Print") },
-                        selected = currentRoute == NoteEatDestinations.PRINT_ROUTE,
-                        onClick = {
-                            navigationActions.navigateToPrintList
-                            coroutineScope.launch {
-                                drawerState.close()
+                        )
+                        NavigationDrawerItem(
+                            label = { Text("Print") },
+                            selected = currentRoute == NoteEatDestinations.PRINT_ROUTE,
+                            onClick = {
+                                navigationActions.navigateToPrintList()
+                                closeDrawer()
                             }
-                        }
-                    )
-                    NavigationDrawerItem(
-                        label = { Text("Settings") },
-                        selected = currentRoute == NoteEatDestinations.SETTINGS_ROUTE,
-                        onClick = {
-                            navigationActions.navigateToSettings
-                            coroutineScope.launch {
-                                drawerState.close()
+                        )
+                        NavigationDrawerItem(
+                            label = { Text("Settings") },
+                            selected = currentRoute == NoteEatDestinations.SETTINGS_ROUTE,
+                            onClick = {
+                                navigationActions.navigateToSettings()
+                                closeDrawer()
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             },
             gesturesEnabled = true
@@ -100,8 +100,12 @@ fun NoteEatApp(
                     )
                 },
             ) {
+                innerPadding ->
+
                 NoteEatNavGraph(
+                    modifier = Modifier.padding(innerPadding),
                     application = app,
+                    navController = navController,
                     openDrawer = { coroutineScope.launch { drawerState.open() } }
                 )
             }
