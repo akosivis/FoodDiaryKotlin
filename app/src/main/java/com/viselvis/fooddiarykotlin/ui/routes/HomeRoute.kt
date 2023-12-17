@@ -6,10 +6,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.viselvis.fooddiarykotlin.utils.BaseClickableCard
@@ -20,18 +22,23 @@ import com.viselvis.fooddiarykotlin.viewmodels.MainViewModel
 fun HomeRoute(
     viewModel: MainViewModel
 ){
-    val recentFoodItems by viewModel.allFoodItems.observeAsState()
+    val recentFoodItems by viewModel.uiState.collectAsState()
 
     Surface (
         modifier = Modifier.fillMaxSize()
     ) {
         Column (modifier = Modifier.padding(15.dp)){
             Text("Hi User!")
-            Text(text = "What have you eaten today?")
+            Text(text = "Here are your latest food items: ")
+
             Spacer(modifier = Modifier.height(15.dp))
-            if (recentFoodItems != null) {
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    items(recentFoodItems!!) { item ->
+
+            if (recentFoodItems.latestFoodItems != null) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    items(recentFoodItems.latestFoodItems!!) { item ->
                         BaseColumnItem(
                             itemType = 4,
                             content = {
@@ -53,8 +60,19 @@ fun HomeRoute(
                         )
                     }
                 }
+            } else {
+                Box(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp)) {
+                    Text(
+                        "There are no items added yet!",
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
+
             Spacer(modifier = Modifier.height(15.dp))
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -72,3 +90,4 @@ fun HomeRoute(
         }
     }
 }
+

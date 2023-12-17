@@ -169,14 +169,13 @@ fun BaseColumnItem (
     itemType: Int = 0
 ) {
     Card (
-        modifier = Modifier.fillMaxWidth().clickable { clickable },
+        modifier = Modifier.fillMaxWidth().clickable { clickable() },
         shape = when (itemType) {
             1 -> RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp, bottomStart = 0.dp, bottomEnd = 0.dp)
             2 -> RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp, bottomStart = 15.dp, bottomEnd = 15.dp)
             3 -> RoundedCornerShape(0.dp)
             else -> RoundedCornerShape(15.dp)
-        }
-    ) {
-        content
-    }
+        },
+        content = content
+    )
 }

@@ -73,60 +73,60 @@ class MainFragment : Fragment() {
         fun navigateToFoodHistory()
     }
 
-    @Composable
-    fun HomeRoute(
-        viewModel: MainViewModel
-    ){
-        val recentFoodItems by viewModel.allFoodItems.observeAsState()
-
-        Surface (
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Column (modifier = Modifier.padding(15.dp)){
-                Text("Hi User!")
-                Text(text = "What have you eaten today?")
-                Spacer(modifier = Modifier.height(15.dp))
-                if (recentFoodItems != null) {
-                    LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                        items(recentFoodItems!!) { item ->
-                            BaseColumnItem(
-                                itemType = 4,
-                                content = {
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(8.dp)
-                                    ) {
-                                        Column {
-                                            Text(
-                                                text = item.foodItemTitle,
-                                                fontWeight = FontWeight.Bold,
-                                                fontSize = 16.sp
-                                            )
-                                            Text(text = item.foodItemDetails)
-                                        }
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }
-                Spacer(modifier = Modifier.height(15.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    BaseClickableCard(
-                        clickable = { listener.navigateToSelectFoodTypes() },
-                        name = "Add food item"
-                    )
-                    BaseClickableCard(clickable = {
-                        listener.navigateToFoodHistory()
-                    }, name = "View food history")
-                }
-            }
-        }
-    }
+//    @Composable
+//    fun HomeRoute(
+//        viewModel: MainViewModel
+//    ){
+//        val recentFoodItems by viewModel.uiState.observeAsState()
+//
+//        Surface (
+//            modifier = Modifier.fillMaxSize()
+//        ) {
+//            Column (modifier = Modifier.padding(15.dp)){
+//                Text("Hi User!")
+//                Text(text = "What have you eaten today?")
+//                Spacer(modifier = Modifier.height(15.dp))
+//                if (recentFoodItems != null) {
+//                    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+//                        items(recentFoodItems!!) { item ->
+//                            BaseColumnItem(
+//                                itemType = 4,
+//                                content = {
+//                                    Row(
+//                                        modifier = Modifier
+//                                            .fillMaxWidth()
+//                                            .padding(8.dp)
+//                                    ) {
+//                                        Column {
+//                                            Text(
+//                                                text = item.foodItemTitle,
+//                                                fontWeight = FontWeight.Bold,
+//                                                fontSize = 16.sp
+//                                            )
+//                                            Text(text = item.foodItemDetails)
+//                                        }
+//                                    }
+//                                }
+//                            )
+//                        }
+//                    }
+//                }
+//                Spacer(modifier = Modifier.height(15.dp))
+//                Row(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    horizontalArrangement = Arrangement.SpaceEvenly
+//                ) {
+//                    BaseClickableCard(
+//                        clickable = { listener.navigateToSelectFoodTypes() },
+//                        name = "Add food item"
+//                    )
+//                    BaseClickableCard(clickable = {
+//                        listener.navigateToFoodHistory()
+//                    }, name = "View food history")
+//                }
+//            }
+//        }
+//    }
 
     companion object {
 
