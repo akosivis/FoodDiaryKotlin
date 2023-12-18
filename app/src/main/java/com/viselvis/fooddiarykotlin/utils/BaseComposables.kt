@@ -1,23 +1,22 @@
 package com.viselvis.fooddiarykotlin.utils
 
-import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Placeable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import kotlin.math.roundToInt
 
@@ -147,7 +146,9 @@ fun BaseLoadingIndicator() {
 @Composable
 fun BaseClickableCard (
     clickable: () -> Unit,
-    name: String
+    name: String,
+    imageVector: ImageVector? = null,
+    contentDesc: String = ""
 ) {
     Card (
         modifier = Modifier.clickable(onClick = clickable),
@@ -156,7 +157,13 @@ fun BaseClickableCard (
             modifier = Modifier.padding(15.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
+            if (imageVector != null) {
+                Icon(
+                    imageVector = imageVector,
+                    contentDescription = contentDesc
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
             Text(name)
         }
     }

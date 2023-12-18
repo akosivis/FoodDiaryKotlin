@@ -2,18 +2,15 @@ package com.viselvis.fooddiarykotlin.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
-import com.viselvis.fooddiarykotlin.fragments.MainFragment
 import com.viselvis.fooddiarykotlin.ui.routes.HomeRoute
 import com.viselvis.fooddiarykotlin.ui.routes.PrintListRoute
+import com.viselvis.fooddiarykotlin.ui.routes.SelectFoodTypeRoute
 import com.viselvis.fooddiarykotlin.ui.routes.SettingsRoute
 import com.viselvis.fooddiarykotlin.viewmodels.MainViewModel
 import com.viselvis.fooddiarykotlin.viewmodels.MainViewModelFactory
@@ -26,7 +23,9 @@ fun NoteEatNavGraph(
     application: FoodItemListApplication,
     openDrawer: () -> Unit = {},
     navController: NavHostController = rememberNavController(),
-    startNavigation: String = NoteEatDestinations.HOME_ROUTE
+    startNavigation: String = NoteEatDestinations.HOME_ROUTE,
+    navigateToAddFoodRoute: () -> Unit,
+    navigateToSelectFoodTypeRoute: () -> Unit
 ) {
     NavHost(
         modifier = modifier,
@@ -37,7 +36,10 @@ fun NoteEatNavGraph(
             val viewModel: MainViewModel = viewModel(
                 factory = MainViewModelFactory(application.repository)
             )
-            HomeRoute(viewModel = viewModel)
+            HomeRoute(
+                viewModel = viewModel,
+                navigateToSelectFoodType = navigateToSelectFoodTypeRoute
+            )
         }
 
         composable(NoteEatDestinations.PRINT_ROUTE) {
@@ -49,6 +51,18 @@ fun NoteEatNavGraph(
 
         composable(NoteEatDestinations.SETTINGS_ROUTE) {
             SettingsRoute()
+        }
+
+        composable(NoteEatDestinations.ADD_FOOD_ITEM_ROUTE) {
+
+        }
+
+        composable(NoteEatDestinations.FOOD_HISTORY_ROUTE) {
+            SettingsRoute()
+        }
+
+        composable(NoteEatDestinations.SELECT_FOOD_TYPE_ROUTE) {
+            SelectFoodTypeRoute(navigateToAddFoodItem = navigateToAddFoodRoute())
         }
     }
 }
