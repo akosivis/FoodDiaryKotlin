@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Placeable
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.*
 import kotlin.math.roundToInt
@@ -148,13 +147,18 @@ fun BaseClickableCard (
     clickable: () -> Unit,
     name: String,
     imageVector: ImageVector? = null,
-    contentDesc: String = ""
+    contentDesc: String = "",
+    isFixedHeight: Boolean = false,
 ) {
     Card (
-        modifier = Modifier.clickable(onClick = clickable),
+        modifier = Modifier.clickable(onClick = clickable ),
     ) {
         Column (
-            modifier = Modifier.padding(15.dp),
+            modifier = if (isFixedHeight) {
+                Modifier.padding(15.dp).height(130.dp)
+            } else {
+                Modifier.padding(15.dp)
+                   },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (imageVector != null) {
