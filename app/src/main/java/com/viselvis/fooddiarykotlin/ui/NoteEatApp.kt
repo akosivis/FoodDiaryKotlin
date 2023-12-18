@@ -1,7 +1,5 @@
 package com.viselvis.fooddiarykotlin.ui
 
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,11 +13,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.navigation.NavigationView
 import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
 import com.viselvis.fooddiarykotlin.ui.theme.NoteEatTheme
 import kotlinx.coroutines.launch
@@ -106,6 +101,8 @@ fun NoteEatApp(
                     modifier = Modifier.padding(innerPadding),
                     application = app,
                     navController = navController,
+                    navigateToSelectFoodTypeRoute = navigationActions.navigateToSelectFoodType,
+                    navigateToAddFoodRoute = navigationActions.navigateToAddFoodItem,
                     openDrawer = { coroutineScope.launch { drawerState.open() } }
                 )
             }

@@ -8,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -20,7 +19,8 @@ import com.viselvis.fooddiarykotlin.viewmodels.MainViewModel
 
 @Composable
 fun HomeRoute(
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    navigateToSelectFoodType: () -> Unit
 ){
     val recentFoodItems by viewModel.uiState.collectAsState()
 
@@ -78,9 +78,7 @@ fun HomeRoute(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 BaseClickableCard(
-                    clickable = {
-                        // listener.navigateToSelectFoodTypes()
-                                },
+                    clickable = navigateToSelectFoodType,
                     name = "Add food item"
                 )
                 BaseClickableCard(clickable = {
