@@ -24,8 +24,8 @@ fun NoteEatNavGraph(
     openDrawer: () -> Unit = {},
     navController: NavHostController = rememberNavController(),
     startNavigation: String = NoteEatDestinations.HOME_ROUTE,
+    navigateToSelectFoodTypeRoute: () -> Unit,
     navigateToAddFoodRoute: () -> Unit,
-    navigateToSelectFoodTypeRoute: () -> Unit
 ) {
     NavHost(
         modifier = modifier,
@@ -53,9 +53,9 @@ fun NoteEatNavGraph(
             SettingsRoute()
         }
 
-        composable(NoteEatDestinations.ADD_FOOD_ITEM_ROUTE) {
-
-        }
+//        composable(NoteEatDestinations.ADD_FOOD_ITEM_ROUTE) {
+//
+//        }
 
         composable(NoteEatDestinations.FOOD_HISTORY_ROUTE) {
             SettingsRoute()

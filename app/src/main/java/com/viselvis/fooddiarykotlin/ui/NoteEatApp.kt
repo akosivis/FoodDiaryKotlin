@@ -101,9 +101,9 @@ fun NoteEatApp(
                     modifier = Modifier.padding(innerPadding),
                     application = app,
                     navController = navController,
+                    openDrawer = { coroutineScope.launch { drawerState.open() } },
                     navigateToSelectFoodTypeRoute = navigationActions.navigateToSelectFoodType,
-                    navigateToAddFoodRoute = navigationActions.navigateToAddFoodItem,
-                    openDrawer = { coroutineScope.launch { drawerState.open() } }
+                    navigateToAddFoodRoute = {},
                 )
             }
         }

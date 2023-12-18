@@ -77,13 +77,11 @@ fun HomeRoute(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                BaseClickableCard(
-                    clickable = navigateToSelectFoodType,
-                    name = "Add food item"
+                BaseClickableCard (
+                    clickable = { navigateToSelectFoodType() },
+                    name = "Add food item",
                 )
-                BaseClickableCard(clickable = {
-                    // listener.navigateToFoodHistory()
-                }, name = "View food history")
+                BaseClickableCard(clickable = {}, name = "View food history")
             }
         }
     }
