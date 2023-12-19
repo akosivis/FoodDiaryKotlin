@@ -103,7 +103,7 @@ fun NoteEatApp(
                     navController = navController,
                     openDrawer = { coroutineScope.launch { drawerState.open() } },
                     navigateToSelectFoodTypeRoute = navigationActions.navigateToSelectFoodType,
-                    navigateToAddFoodRoute = {},
+                    navigateToAddFoodRoute = navigationActions.navigateToAddEditFoodItem,
                 )
             }
         }

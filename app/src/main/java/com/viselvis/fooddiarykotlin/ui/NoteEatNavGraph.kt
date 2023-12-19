@@ -4,18 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
-import com.viselvis.fooddiarykotlin.ui.routes.HomeRoute
-import com.viselvis.fooddiarykotlin.ui.routes.PrintListRoute
-import com.viselvis.fooddiarykotlin.ui.routes.SelectFoodTypeRoute
-import com.viselvis.fooddiarykotlin.ui.routes.SettingsRoute
-import com.viselvis.fooddiarykotlin.viewmodels.MainViewModel
-import com.viselvis.fooddiarykotlin.viewmodels.MainViewModelFactory
-import com.viselvis.fooddiarykotlin.viewmodels.PrintFoodDiaryViewModel
-import com.viselvis.fooddiarykotlin.viewmodels.PrintFoodDiaryViewModelFactory
+import com.viselvis.fooddiarykotlin.ui.routes.*
+import com.viselvis.fooddiarykotlin.viewmodels.*
 
 @Composable
 fun NoteEatNavGraph(
@@ -25,7 +21,7 @@ fun NoteEatNavGraph(
     navController: NavHostController = rememberNavController(),
     startNavigation: String = NoteEatDestinations.HOME_ROUTE,
     navigateToSelectFoodTypeRoute: () -> Unit,
-    navigateToAddFoodRoute: () -> Unit,
+    navigateToAddFoodRoute: (Int) -> Unit,
 ) {
     NavHost(
         modifier = modifier,
@@ -53,16 +49,25 @@ fun NoteEatNavGraph(
             SettingsRoute()
         }
 
-//        composable(NoteEatDestinations.ADD_FOOD_ITEM_ROUTE) {
-//
-//        }
-
         composable(NoteEatDestinations.FOOD_HISTORY_ROUTE) {
             SettingsRoute()
         }
 
         composable(NoteEatDestinations.SELECT_FOOD_TYPE_ROUTE) {
-            SelectFoodTypeRoute(navigateToAddFoodItem = navigateToAddFoodRoute())
+            SelectFoodTypeRoute(navigateToAddFoodItem = navigateToAddFoodRoute)
+        }
+
+        composable(
+            "${NoteEatDestinations.ADD_FOOD_ITEM_ROUTE}/{type}",
+            arguments = listOf(navArgument("type") { type = NavType.IntType } )
+        ) { backStackEntry ->
+            val viewModel: AddFoodItemViewModel = viewModel(
+                factory = AddFoodItemViewModelFactory(application.repository)
+            )
+            AddFoodItemRoute(
+                viewModel = viewModel,
+                backStackEntry.arguments?.getInt("type")
+            )
         }
     }
 }
