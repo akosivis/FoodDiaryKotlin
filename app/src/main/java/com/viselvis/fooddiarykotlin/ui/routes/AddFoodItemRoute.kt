@@ -31,8 +31,9 @@ import com.viselvis.fooddiarykotlin.viewmodels.AddFoodItemViewModel
 @Composable
 fun AddFoodItemRoute(
     viewModel: AddFoodItemViewModel,
+    type: Int?
 ) {
-    val foodItemType by mutableStateOf(-1)
+    val foodItemType by mutableStateOf(type)
 
     NoteEatTheme {
         Surface (modifier = Modifier.fillMaxSize()) {
@@ -132,7 +133,7 @@ fun AddFoodItemRoute(
                         .padding(5.dp),
                     shape = RoundedCornerShape(45.dp),
                     onClick = {
-                        viewModel.insertFoodItemOnDb(foodItemType)
+                        foodItemType?.let { viewModel.insertFoodItemOnDb(it) }
                     }
                 ) {
                     Text(

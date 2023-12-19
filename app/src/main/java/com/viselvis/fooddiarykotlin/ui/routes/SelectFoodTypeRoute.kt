@@ -18,7 +18,7 @@ import com.viselvis.fooddiarykotlin.utils.BaseClickableCard
 
 @Composable
 fun SelectFoodTypeRoute(
-    navigateToAddFoodItem: Unit,
+    navigateToAddFoodItem: (Int) -> Unit,
 ) {
     val initialList = listOf (
         SelectFoodTypeModel(0, "Add food item",
@@ -45,7 +45,12 @@ fun SelectFoodTypeRoute(
                 items(initialList) { item ->
                     BaseClickableCard(
                         isFixedHeight = true,
-                        clickable = {},
+                        clickable = {
+                            when (item.foodTypeId) {
+                                1 -> navigateToAddFoodItem(1)
+                                else -> navigateToAddFoodItem(0)
+                            }
+                        },
                         name = item.foodTypeTitle,
                         imageVector = item.foodTypeIcon,
                         contentDesc = item.contentDescription,
