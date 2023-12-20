@@ -22,6 +22,7 @@ fun NoteEatNavGraph(
     startNavigation: String = NoteEatDestinations.HOME_ROUTE,
     navigateToSelectFoodTypeRoute: () -> Unit,
     navigateToAddFoodRoute: (Int) -> Unit,
+    navigateToFoodHistory: () -> Unit
 ) {
     NavHost(
         modifier = modifier,
@@ -34,7 +35,8 @@ fun NoteEatNavGraph(
             )
             HomeRoute(
                 viewModel = viewModel,
-                navigateToSelectFoodType = navigateToSelectFoodTypeRoute
+                navigateToSelectFoodType = navigateToSelectFoodTypeRoute,
+                navigateToFoodHistory = navigateToFoodHistory
             )
         }
 
@@ -46,10 +48,6 @@ fun NoteEatNavGraph(
         }
 
         composable(NoteEatDestinations.SETTINGS_ROUTE) {
-            SettingsRoute()
-        }
-
-        composable(NoteEatDestinations.FOOD_HISTORY_ROUTE) {
             SettingsRoute()
         }
 
@@ -68,6 +66,13 @@ fun NoteEatNavGraph(
                 viewModel = viewModel,
                 backStackEntry.arguments?.getInt("type")
             )
+        }
+
+        composable(NoteEatDestinations.FOOD_HISTORY_ROUTE) {
+            val viewModel: FoodHistoryViewModel = viewModel(
+                factory = FoodHistoryViewModelFactory(application.repository)
+            )
+            FoodHistoryPage(viewModel = viewModel)
         }
     }
 }

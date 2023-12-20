@@ -20,7 +20,8 @@ import com.viselvis.fooddiarykotlin.viewmodels.MainViewModel
 @Composable
 fun HomeRoute(
     viewModel: MainViewModel,
-    navigateToSelectFoodType: () -> Unit
+    navigateToSelectFoodType: () -> Unit,
+    navigateToFoodHistory: () -> Unit,
 ){
     val recentFoodItems by viewModel.uiState.collectAsState()
 
@@ -81,7 +82,10 @@ fun HomeRoute(
                     clickable = { navigateToSelectFoodType() },
                     name = "Add food item",
                 )
-                BaseClickableCard(clickable = {}, name = "View food history")
+                BaseClickableCard(
+                    clickable = { navigateToFoodHistory() },
+                    name = "View food history"
+                )
             }
         }
     }
