@@ -94,9 +94,7 @@ fun NoteEatApp(
                         }
                     )
                 },
-            ) {
-                innerPadding ->
-
+            ) { innerPadding ->
                 NoteEatNavGraph(
                     modifier = Modifier.padding(innerPadding),
                     application = app,
@@ -104,6 +102,7 @@ fun NoteEatApp(
                     openDrawer = { coroutineScope.launch { drawerState.open() } },
                     navigateToSelectFoodTypeRoute = navigationActions.navigateToSelectFoodType,
                     navigateToAddFoodRoute = navigationActions.navigateToAddEditFoodItem,
+                    navigateToFoodHistory = navigationActions.navigateToViewFoodHistory
                 )
             }
         }

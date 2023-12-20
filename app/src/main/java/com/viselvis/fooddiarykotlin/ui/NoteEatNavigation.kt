@@ -40,11 +40,6 @@ class NoteEatNavigationActions(navController: NavHostController) {
             restoreState = true
         }
     }
-    val navigateToViewFoodHistory: () -> Unit = {
-        navController.navigate(NoteEatDestinations.FOOD_HISTORY_ROUTE) {
-
-        }
-    }
     val navigateToSelectFoodType: () -> Unit = {
         navController.navigate(NoteEatDestinations.SELECT_FOOD_TYPE_ROUTE) {
             popUpTo(navController.graph.findStartDestination().id) {
@@ -57,6 +52,15 @@ class NoteEatNavigationActions(navController: NavHostController) {
     val navigateToAddEditFoodItem: (Int) -> Unit = { foodType ->
         navController.navigate(
             "${NoteEatDestinations.ADD_FOOD_ITEM_ROUTE}/${foodType}") {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+    val navigateToViewFoodHistory: () -> Unit = {
+        navController.navigate(NoteEatDestinations.FOOD_HISTORY_ROUTE) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }
