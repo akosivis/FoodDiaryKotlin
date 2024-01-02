@@ -28,103 +28,95 @@ fun FoodHistoryPage(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    NoteEatTheme {
-        Surface (modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp)
+    Surface (modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Box(modifier = Modifier.fillMaxWidth()) {
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Icon(
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(8.dp)
+                            .clickable {
+                                viewModel.getPreviousDay() },
+                        imageVector = Icons.Rounded.ArrowBack,
+                        contentDescription = "Previous day"
+                    )
+                    Column(
+                        modifier = Modifier.align(Alignment.Center),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = viewModel.dateToDisplay,
+                            fontSize = 16.sp
+                        )
+                        Text(
+                            text = viewModel.dayToDisplay,
+                            fontSize = 16.sp
+                        )
+                    }
+                    if (uiState.givenCalendarInstance != viewModel.dateToday) {
                         Icon(
                             modifier = Modifier
-                                .align(Alignment.CenterStart)
+                                .align(Alignment.CenterEnd)
                                 .padding(8.dp)
                                 .clickable {
-                                    viewModel.getPreviousDay()
-                                },
-                            imageVector = Icons.Rounded.ArrowBack,
-                            contentDescription = "Previous day"
+                                    viewModel.getNextDay() },
+                            imageVector = Icons.Rounded.ArrowForward,
+                            contentDescription = "Next day"
                         )
-                        Column(
-                            modifier = Modifier.align(Alignment.Center),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = viewModel.dateToDisplay,
-                                fontSize = 16.sp
-                            )
-                            Text(
-                                text = viewModel.dayToDisplay,
-                                fontSize = 16.sp
-                            )
-                        }
-                        if (uiState.givenCalendarInstance != viewModel.dateToday) {
-                            Icon(
-                                modifier = Modifier
-                                    .align(Alignment.CenterEnd)
-                                    .padding(8.dp)
-                                    .clickable {
-                                        viewModel.getNextDay()
-                                    },
-                                imageVector = Icons.Rounded.ArrowForward,
-                                contentDescription = "Next day"
-                            )
-                        } else {
-//                    Box(
-//                        modifier =
-//                    )
-                        }
                     }
                 }
+            }
 
-                Spacer(
-                    modifier = Modifier.height(8.dp)
-                )
+            Spacer(
+                modifier = Modifier.height(8.dp)
+            )
 
-                if (uiState.foodItems.isNotEmpty()) {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        items(uiState.foodItems) { foodItem ->
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
+            if (uiState.foodItems.isNotEmpty()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    items(uiState.foodItems) { foodItem ->
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp)
                             ) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(8.dp)
-                                ) {
+                                Text(
+                                    text = viewModel.getTimeFromLong(foodItem.foodItemCreated.time)
+                                        .toString(),
+                                    fontSize = 16.sp
+                                )
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Column {
                                     Text(
-                                        text = viewModel.getTimeFromLong(foodItem.foodItemCreated.time)
-                                            .toString(),
+                                        text = foodItem.foodItemTitle,
+                                        fontWeight = FontWeight.Bold,
                                         fontSize = 16.sp
                                     )
-                                    Spacer(modifier = Modifier.width(10.dp))
-                                    Column {
-                                        Text(
-                                            text = foodItem.foodItemTitle,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 16.sp
-                                        )
-                                        Text(text = foodItem.foodItemDetails)
-                                    }
+                                    Text(text = foodItem.foodItemDetails)
                                 }
                             }
                         }
                     }
-                } else {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        Text(
-                            modifier = Modifier.align(Alignment.Center),
-                            text = "No food items recorded",
-                            fontSize = 20.sp
-                        )
-                    }
+                }
+            } else {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        modifier = Modifier.align(Alignment.Center),
+                        text = "No food items recorded",
+                        fontSize = 20.sp
+                    )
                 }
             }
         }
