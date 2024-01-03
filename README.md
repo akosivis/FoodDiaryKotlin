@@ -1,48 +1,52 @@
-# FoodDiaryKotlin
-A personal app intended for saving information of your daily food intake. It is a native Android app made in Kotlin.
+# NoteEat (formerly FoodDiaryKotlin)
+A personal app intended for saving information of daily food intake. It is a native Android app made in Kotlin, with its UI now built using [Jetpack Compose](https://developer.android.com/jetpack/compose).
 
-This app is primarily created as a way for me to track the food that I have eaten daily as I am suffering from occasional acid reflux a few months ago. I also created this app to reinforce specific concepts in Android app architecture that I am currently trying to learn such as ViewModels, Room database, Coroutines and View Binding.  
+This app is primarily created as a way for me to track the food that I have eaten daily as I am suffering from occasional acid reflux. I also created this app to reinforce specific concepts in Android app architecture that I am trying to learn such as ViewModels, Room database, Coroutines and View Binding. 
+
+This app is continuously being developed in terms of the UI and features.
 
 ### Features:
-- Add an food item and its details (name, food item's specific ingredients)
-- View all the food item history by date
+- Add a food or medicine item and its details (name, details and other specific ingredients)
+- View food item history 
 - View the three latest food items added to the app
 - Date range selection for generation of food list 
+- Generate PDF file for a food list from a given date range
 
 ### Features that are yet to be implemented:
 - Modify details of food items
-- PDF file generation for food list certain food list items 
-- Overall app theme  
+- Complete app theme
+- Other UI components (custom dialogs, UI displays for ongoing pages)
 
 ### Screenshots and screen records: 
 
 - Home page
-<!--
-*** Original content
-*** ![Screenshot_2021-10-15-23-15-23-33_8992da038339798965361a2f5372f6b6](https://user-images.githubusercontent.com/25239668/142010257-4dcff170-f455-4612-abf4-acf6bdb5e2a7.jpg)
--->
-<img src="https://user-images.githubusercontent.com/25239668/142010257-4dcff170-f455-4612-abf4-acf6bdb5e2a7.jpg" alt="" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" width="200" height="400" />
+<img src="screenshots/Screenshot_20240103_182022.png" alt="Home page" width="200" height="400" />
 
 - Add food item page
-<!--
-*** Original content
-*** ![Screenshot_2021-10-15-23-15-57-68_8992da038339798965361a2f5372f6b6](https://user-images.githubusercontent.com/25239668/142011240-01ab5659-af72-4e03-95ca-198483f3fca2.jpg)
--->
-<img src="https://user-images.githubusercontent.com/25239668/142011240-01ab5659-af72-4e03-95ca-198483f3fca2.jpg" alt="" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" width="200" height="400" />
+<img src="screenshots/Screenshot_20240103_182119.png" alt="Add food item page" width="200" height="400" />
+
+- Add medicine item page
+<img src="screenshots/Screenshot_20240103_182244.png" alt="Add medicine item page" width="200" height="400" />
 
 - View food item history page
-<!--
-*** Original content
-*** ![Screenshot_2021-10-15-23-16-12-25_8992da038339798965361a2f5372f6b6](https://user-images.githubusercontent.com/25239668/142011443-3709b8e8-852a-4423-90d2-56fc8b57acd3.jpg)
--->
-<img src="https://user-images.githubusercontent.com/25239668/142011443-3709b8e8-852a-4423-90d2-56fc8b57acd3.jpg" alt="" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" width="200" height="400" />
+<img src="screenshots/Screenshot_20240103_182147.png" alt="Food item history page" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" width="200" height="400" />
 
-- Adding a food item
-https://user-images.githubusercontent.com/25239668/142009395-9b7c0b29-1257-49d3-ae1b-19f4383dcec9.mp4
+- Print food item history page
+<img src="screenshots/Screenshot_20240103_182051.png" alt="Food item history page" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" width="200" height="400" />
 
-- Viewing food item history
-https://user-images.githubusercontent.com/25239668/142009819-f8b17752-7253-4078-a056-ff74521b2158.mp4
+(Screen records for the app's newest version are yet to be uploaded)
+[//]: # ()
+[//]: # (- Adding a food item)
 
-- Printing food list within certain date range (not yet completed)
-https://user-images.githubusercontent.com/25239668/142009651-3db9bb21-d89e-4465-88d6-634837f1b6e8.mp4
+[//]: # (https://user-images.githubusercontent.com/25239668/142009395-9b7c0b29-1257-49d3-ae1b-19f4383dcec9.mp4)
+
+[//]: # ()
+[//]: # (- Viewing food item history)
+
+[//]: # (https://user-images.githubusercontent.com/25239668/142009819-f8b17752-7253-4078-a056-ff74521b2158.mp4)
+
+[//]: # ()
+[//]: # (- Printing food list within certain date range &#40;not yet completed&#41;)
+
+[//]: # (https://user-images.githubusercontent.com/25239668/142009651-3db9bb21-d89e-4465-88d6-634837f1b6e8.mp4)
 
