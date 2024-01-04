@@ -74,7 +74,7 @@ fun NoteEatApp(
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { Text(text = "AppBar") },
+                        title = { },
                         navigationIcon = {
                             Icon(
                                 modifier = Modifier.clickable(
