@@ -1,11 +1,13 @@
 package com.viselvis.fooddiarykotlin.utils
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -155,7 +157,9 @@ fun BaseClickableCard (
     ) {
         Column (
             modifier = if (isFixedHeight) {
-                Modifier.padding(15.dp).height(130.dp)
+                Modifier
+                    .padding(15.dp)
+                    .height(130.dp)
             } else {
                 Modifier.padding(15.dp)
                    },
@@ -180,7 +184,9 @@ fun BaseColumnItem (
     itemType: Int = 0
 ) {
     Card (
-        modifier = Modifier.fillMaxWidth().clickable { clickable() },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { clickable() },
         shape = when (itemType) {
             1 -> RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp, bottomStart = 0.dp, bottomEnd = 0.dp)
             2 -> RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp, bottomStart = 15.dp, bottomEnd = 15.dp)
@@ -189,4 +195,29 @@ fun BaseColumnItem (
         },
         content = content
     )
+}
+
+@Composable
+fun NotWorkingDisplayPage(
+    message: String
+) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column (
+            modifier = Modifier.align (Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Image (
+                modifier = Modifier.height(100.dp).width(100.dp),
+                imageVector = Icons.Default.Warning,
+                contentDescription = "Not yet working icon"
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text (
+                fontSize = 18.sp,
+                text = message
+            )
+        }
+    }
 }
