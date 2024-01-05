@@ -20,19 +20,19 @@ This app is continuously being developed in terms of the UI and features.
 ### Screenshots and screen records: 
 
 - Home page
-<img src="screenshots/Screenshot_20240103_182022.png" alt="Home page" width="200" height="400" />
+<img src="screenshots/Screenshot_20240105_190602.png" alt="Home page" width="200" height="400" />
 
 - Add food item page
-<img src="screenshots/Screenshot_20240103_182119.png" alt="Add food item page" width="200" height="400" />
+<img src="screenshots/Screenshot_20240105_190756.png" alt="Add food item page" width="200" height="400" />
 
 - Add medicine item page
-<img src="screenshots/Screenshot_20240103_182244.png" alt="Add medicine item page" width="200" height="400" />
+<img src="screenshots/Screenshot_20240105_190840.png" alt="Add medicine item page" width="200" height="400" />
 
 - View food item history page
-<img src="screenshots/Screenshot_20240103_182147.png" alt="Food item history page" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" width="200" height="400" />
+<img src="screenshots/Screenshot_20240105_190935.png" alt="Food item history page" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" width="200" height="400" />
 
 - Print food item history page
-<img src="screenshots/Screenshot_20240103_182051.png" alt="Food item history page" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" width="200" height="400" />
+<img src="screenshots/Screenshot_20240105_190704.png" alt="Food item history page" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" width="200" height="400" />
 
 (Screen records for the app's newest version are yet to be uploaded)
 [//]: # ()
