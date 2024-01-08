@@ -82,6 +82,7 @@ fun FoodHistoryPage(
             if (uiState.foodItems.isNotEmpty()) {
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     items(uiState.foodItems) { foodItem ->
                         Card(
