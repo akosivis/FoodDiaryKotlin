@@ -15,4 +15,6 @@
     <string name="ingredients_hint">e.g. onion, nuts</string>
     <string name="generate_pdf">Generate PDF</string>
     <string name="select_food_type">Select food type:</string>
+    <string name="item_added_successfully">Item has been successfully added!</string>
+    <string name="close">Close</string>
 </resources>

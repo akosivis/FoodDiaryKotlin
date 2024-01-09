@@ -63,6 +63,7 @@ fun NoteEatNavGraph(
                 factory = AddFoodItemViewModelFactory(application.repository)
             )
             AddFoodItemRoute(
+                navController = navController,
                 viewModel = viewModel,
                 backStackEntry.arguments?.getInt("type")
             )
