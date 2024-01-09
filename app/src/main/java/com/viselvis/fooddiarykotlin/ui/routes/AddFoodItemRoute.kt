@@ -5,10 +5,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
@@ -17,12 +16,13 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.ui.theme.NoteEatTheme
 import com.viselvis.fooddiarykotlin.utils.BaseChip
+import com.viselvis.fooddiarykotlin.utils.BaseDialog
 import com.viselvis.fooddiarykotlin.utils.BaseTextField
 import com.viselvis.fooddiarykotlin.utils.FlowRow
 import com.viselvis.fooddiarykotlin.viewmodels.AddFoodItemViewModel
@@ -30,10 +30,22 @@ import com.viselvis.fooddiarykotlin.viewmodels.AddFoodItemViewModel
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AddFoodItemRoute(
+    navController: NavHostController,
     viewModel: AddFoodItemViewModel,
     type: Int?
 ) {
     val foodItemType by mutableStateOf(type)
+    val isInsertedSuccessfully = viewModel.isDataInserted.observeAsState(-1)
+    var isItemAddedDialogShown by mutableStateOf(false)
+    if (!isItemAddedDialogShown && (isInsertedSuccessfully.value != (-1).toLong())) {
+        BaseDialog(
+            onDismiss = {
+                isItemAddedDialogShown = true
+                navController.popBackStack()
+            },
+            message = "Item is added successfully!"
+        )
+    }
 
     NoteEatTheme {
         Surface (modifier = Modifier.fillMaxSize()) {
@@ -96,7 +108,9 @@ fun AddFoodItemRoute(
                                 for (ingredient in viewModel.itemIngredientsList) {
                                     BaseChip(
                                         text = ingredient,
-                                        clickable = {}
+                                        clickable = {
+                                            viewModel.itemIngredientsList.remove(ingredient)
+                                        }
                                     )
                                 }
 
@@ -147,4 +161,15 @@ fun AddFoodItemRoute(
             }
         }
     }
+}
+
+@Composable
+fun AddFoodItemScreen(
+    navController: NavHostController,
+    viewModel: AddFoodItemViewModel,
+    foodItemType: Int?,
+    isInsertedSuccessfully: Long,
+    dismiss: () -> Unit,
+) {
+
 }

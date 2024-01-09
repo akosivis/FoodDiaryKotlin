@@ -17,8 +17,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Placeable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.*
+import com.viselvis.fooddiarykotlin.R
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -209,7 +211,9 @@ fun NotWorkingDisplayPage(
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             Image (
-                modifier = Modifier.height(100.dp).width(100.dp),
+                modifier = Modifier
+                    .height(100.dp)
+                    .width(100.dp),
                 imageVector = Icons.Default.Warning,
                 contentDescription = "Not yet working icon"
             )
@@ -220,4 +224,27 @@ fun NotWorkingDisplayPage(
             )
         }
     }
+}
+
+@Composable
+fun BaseDialog(
+    onDismiss: () -> Unit,
+    message: String = "",
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        text = {
+            Text(
+                text = stringResource(id = R.string.item_added_successfully),
+                style = MaterialTheme.typography.bodyLarge
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = onDismiss
+            ) {
+                Text(text = stringResource(id = R.string.close))
+            }
+        }
+    )
 }
