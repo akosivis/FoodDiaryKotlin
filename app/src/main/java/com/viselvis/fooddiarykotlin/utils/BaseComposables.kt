@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.*
 import com.viselvis.fooddiarykotlin.R
 import kotlin.math.roundToInt
 
+val TAG = "NoteEat"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BaseTextField(

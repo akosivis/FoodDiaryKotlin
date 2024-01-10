@@ -56,7 +56,7 @@ class NoteEatNavigationActions(navController: NavHostController) {
                 saveState = true
             }
             launchSingleTop = true
-            restoreState = true
+            // restoreState = true
         }
     }
     val navigateToViewFoodHistory: () -> Unit = {
