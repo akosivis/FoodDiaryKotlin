@@ -1,5 +1,6 @@
 package com.viselvis.fooddiarykotlin.ui.routes
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -20,11 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.viselvis.fooddiarykotlin.R
+import com.viselvis.fooddiarykotlin.ui.NoteEatDestinations
 import com.viselvis.fooddiarykotlin.ui.theme.NoteEatTheme
-import com.viselvis.fooddiarykotlin.utils.BaseChip
-import com.viselvis.fooddiarykotlin.utils.BaseDialog
-import com.viselvis.fooddiarykotlin.utils.BaseTextField
-import com.viselvis.fooddiarykotlin.utils.FlowRow
+import com.viselvis.fooddiarykotlin.utils.*
 import com.viselvis.fooddiarykotlin.viewmodels.AddFoodItemViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -35,13 +34,17 @@ fun AddFoodItemRoute(
     type: Int?
 ) {
     val foodItemType by mutableStateOf(type)
+    Log.d(TAG, "AddFoodItemRoute: foodItemType passed is $foodItemType")
     val isInsertedSuccessfully = viewModel.isDataInserted.observeAsState(-1)
     var isItemAddedDialogShown by mutableStateOf(false)
     if (!isItemAddedDialogShown && (isInsertedSuccessfully.value != (-1).toLong())) {
         BaseDialog(
             onDismiss = {
                 isItemAddedDialogShown = true
-                navController.popBackStack()
+                navController.popBackStack(
+                    route = NoteEatDestinations.HOME_ROUTE,
+                    inclusive = false
+                )
             },
             message = "Item is added successfully!"
         )
