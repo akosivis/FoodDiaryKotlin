@@ -1,13 +1,12 @@
 package com.viselvis.fooddiarykotlin.viewmodels
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.lifecycle.*
 import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import com.viselvis.fooddiarykotlin.database.FoodItemRepository
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.ArrayList
 
 class AddFoodItemViewModel(private val repo: FoodItemRepository) : ViewModel() {
     private var _isDataInserted = MutableLiveData<Long>()
@@ -17,7 +16,7 @@ class AddFoodItemViewModel(private val repo: FoodItemRepository) : ViewModel() {
     var itemName by mutableStateOf("")
     var itemDetail by mutableStateOf("")
     var itemIngredientInput by mutableStateOf("")
-    var itemIngredientsList by mutableStateOf(arrayListOf<String>())
+    val itemIngredientsList = mutableStateListOf<String>()
     var errorMessage by mutableStateOf("")
 
     fun saveFoodItem(foodItem: FoodItemModel) = viewModelScope.launch {
@@ -33,6 +32,12 @@ class AddFoodItemViewModel(private val repo: FoodItemRepository) : ViewModel() {
 
     fun insertFoodItemOnDb(foodItemType: Int) {
         if (itemName.isNotEmpty()) {
+
+            val foodItemIngredients: ArrayList<String> = arrayListOf()
+            itemIngredientsList.forEach {
+               foodItemIngredients.add(it)
+            }
+
             val dateCreated = Calendar.getInstance().time
             val dateModified = Calendar.getInstance().time
             val newFoodItem = FoodItemModel(
@@ -41,7 +46,7 @@ class AddFoodItemViewModel(private val repo: FoodItemRepository) : ViewModel() {
                 foodItemDetails = itemDetail,
                 foodItemCreated = dateCreated,
                 foodItemLastModified = dateModified,
-                foodItemIngredients = itemIngredientsList
+                foodItemIngredients = foodItemIngredients
             )
 
             saveFoodItem(newFoodItem)
