@@ -114,8 +114,6 @@ private class Row(
 fun BaseChip (
     text: String,
     clickable: () -> Unit,
-//    contentColor: Color = Color.,
-//    contentColor: Color = Color.White
 ) {
     InputChip (
         onClick = clickable,
