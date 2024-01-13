@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.ui.NoteEatDestinations
@@ -33,11 +34,12 @@ fun AddFoodItemRoute(
     viewModel: AddFoodItemViewModel,
     type: Int?
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val foodItemType by mutableStateOf(type)
     Log.d(TAG, "AddFoodItemRoute: foodItemType passed is $foodItemType")
-    val isInsertedSuccessfully = viewModel.isDataInserted.observeAsState(-1)
+
     var isItemAddedDialogShown by mutableStateOf(false)
-    if (!isItemAddedDialogShown && (isInsertedSuccessfully.value != (-1).toLong())) {
+    if (!isItemAddedDialogShown && (uiState.isDataInserted != (-1).toLong())) {
         BaseDialog(
             onDismiss = {
                 isItemAddedDialogShown = true
@@ -58,12 +60,9 @@ fun AddFoodItemRoute(
                     .padding(10.dp)
             ) {
                 BaseTextField(
-                    text = viewModel.itemName,
+                    text = uiState.itemName,
                     onTextChanged = {
-                        viewModel.itemName = it
-                        if (viewModel.itemName.isNotEmpty()) {
-                            viewModel.errorMessage = ""
-                        }
+                        viewModel.updateItemName(it)
                     },
                     placeholderText = if (foodItemType == 1) {
                         "Medicine item name"
@@ -72,10 +71,10 @@ fun AddFoodItemRoute(
                     },
                 )
 
-                if (viewModel.errorMessage.isNotEmpty()) {
+                if (uiState.errorMessage.isNotEmpty()) {
                     Box(modifier = Modifier.fillMaxWidth()) {
-                        Text(
-                            text = viewModel.errorMessage,
+                        Text (
+                            text = uiState.errorMessage,
                             fontSize = 14.sp,
                             fontStyle = FontStyle.Normal,
                             color = Color.Red,
@@ -87,8 +86,8 @@ fun AddFoodItemRoute(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 BaseTextField(
-                    text = viewModel.itemDetail,
-                    onTextChanged = { viewModel.itemDetail = it },
+                    text = uiState.itemDetail,
+                    onTextChanged = { viewModel.updateItemDetail(it) },
                     placeholderText = if (foodItemType == 1) {
                         "Medicine item details"
                     } else {
@@ -108,11 +107,11 @@ fun AddFoodItemRoute(
                                 horizontalGap = 8.dp,
                                 verticalGap = 8.dp,
                             ) {
-                                for (ingredient in viewModel.itemIngredientsList) {
+                                for (ingredient in uiState.itemIngredientsList) {
                                     BaseChip(
                                         text = ingredient,
                                         clickable = {
-                                            viewModel.itemIngredientsList.remove(ingredient)
+                                            viewModel.removeInIngredientList(ingredient)
                                         }
                                     )
                                 }
@@ -123,7 +122,7 @@ fun AddFoodItemRoute(
                                         .onKeyEvent { event ->
                                             if (event.key == Key.Enter) {
                                                 val input =
-                                                    viewModel.itemIngredientInput
+                                                    uiState.itemIngredientInput
                                                 if (input.isNotEmpty()) {
                                                     viewModel.insertIngredient(input)
                                                 }
@@ -131,9 +130,9 @@ fun AddFoodItemRoute(
                                             }
                                             false
                                         },
-                                    text = viewModel.itemIngredientInput,
+                                    text = uiState.itemIngredientInput,
                                     onTextChanged = {
-                                        viewModel.itemIngredientInput = it
+                                        viewModel.insertItemIngredientInput(it)
                                     },
                                     placeholderText = stringResource(R.string.ingredients_hint),
                                     isSingleLine = true

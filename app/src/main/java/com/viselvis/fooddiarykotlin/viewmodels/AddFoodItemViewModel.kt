@@ -4,11 +4,28 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.*
 import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import com.viselvis.fooddiarykotlin.database.FoodItemRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
+data class AddItemUiState(
+    val itemName : String = "",
+    val itemDetail : String = "",
+    val itemIngredientInput : String = "",
+    val itemIngredientsList : List<String> = emptyList(),
+    val errorMessage: String = "",
+    val isDataInserted: Long = (-1).toLong(),
+)
+
 class AddFoodItemViewModel(private val repo: FoodItemRepository) : ViewModel() {
+
+    private var _uiState = MutableStateFlow(AddItemUiState())
+    val uiState: StateFlow<AddItemUiState> = _uiState.asStateFlow()
+
     private var _isDataInserted = MutableLiveData<Long>()
     val isDataInserted: LiveData<Long>
         get() = _isDataInserted
@@ -19,22 +36,79 @@ class AddFoodItemViewModel(private val repo: FoodItemRepository) : ViewModel() {
     val itemIngredientsList = mutableStateListOf<String>()
     var errorMessage by mutableStateOf("")
 
+    fun updateItemName(input: String) {
+        if (input.trim().isNotEmpty()) {
+            _uiState.update {
+                it.copy (
+                    itemName = input,
+                    errorMessage = ""
+                )
+            }
+        }
+    }
+
+    fun updateItemDetail(inputDetail: String) {
+        if (inputDetail.trim().isNotEmpty()) {
+            _uiState.update {
+                it.copy (
+                    itemDetail = inputDetail,
+                    errorMessage = ""
+                )
+            }
+        }
+    }
+
+    fun removeInIngredientList(ingredient: String) {
+        val newItemIngredientsList = _uiState.value.itemIngredientsList
+        newItemIngredientsList.apply {
+            this.toMutableList().remove(ingredient)
+        }
+        _uiState.update {
+            it.copy(
+                itemIngredientsList = newItemIngredientsList
+            )
+        }
+    }
+
     fun saveFoodItem(foodItem: FoodItemModel) = viewModelScope.launch {
-        _isDataInserted.value = repo.insertFoodItem(foodItem)
+        // _isDataInserted.value = repo.insertFoodItem(foodItem)
+        _uiState.update {
+            it.copy(isDataInserted = repo.insertFoodItem(foodItem))
+        }
     }
 
     fun insertIngredient(ingredientInput: String) {
         if (ingredientInput.trim().isNotEmpty()) {
-            itemIngredientsList.add(ingredientInput.trim())
-            itemIngredientInput = ""
+            var ingredientList = _uiState.value.itemIngredientsList + ingredientInput
+            _uiState.update {
+                it.copy(
+                    itemIngredientsList = ingredientList,
+                    itemIngredientInput = ""
+                )
+            }
+            // itemIngredientsList.add(ingredientInput.trim())
+            // itemIngredientInput = ""
+        }
+    }
+
+    fun insertItemIngredientInput(input: String) {
+        if (input.trim().isNotEmpty()) {
+            _uiState.update {
+                it.copy(
+                    itemIngredientInput = input
+                )
+            }
+            // itemIngredientsList.add(ingredientInput.trim())
+            // itemIngredientInput = ""
         }
     }
 
     fun insertFoodItemOnDb(foodItemType: Int) {
-        if (itemName.isNotEmpty()) {
+
+        if (_uiState.value.itemName.isNotEmpty()) {
 
             val foodItemIngredients: ArrayList<String> = arrayListOf()
-            itemIngredientsList.forEach {
+            _uiState.value.itemIngredientsList.forEach {
                foodItemIngredients.add(it)
             }
 
@@ -42,8 +116,8 @@ class AddFoodItemViewModel(private val repo: FoodItemRepository) : ViewModel() {
             val dateModified = Calendar.getInstance().time
             val newFoodItem = FoodItemModel(
                 foodItemType = foodItemType,
-                foodItemTitle = itemName,
-                foodItemDetails = itemDetail,
+                foodItemTitle = _uiState.value.itemName,
+                foodItemDetails = _uiState.value.itemDetail,
                 foodItemCreated = dateCreated,
                 foodItemLastModified = dateModified,
                 foodItemIngredients = foodItemIngredients
@@ -51,15 +125,15 @@ class AddFoodItemViewModel(private val repo: FoodItemRepository) : ViewModel() {
 
             saveFoodItem(newFoodItem)
         } else {
-            errorMessage = when (foodItemType) {
-                1 -> "Medicine item name is required!"
-                else -> "Food item name is required!"
+            _uiState.update {
+                it.copy(
+                    errorMessage = when (foodItemType) {
+                        1 -> "Medicine item name is required!"
+                        else -> "Food item name is required!"
+                    }
+                )
             }
         }
-    }
-
-    fun clearErrorMessage() {
-        errorMessage = ""
     }
 }
 
