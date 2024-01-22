@@ -25,6 +25,8 @@ fun NoteEatApp(
     app: FoodItemListApplication
 ) {
     NoteEatTheme {
+
+
         val navController = rememberNavController()
         val navigationActions = remember(navController) {
             NoteEatNavigationActions(navController)
