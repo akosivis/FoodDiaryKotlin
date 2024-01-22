@@ -10,6 +10,8 @@ object NoteEatDestinations {
     const val ADD_FOOD_ITEM_ROUTE = "add_edit_food"
     const val FOOD_HISTORY_ROUTE = "view_food_history"
     const val SELECT_FOOD_TYPE_ROUTE = "select_food_type"
+    const val INTRODUCTION_ROUTE = "intro"
+    const val ENTER_NAME_ROUTE = "enter_name"
 }
 
 class NoteEatNavigationActions(navController: NavHostController) {
