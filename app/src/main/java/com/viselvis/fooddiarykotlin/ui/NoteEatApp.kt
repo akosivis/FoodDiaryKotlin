@@ -25,15 +25,13 @@ fun NoteEatApp(
     app: FoodItemListApplication
 ) {
     NoteEatTheme {
-
-
         val navController = rememberNavController()
         val navigationActions = remember(navController) {
             NoteEatNavigationActions(navController)
         }
         val coroutineScope = rememberCoroutineScope()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route ?: NoteEatDestinations.HOME_ROUTE
+        val currentRoute = navBackStackEntry?.destination?.route ?: NoteEatDestinations.INTRODUCTION_ROUTE
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val closeDrawer: () -> Unit = { coroutineScope.launch { drawerState.close() } }
 
@@ -41,7 +39,9 @@ fun NoteEatApp(
             drawerState = drawerState,
             drawerContent = {
                 ModalDrawerSheet {
-                    Column(modifier = Modifier.fillMaxSize().padding(15.dp)) {
+                    Column(modifier = Modifier
+                        .fillMaxSize()
+                        .padding(15.dp)) {
                         Text("NoteEat")
                         Divider()
                         NavigationDrawerItem(
@@ -75,26 +75,31 @@ fun NoteEatApp(
         ) {
             Scaffold(
                 topBar = {
-                    TopAppBar(
-                        title = { },
-                        navigationIcon = {
-                            Icon(
-                                modifier = Modifier.clickable(
-                                    onClick = {
-                                        coroutineScope.launch {
-                                            if (drawerState.isClosed) {
-                                                drawerState.open()
-                                            } else {
-                                                drawerState.close()
+                    if (
+                        currentRoute != NoteEatDestinations.INTRODUCTION_ROUTE &&
+                        currentRoute != NoteEatDestinations.ENTER_NAME_ROUTE
+                    ) {
+                        TopAppBar(
+                            title = { },
+                            navigationIcon = {
+                                Icon(
+                                    modifier = Modifier.clickable(
+                                        onClick = {
+                                            coroutineScope.launch {
+                                                if (drawerState.isClosed) {
+                                                    drawerState.open()
+                                                } else {
+                                                    drawerState.close()
+                                                }
                                             }
                                         }
-                                    }
-                                ),
-                                imageVector = Icons.Default.Menu,
-                                contentDescription = "Menu"
-                            )
-                        }
-                    )
+                                    ),
+                                    imageVector = Icons.Default.Menu,
+                                    contentDescription = "Menu"
+                                )
+                            }
+                        )
+                    }
                 },
             ) { innerPadding ->
                 NoteEatNavGraph(
@@ -104,7 +109,8 @@ fun NoteEatApp(
                     openDrawer = { coroutineScope.launch { drawerState.open() } },
                     navigateToSelectFoodTypeRoute = navigationActions.navigateToSelectFoodType,
                     navigateToAddFoodRoute = navigationActions.navigateToAddEditFoodItem,
-                    navigateToFoodHistory = navigationActions.navigateToViewFoodHistory
+                    navigateToFoodHistory = navigationActions.navigateToViewFoodHistory,
+                    navigateToMainRoute = navigationActions.navigateToMainRoute
                 )
             }
         }
