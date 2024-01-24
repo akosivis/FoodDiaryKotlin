@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
@@ -19,61 +20,76 @@ fun NoteEatNavGraph(
     application: FoodItemListApplication,
     openDrawer: () -> Unit = {},
     navController: NavHostController = rememberNavController(),
-    startNavigation: String = NoteEatDestinations.HOME_ROUTE,
+    startNavigation: String = NoteEatDestinations.INTRODUCTION_ROUTE,
     navigateToSelectFoodTypeRoute: () -> Unit,
     navigateToAddFoodRoute: (Int) -> Unit,
-    navigateToFoodHistory: () -> Unit
+    navigateToFoodHistory: () -> Unit,
+    navigateToMainRoute: () -> Unit
 ) {
     NavHost(
         modifier = modifier,
         navController = navController,
         startDestination = startNavigation
     ) {
-        composable(NoteEatDestinations.HOME_ROUTE) {
-            val viewModel: MainViewModel = viewModel(
-                factory = MainViewModelFactory(application.repository)
-            )
-            HomeRoute(
-                viewModel = viewModel,
-                navigateToSelectFoodType = navigateToSelectFoodTypeRoute,
-                navigateToFoodHistory = navigateToFoodHistory
-            )
+        composable(NoteEatDestinations.INTRODUCTION_ROUTE) {
+            IntroductionRoute(navigateToMainRoute)
         }
 
-        composable(NoteEatDestinations.PRINT_ROUTE) {
-            val viewModel: PrintFoodDiaryViewModel = viewModel(
-                factory = PrintFoodDiaryViewModelFactory(application.repository)
-            )
-            PrintListRoute(printFoodDiaryViewModel = viewModel)
+        composable(NoteEatDestinations.ENTER_NAME_ROUTE) {
+            EnterNameRoute()
         }
 
-        composable(NoteEatDestinations.SETTINGS_ROUTE) {
-            SettingsRoute()
-        }
+        navigation(
+            startDestination = NoteEatDestinations.HOME_ROUTE,
+            route = NoteEatDestinations.MAIN_ROUTE
+        ) {
+            composable(NoteEatDestinations.HOME_ROUTE) {
+                val viewModel: MainViewModel = viewModel(
+                    factory = MainViewModelFactory(application.repository)
+                )
+                HomeRoute(
+                    viewModel = viewModel,
+                    navigateToSelectFoodType = navigateToSelectFoodTypeRoute,
+                    navigateToFoodHistory = navigateToFoodHistory
+                )
+            }
 
-        composable(NoteEatDestinations.SELECT_FOOD_TYPE_ROUTE) {
-            SelectFoodTypeRoute(navigateToAddFoodItem = navigateToAddFoodRoute)
-        }
+            composable(NoteEatDestinations.PRINT_ROUTE) {
+                val viewModel: PrintFoodDiaryViewModel = viewModel(
+                    factory = PrintFoodDiaryViewModelFactory(application.repository)
+                )
+                PrintListRoute(printFoodDiaryViewModel = viewModel)
+            }
 
-        composable(
-            "${NoteEatDestinations.ADD_FOOD_ITEM_ROUTE}/{type}",
-            arguments = listOf(navArgument("type") { type = NavType.IntType } )
-        ) { backStackEntry ->
-            val viewModel: AddFoodItemViewModel = viewModel(
-                factory = AddFoodItemViewModelFactory(application.repository)
-            )
-            AddFoodItemRoute(
-                navController = navController,
-                viewModel = viewModel,
-                backStackEntry.arguments?.getInt("type")
-            )
-        }
+            composable(NoteEatDestinations.SETTINGS_ROUTE) {
+                SettingsRoute()
+            }
 
-        composable(NoteEatDestinations.FOOD_HISTORY_ROUTE) {
-            val viewModel: FoodHistoryViewModel = viewModel(
-                factory = FoodHistoryViewModelFactory(application.repository)
-            )
-            FoodHistoryPage(viewModel = viewModel)
+            composable(NoteEatDestinations.SELECT_FOOD_TYPE_ROUTE) {
+                SelectFoodTypeRoute(navigateToAddFoodItem = navigateToAddFoodRoute)
+            }
+
+            composable(
+                "${NoteEatDestinations.ADD_FOOD_ITEM_ROUTE}/{type}",
+                arguments = listOf(navArgument("type") { type = NavType.IntType } )
+            ) { backStackEntry ->
+                val viewModel: AddFoodItemViewModel = viewModel(
+                    factory = AddFoodItemViewModelFactory(application.repository)
+                )
+                AddFoodItemRoute(
+                    navController = navController,
+                    viewModel = viewModel,
+                    backStackEntry.arguments?.getInt("type")
+                )
+            }
+
+            composable(NoteEatDestinations.FOOD_HISTORY_ROUTE) {
+                val viewModel: FoodHistoryViewModel = viewModel(
+                    factory = FoodHistoryViewModelFactory(application.repository)
+                )
+                FoodHistoryPage(viewModel = viewModel)
+            }
+
         }
     }
 }

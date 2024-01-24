@@ -4,17 +4,27 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 
 object NoteEatDestinations {
+    const val ENTER_NAME_ROUTE = "enter_name"
+    const val INTRODUCTION_ROUTE = "intro"
+    const val MAIN_ROUTE = "main"
     const val HOME_ROUTE = "home"
     const val PRINT_ROUTE = "print"
     const val SETTINGS_ROUTE = "settings"
     const val ADD_FOOD_ITEM_ROUTE = "add_edit_food"
     const val FOOD_HISTORY_ROUTE = "view_food_history"
     const val SELECT_FOOD_TYPE_ROUTE = "select_food_type"
-    const val INTRODUCTION_ROUTE = "intro"
-    const val ENTER_NAME_ROUTE = "enter_name"
 }
 
 class NoteEatNavigationActions(navController: NavHostController) {
+    val navigateToMainRoute: () -> Unit = {
+        navController.navigate(NoteEatDestinations.MAIN_ROUTE) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
     val navigateToHome: () -> Unit = {
         navController.navigate(NoteEatDestinations.HOME_ROUTE) {
             popUpTo(navController.graph.findStartDestination().id) {
