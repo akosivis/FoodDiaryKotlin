@@ -20,7 +20,7 @@ fun NoteEatNavGraph(
     application: FoodItemListApplication,
     openDrawer: () -> Unit = {},
     navController: NavHostController = rememberNavController(),
-    startNavigation: String = NoteEatDestinations.INTRODUCTION_ROUTE,
+    startNavigation: String = NoteEatDestinations.ENTER_NAME_ROUTE,
     navigateToSelectFoodTypeRoute: () -> Unit,
     navigateToAddFoodRoute: (Int) -> Unit,
     navigateToFoodHistory: () -> Unit,
@@ -31,12 +31,15 @@ fun NoteEatNavGraph(
         navController = navController,
         startDestination = startNavigation
     ) {
-        composable(NoteEatDestinations.INTRODUCTION_ROUTE) {
-            IntroductionRoute(navigateToMainRoute)
+        composable(NoteEatDestinations.ENTER_NAME_ROUTE) {
+            val viewModel: EnterUsernameViewModel = viewModel(
+                factory = EnterUsernameViewModelFactory()
+            )
+            EnterNameRoute(viewModel)
         }
 
-        composable(NoteEatDestinations.ENTER_NAME_ROUTE) {
-            EnterNameRoute()
+        composable(NoteEatDestinations.INTRODUCTION_ROUTE) {
+            IntroductionRoute(navigateToMainRoute)
         }
 
         navigation(

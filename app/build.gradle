@@ -107,4 +107,8 @@ dependencies {
     // To call setContent in activity
     implementation 'androidx.activity:activity-compose:1.8.1'
     implementation 'androidx.compose.ui:ui-viewbinding:1.5.4'
+
+    // Data Store
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
 }

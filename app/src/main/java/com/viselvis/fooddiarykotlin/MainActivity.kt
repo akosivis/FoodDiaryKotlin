@@ -19,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.core.view.WindowCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -49,6 +51,7 @@ class MainActivity : ComponentActivity(),
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         val application: FoodItemListApplication = (application as FoodItemListApplication)
+        // val noteEatDataStore: DataStore<Preferences> = applicationContext.createDataStore(name = "gfg-datastore")
         setContent {
             NoteEatApp(app = application)
         }
