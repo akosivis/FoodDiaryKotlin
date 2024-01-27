@@ -5,6 +5,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -13,8 +15,15 @@ import com.viselvis.fooddiarykotlin.viewmodels.EnterUsernameViewModel
 
 @Composable
 fun EnterNameRoute(
-    viewModel: EnterUsernameViewModel
+    viewModel: EnterUsernameViewModel,
+    navigateToMain : () -> Unit
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    if (uiState.isUserNameSaved) {
+        navigateToMain()
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -24,8 +33,8 @@ fun EnterNameRoute(
             text = "What is your name?"
         )
         BaseTextField(
-            text = viewModel.userName,
-            onTextChanged = { viewModel.enterUserName(it) },
+            text = uiState.userName,
+            onTextChanged = { viewModel.updateUserName(it) },
             placeholderText = "",
             isSingleLine = true
         )

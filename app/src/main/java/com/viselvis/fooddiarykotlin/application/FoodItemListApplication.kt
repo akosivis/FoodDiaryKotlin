@@ -10,10 +10,16 @@ import com.viselvis.fooddiarykotlin.database.FoodItemRepository
 import com.viselvis.fooddiarykotlin.database.FoodListDatabase
 
 class FoodItemListApplication: Application() {
-    val USER_NAME: String = "username"
+    private val USER_NAME: String = "username"
 
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = USER_NAME)
     val database by lazy { FoodListDatabase.getInstance(this) }
-    val repository by lazy { FoodItemRepository(database.foodItemDao()) }
-    val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = USER_NAME)
+    val repository by lazy {
+        FoodItemRepository(
+            dataStore,
+            database.foodItemDao()
+        )
+    }
+
 
 }

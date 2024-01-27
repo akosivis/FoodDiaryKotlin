@@ -33,9 +33,12 @@ fun NoteEatNavGraph(
     ) {
         composable(NoteEatDestinations.ENTER_NAME_ROUTE) {
             val viewModel: EnterUsernameViewModel = viewModel(
-                factory = EnterUsernameViewModelFactory()
+                factory = EnterUsernameViewModelFactory(application.repository)
             )
-            EnterNameRoute(viewModel)
+            EnterNameRoute(
+                viewModel,
+                navigateToMainRoute
+            )
         }
 
         composable(NoteEatDestinations.INTRODUCTION_ROUTE) {
