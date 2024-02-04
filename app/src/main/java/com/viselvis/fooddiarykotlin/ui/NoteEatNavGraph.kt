@@ -20,11 +20,13 @@ fun NoteEatNavGraph(
     application: FoodItemListApplication,
     openDrawer: () -> Unit = {},
     navController: NavHostController = rememberNavController(),
-    startNavigation: String = NoteEatDestinations.ENTER_NAME_ROUTE,
+    startNavigation: String = NoteEatDestinations.MAIN_ROUTE,
     navigateToSelectFoodTypeRoute: () -> Unit,
     navigateToAddFoodRoute: (Int) -> Unit,
     navigateToFoodHistory: () -> Unit,
-    navigateToMainRoute: () -> Unit
+    navigateToMainRoute: () -> Unit,
+    navigateToEnterUsername: () -> Unit,
+    navigateToIntroPage: () -> Unit,
 ) {
     NavHost(
         modifier = modifier,
@@ -37,7 +39,7 @@ fun NoteEatNavGraph(
             )
             EnterNameRoute(
                 viewModel,
-                navigateToMainRoute
+                navigateToIntroPage
             )
         }
 
@@ -56,7 +58,8 @@ fun NoteEatNavGraph(
                 HomeRoute(
                     viewModel = viewModel,
                     navigateToSelectFoodType = navigateToSelectFoodTypeRoute,
-                    navigateToFoodHistory = navigateToFoodHistory
+                    navigateToFoodHistory = navigateToFoodHistory,
+                    navigateToEnterNameRoute = navigateToEnterUsername
                 )
             }
 

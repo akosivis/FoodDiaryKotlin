@@ -16,12 +16,12 @@ import com.viselvis.fooddiarykotlin.viewmodels.EnterUsernameViewModel
 @Composable
 fun EnterNameRoute(
     viewModel: EnterUsernameViewModel,
-    navigateToMain : () -> Unit
+    navigateToIntroPage : () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    if (uiState.isUserNameSaved) {
-        navigateToMain()
+    if (uiState.isThereUserName) {
+        navigateToIntroPage()
     }
 
     Column(

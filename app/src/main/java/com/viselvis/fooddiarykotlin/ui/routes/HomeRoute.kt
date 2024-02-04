@@ -22,8 +22,14 @@ fun HomeRoute(
     viewModel: MainViewModel,
     navigateToSelectFoodType: () -> Unit,
     navigateToFoodHistory: () -> Unit,
+    navigateToEnterNameRoute: () -> Unit
 ){
     val recentFoodItems by viewModel.uiState.collectAsState()
+    val userNameState by viewModel.userNameState.collectAsState()
+
+    if (!userNameState.isThereUserName) {
+        navigateToEnterNameRoute()
+    }
 
     Surface (
         modifier = Modifier.fillMaxSize()

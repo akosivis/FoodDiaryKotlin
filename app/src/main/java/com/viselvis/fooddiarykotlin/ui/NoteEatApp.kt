@@ -110,7 +110,9 @@ fun NoteEatApp(
                     navigateToSelectFoodTypeRoute = navigationActions.navigateToSelectFoodType,
                     navigateToAddFoodRoute = navigationActions.navigateToAddEditFoodItem,
                     navigateToFoodHistory = navigationActions.navigateToViewFoodHistory,
-                    navigateToMainRoute = navigationActions.navigateToMainRoute
+                    navigateToMainRoute = navigationActions.navigateToMainRoute,
+                    navigateToEnterUsername = navigationActions.navigateToEnterUserName,
+                    navigateToIntroPage = navigationActions.navigateToIntroPage
                 )
             }
         }
