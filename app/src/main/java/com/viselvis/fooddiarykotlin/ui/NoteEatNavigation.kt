@@ -80,4 +80,22 @@ class NoteEatNavigationActions(navController: NavHostController) {
             restoreState = true
         }
     }
+    val navigateToEnterUserName: () -> Unit = {
+        navController.navigate(NoteEatDestinations.ENTER_NAME_ROUTE) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+    val navigateToIntroPage: () -> Unit = {
+        navController.navigate(NoteEatDestinations.INTRODUCTION_ROUTE) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
 }

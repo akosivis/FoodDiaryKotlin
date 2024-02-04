@@ -20,23 +20,10 @@ class EnterUsernameViewModel(private val repo: FoodItemRepository): ViewModel() 
     private var _uiState = MutableStateFlow(
         EnterUsernameState(
             userName = "",
-            isUserNameSaved = false
+            isThereUserName = false
         )
     )
     val uiState: StateFlow<EnterUsernameState> = _uiState.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            repo.usernameFlow.collect { name ->
-                _uiState.update {
-                    it.copy(
-                        userName = name,
-                        isUserNameSaved = name != ""
-                    )
-                }
-            }
-        }
-    }
 
     fun updateUserName(input: String) {
         if (input.trim().isNotEmpty()) {
@@ -53,16 +40,11 @@ class EnterUsernameViewModel(private val repo: FoodItemRepository): ViewModel() 
                 repo.writeUserName(userNameTrimmed)
             }
             _uiState.update {
-                it.copy(isUserNameSaved = true)
+                it.copy(isThereUserName = true)
             }
         }
     }
 }
-
-data class EnterUsernameState (
-    var userName: String,
-    var isUserNameSaved: Boolean,
-)
 
 class EnterUsernameViewModelFactory(private val repo: FoodItemRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
