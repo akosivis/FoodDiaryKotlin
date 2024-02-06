@@ -17,4 +17,5 @@
     <string name="select_food_type">Select food type:</string>
     <string name="item_added_successfully">Item has been successfully added!</string>
     <string name="close">Close</string>
+    <string name="no_items_to_display">There are no items added yet!</string>
 </resources>

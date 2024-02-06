@@ -8,11 +8,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.utils.BaseClickableCard
 import com.viselvis.fooddiarykotlin.utils.BaseColumnItem
 import com.viselvis.fooddiarykotlin.viewmodels.MainViewModel
@@ -35,47 +38,44 @@ fun HomeRoute(
         modifier = Modifier.fillMaxSize()
     ) {
         Column (modifier = Modifier.padding(15.dp)){
-            Text("Hi User!")
+            Text("Hi ${userNameState.userName}")
             Text(text = "Here are your latest food items: ")
 
             Spacer(modifier = Modifier.height(15.dp))
 
             if (recentFoodItems.latestFoodItems != null) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(5.dp)
-                ) {
-                    items(recentFoodItems.latestFoodItems!!) { item ->
-                        BaseColumnItem(
-                            itemType = 4,
-                            content = {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(8.dp)
-                                ) {
-                                    Column {
-                                        Text(
-                                            text = item.foodItemTitle,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 16.sp
-                                        )
-                                        Text(text = item.foodItemDetails)
+                if (recentFoodItems.latestFoodItems!!.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        items(recentFoodItems.latestFoodItems!!) { item ->
+                            BaseColumnItem(
+                                itemType = 4,
+                                content = {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(8.dp)
+                                    ) {
+                                        Column {
+                                            Text(
+                                                text = item.foodItemTitle,
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 16.sp
+                                            )
+                                            Text(text = item.foodItemDetails)
+                                        }
                                     }
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
+                } else {
+                    DisplayNoItems()
                 }
             } else {
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(15.dp)) {
-                    Text(
-                        "There are no items added yet!",
-                        textAlign = TextAlign.Center
-                    )
-                }
+                DisplayNoItems()
             }
 
             Spacer(modifier = Modifier.height(15.dp))
@@ -97,3 +97,15 @@ fun HomeRoute(
     }
 }
 
+@Composable
+fun DisplayNoItems() {
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .padding(15.dp)) {
+        Text (
+            modifier = Modifier.align(Alignment.Center),
+            text = stringResource(id = R.string.no_items_to_display),
+            textAlign = TextAlign.Center
+        )
+    }
+}
