@@ -148,6 +148,7 @@ fun BaseLoadingIndicator() {
 
 @Composable
 fun BaseClickableCard (
+    modifierAddtl: Modifier = Modifier,
     clickable: () -> Unit,
     name: String,
     imageVector: ImageVector? = null,
@@ -155,7 +156,7 @@ fun BaseClickableCard (
     isFixedHeight: Boolean = false,
 ) {
     Card (
-        modifier = Modifier.clickable(onClick = clickable ),
+        modifier = Modifier.clickable(onClick = clickable).then(modifierAddtl),
     ) {
         Column (
             modifier = if (isFixedHeight) {

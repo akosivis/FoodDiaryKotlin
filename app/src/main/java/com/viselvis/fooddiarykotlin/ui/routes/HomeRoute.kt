@@ -85,10 +85,17 @@ fun HomeRoute(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 BaseClickableCard (
+                    modifierAddtl = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                     clickable = { navigateToSelectFoodType() },
                     name = "Add food item",
                 )
-                BaseClickableCard(
+                Spacer(modifier = Modifier.width(15.dp))
+                BaseClickableCard (
+                    modifierAddtl = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                     clickable = { navigateToFoodHistory() },
                     name = "View food history"
                 )
@@ -109,3 +116,4 @@ fun DisplayNoItems() {
         )
     }
 }
+
