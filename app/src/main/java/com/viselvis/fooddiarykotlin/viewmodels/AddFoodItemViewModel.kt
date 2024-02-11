@@ -59,13 +59,12 @@ class AddFoodItemViewModel(private val repo: FoodItemRepository) : ViewModel() {
     }
 
     fun removeInIngredientList(ingredient: String) {
-        val newItemIngredientsList = _uiState.value.itemIngredientsList
-        newItemIngredientsList.apply {
-            this.toMutableList().remove(ingredient)
+        val newList = _uiState.value.itemIngredientsList.filter {
+            it != ingredient
         }
         _uiState.update {
             it.copy(
-                itemIngredientsList = newItemIngredientsList
+                itemIngredientsList = newList
             )
         }
     }
@@ -79,6 +78,7 @@ class AddFoodItemViewModel(private val repo: FoodItemRepository) : ViewModel() {
 
     fun insertIngredient(ingredientInput: String) {
         if (ingredientInput.trim().isNotEmpty()) {
+
             var ingredientList = _uiState.value.itemIngredientsList + ingredientInput
             _uiState.update {
                 it.copy(
