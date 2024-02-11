@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.viselvis.fooddiarykotlin.R
+import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import com.viselvis.fooddiarykotlin.utils.BaseClickableCard
 import com.viselvis.fooddiarykotlin.utils.BaseColumnItem
 import com.viselvis.fooddiarykotlin.viewmodels.MainViewModel
@@ -27,7 +29,7 @@ fun HomeRoute(
     navigateToFoodHistory: () -> Unit,
     navigateToEnterNameRoute: () -> Unit
 ){
-    val recentFoodItems by viewModel.uiState.collectAsState()
+    val recentFoodItems: List<FoodItemModel> by viewModel.latestFoodItems.observeAsState(initial = listOf())
     val userNameState by viewModel.userNameState.collectAsState()
 
     if (!userNameState.isThereUserName) {
@@ -43,36 +45,32 @@ fun HomeRoute(
 
             Spacer(modifier = Modifier.height(15.dp))
 
-            if (recentFoodItems.latestFoodItems != null) {
-                if (recentFoodItems.latestFoodItems!!.isNotEmpty()) {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(5.dp)
-                    ) {
-                        items(recentFoodItems.latestFoodItems!!) { item ->
-                            BaseColumnItem(
-                                itemType = 4,
-                                content = {
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(8.dp)
-                                    ) {
-                                        Column {
-                                            Text(
-                                                text = item.foodItemTitle,
-                                                fontWeight = FontWeight.Bold,
-                                                fontSize = 16.sp
-                                            )
-                                            Text(text = item.foodItemDetails)
-                                        }
+            if (recentFoodItems.isNotEmpty()) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    items(recentFoodItems) { item ->
+                        BaseColumnItem(
+                            itemType = 4,
+                            content = {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(8.dp)
+                                ) {
+                                    Column {
+                                        Text(
+                                            text = item.foodItemTitle,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 16.sp
+                                        )
+                                        Text(text = item.foodItemDetails)
                                     }
                                 }
-                            )
-                        }
+                            }
+                        )
                     }
-                } else {
-                    DisplayNoItems()
                 }
             } else {
                 DisplayNoItems()
