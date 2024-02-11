@@ -12,8 +12,8 @@ import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 class MainViewModel(private val repo: FoodItemRepository): ViewModel() {
-    private val viewModelState = MutableStateFlow(MainViewModelState(latestFoodItems = emptyList()))
-    val uiState = viewModelState
+    // private val viewModelState = MutableStateFlow(MainViewModelState(latestFoodItems = emptyList()))
+    // val uiState = viewModelState
     private var _userNameState = MutableStateFlow(
         EnterUsernameState(
             userName = "",
@@ -21,6 +21,7 @@ class MainViewModel(private val repo: FoodItemRepository): ViewModel() {
         )
     )
     val userNameState: StateFlow<EnterUsernameState> = _userNameState.asStateFlow()
+    val latestFoodItems: LiveData<List<FoodItemModel>> = repo.firstThreeFoodItems.asLiveData()
 
     init {
         viewModelScope.launch {
@@ -33,9 +34,11 @@ class MainViewModel(private val repo: FoodItemRepository): ViewModel() {
                 }
             }
 
-            repo.firstThreeFoodItems.collect { items ->
-                viewModelState.update { it.copy(latestFoodItems = items) }
-            }
+//            repo.firstThreeFoodItems.collect { items ->
+//                viewModelState.update {
+//                    it.copy(latestFoodItems = items)
+//                }
+//            }
         }
     }
 }

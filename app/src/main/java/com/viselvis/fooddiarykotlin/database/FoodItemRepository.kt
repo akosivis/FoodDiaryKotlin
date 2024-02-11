@@ -11,7 +11,7 @@ import java.io.IOException
 import java.util.*
 
 class FoodItemRepository(
-    val dataStore: DataStore<Preferences>,
+    private val dataStore: DataStore<Preferences>,
     private val foodItemDao: FoodItemDao
 ) {
     object PreferencesKeys {
