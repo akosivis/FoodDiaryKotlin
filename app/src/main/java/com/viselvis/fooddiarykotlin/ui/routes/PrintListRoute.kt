@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.viselvis.fooddiarykotlin.utils.BaseLoadingIndicator
 import com.viselvis.fooddiarykotlin.viewmodels.PrintFoodDiaryViewModel
 import java.util.*
@@ -19,6 +20,7 @@ import java.util.*
 fun PrintListRoute(
     printFoodDiaryViewModel: PrintFoodDiaryViewModel
 ) {
+    val uiState by printFoodDiaryViewModel.uiState.collectAsStateWithLifecycle()
     val calendar = Calendar.getInstance()
     val context = LocalContext.current
 
@@ -33,19 +35,19 @@ fun PrintListRoute(
         initialSelectedEndDateMillis = toDateSelected
     )
 
-    if (printFoodDiaryViewModel.toastMessage.isNotEmpty()) {
-        Toast.makeText(context, printFoodDiaryViewModel.toastMessage, Toast.LENGTH_LONG).show()
+    if (uiState.toastMessage.isNotEmpty()) {
+        Toast.makeText(context, uiState.toastMessage, Toast.LENGTH_LONG).show()
         printFoodDiaryViewModel.emptyToastMessage()
     }
 
-    if (printFoodDiaryViewModel.showDatePicker) {
+    if (uiState.showDatePicker) {
         DatePickerDialog(
             onDismissRequest = {
-                printFoodDiaryViewModel.showDatePicker = false
+                printFoodDiaryViewModel.showDatePicker(false)
             },
             confirmButton = {
                 TextButton(onClick = {
-                    printFoodDiaryViewModel.showDatePicker = false
+                    printFoodDiaryViewModel.showDatePicker( false)
                     fromDateSelected = dateRangePickerState.selectedStartDateMillis!!
                     toDateSelected = dateRangePickerState.selectedEndDateMillis!!
                 }) {
@@ -54,7 +56,7 @@ fun PrintListRoute(
             },
             dismissButton = {
                 TextButton(onClick = {
-                    printFoodDiaryViewModel.showDatePicker = false
+                    printFoodDiaryViewModel.showDatePicker(false)
                 }) {
                     Text(text = "Cancel")
                 }
@@ -66,7 +68,7 @@ fun PrintListRoute(
         }
     }
 
-    if (printFoodDiaryViewModel.isLoading) {
+    if (uiState.isLoading) {
         BaseLoadingIndicator()
     }
 
@@ -86,8 +88,8 @@ fun PrintListRoute(
                     modifier = Modifier
                         .alignByBaseline()
                         .clickable {
-                            printFoodDiaryViewModel.showDatePicker = true
-                            printFoodDiaryViewModel.dateDisplayClicked = 0
+                            printFoodDiaryViewModel.showDatePicker(true)
+                            printFoodDiaryViewModel.updateDateDisplayClicked( 0)
                         },
                     text = printFoodDiaryViewModel.longToStringDisplay(fromDateSelected).toString(),
                     fontSize = 24.sp
@@ -101,8 +103,8 @@ fun PrintListRoute(
                     modifier = Modifier
                         .alignByBaseline()
                         .clickable {
-                            printFoodDiaryViewModel.showDatePicker = true
-                            printFoodDiaryViewModel.dateDisplayClicked = 1
+                            printFoodDiaryViewModel.showDatePicker(true)
+                            printFoodDiaryViewModel.updateDateDisplayClicked(1)
                         },
                     text = printFoodDiaryViewModel.longToStringDisplay(toDateSelected).toString(),
                     fontSize = 24.sp
@@ -113,7 +115,7 @@ fun PrintListRoute(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(5.dp),
-                enabled = printFoodDiaryViewModel.allowGeneratePDF,
+                enabled = uiState.allowGeneratePDF,
                 onClick = {
                     printFoodDiaryViewModel.getFoodItems(
                         fromDateSelected,

@@ -79,42 +79,42 @@ class PrintFoodDiaryFragment : Fragment() {
             initialSelectedEndDateMillis = toDateSelected
         )
 
-        if (printFoodDiaryViewModel.toastMessage.isNotEmpty()) {
-            Toast.makeText(context, printFoodDiaryViewModel.toastMessage, Toast.LENGTH_LONG).show()
-            printFoodDiaryViewModel.emptyToastMessage()
-        }
+//        if (printFoodDiaryViewModel.toastMessage.isNotEmpty()) {
+//            Toast.makeText(context, printFoodDiaryViewModel.toastMessage, Toast.LENGTH_LONG).show()
+//            printFoodDiaryViewModel.emptyToastMessage()
+//        }
 
-        if (printFoodDiaryViewModel.showDatePicker) {
-            DatePickerDialog(
-                onDismissRequest = {
-                    printFoodDiaryViewModel.showDatePicker = false
-                },
-                confirmButton = {
-                    TextButton(onClick = {
-                        printFoodDiaryViewModel.showDatePicker = false
-                        fromDateSelected = dateRangePickerState.selectedStartDateMillis!!
-                        toDateSelected = dateRangePickerState.selectedEndDateMillis!!
-                    }) {
-                        Text(text = "Confirm")
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = {
-                        printFoodDiaryViewModel.showDatePicker = false
-                    }) {
-                        Text(text = "Cancel")
-                    }
-                }
-            ) {
-                DateRangePicker(
-                    state = dateRangePickerState
-                )
-            }
-        }
+//        if (printFoodDiaryViewModel.showDatePicker) {
+//            DatePickerDialog(
+//                onDismissRequest = {
+//                    printFoodDiaryViewModel.showDatePicker = false
+//                },
+//                confirmButton = {
+//                    TextButton(onClick = {
+//                        printFoodDiaryViewModel.showDatePicker = false
+//                        fromDateSelected = dateRangePickerState.selectedStartDateMillis!!
+//                        toDateSelected = dateRangePickerState.selectedEndDateMillis!!
+//                    }) {
+//                        Text(text = "Confirm")
+//                    }
+//                },
+//                dismissButton = {
+//                    TextButton(onClick = {
+//                        printFoodDiaryViewModel.showDatePicker = false
+//                    }) {
+//                        Text(text = "Cancel")
+//                    }
+//                }
+//            ) {
+//                DateRangePicker(
+//                    state = dateRangePickerState
+//                )
+//            }
+//        }
 
-        if (printFoodDiaryViewModel.isLoading) {
-            BaseLoadingIndicator()
-        }
+//        if (printFoodDiaryViewModel.isLoading) {
+//            BaseLoadingIndicator()
+//        }
 
         Surface (modifier = Modifier.fillMaxSize()) {
             Column(
@@ -132,8 +132,8 @@ class PrintFoodDiaryFragment : Fragment() {
                         modifier = Modifier
                             .alignByBaseline()
                             .clickable {
-                                printFoodDiaryViewModel.showDatePicker = true
-                                printFoodDiaryViewModel.dateDisplayClicked = 0
+                                // printFoodDiaryViewModel.showDatePicker = true
+                                // printFoodDiaryViewModel.dateDisplayClicked = 0
                             },
                         text = printFoodDiaryViewModel.longToStringDisplay(fromDateSelected).toString(),
                         fontSize = 24.sp
@@ -147,8 +147,8 @@ class PrintFoodDiaryFragment : Fragment() {
                         modifier = Modifier
                             .alignByBaseline()
                             .clickable {
-                                printFoodDiaryViewModel.showDatePicker = true
-                                printFoodDiaryViewModel.dateDisplayClicked = 1
+                                // printFoodDiaryViewModel.showDatePicker = true
+                                // printFoodDiaryViewModel.dateDisplayClicked = 1
                             },
                         text = printFoodDiaryViewModel.longToStringDisplay(toDateSelected).toString(),
                         fontSize = 24.sp
@@ -159,7 +159,7 @@ class PrintFoodDiaryFragment : Fragment() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(5.dp),
-                    enabled = printFoodDiaryViewModel.allowGeneratePDF,
+                    enabled = true,
                     onClick = {
                         printFoodDiaryViewModel.getFoodItems(
                             fromDateSelected,
