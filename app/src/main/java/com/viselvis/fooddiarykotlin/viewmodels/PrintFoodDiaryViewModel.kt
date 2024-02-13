@@ -24,17 +24,31 @@ import java.io.File
 import java.io.FileOutputStream
 import java.util.*
 
-class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel() {
 
-    var showDatePicker by mutableStateOf(false)
-    var dateToday: Calendar = Calendar.getInstance()
-    // 0 - from Date display is clicked,
-    // 1 - to Date display is clicked
-    var dateDisplayClicked by mutableStateOf(-1)
-    var allowGeneratePDF by mutableStateOf(true)
-    var itemsToPrint by mutableStateOf(emptyList<FoodItemModel>())
-    var toastMessage by mutableStateOf("")
-    var isLoading by mutableStateOf(false)
+data class PrintFoodDiaryUiState(
+    val showDatePicker : Boolean = false,
+    val dateToday: Calendar = Calendar.getInstance(),
+    val dateDisplayClicked: Int = -1,
+    val allowGeneratePDF: Boolean = true,
+    val itemsToPrint: List<FoodItemModel> = emptyList(),
+    val toastMessage: String = "",
+    val isLoading: Boolean = false,
+)
+
+class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel() {
+    private val _uiState = MutableStateFlow(PrintFoodDiaryUiState())
+    val uiState: StateFlow<PrintFoodDiaryUiState> = _uiState.asStateFlow()
+
+//    var showDatePicker by mutableStateOf(false)
+//    var dateToday: Calendar = Calendar.getInstance()
+//    // 0 - from Date display is clicked,
+//    // 1 - to Date display is clicked
+//    var dateDisplayClicked by mutableStateOf(-1)
+//    var allowGeneratePDF by mutableStateOf(true)
+//    var itemsToPrint by mutableStateOf(emptyList<FoodItemModel>())
+//    var toastMessage by mutableStateOf("")
+//    var isLoading by mutableStateOf(false)
+
 
     fun longToStringDisplay(date: Long): CharSequence {
         val calendar = Calendar.getInstance()
@@ -48,18 +62,64 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
     }
 
     fun getFoodItems(fromDate: Long, toDate: Long, context: Context) {
-        isLoading = true
+        updateLoading(true)
         Log.d(TAG, "getFoodItems: $fromDate and $toDate")
         viewModelScope.launch(Dispatchers.IO) {
             repo.getFoodItemsOnGivenDate(fromDate, toDate).apply {
                 if (this.isNotEmpty()) {
-                    itemsToPrint = this
+                    updateFoodItems(this)
                     renderToPdf(fromDate, toDate, context)
                 } else {
-                    toastMessage = "There's no items to print for the given date range"
+                    updateToastMessage("There's no items to print for the given date range")
                 }
             }
-            isLoading = false
+            updateLoading(false)
+        }
+    }
+
+    private fun updateFoodItems(foodItemModels: List<FoodItemModel>) {
+        _uiState.update {
+            it.copy(
+                itemsToPrint = foodItemModels
+            )
+        }
+    }
+
+    private fun updateToastMessage(msg: String) {
+        _uiState.update {
+            it.copy(
+                toastMessage = msg
+            )
+        }
+    }
+
+    private fun updateLoading(isLoading: Boolean) {
+        _uiState.update {
+            it.copy(isLoading = isLoading)
+        }
+    }
+
+    fun showDatePicker(showPicker: Boolean) {
+        _uiState.update {
+            it.copy(
+                showDatePicker = showPicker
+            )
+        }
+    }
+
+    fun updateDateDisplayClicked(dateInput: Int) {
+        _uiState.update {
+            it.copy(
+                dateDisplayClicked = dateInput
+            )
+        }
+    }
+
+    fun allowGeneratedPdf(isAllowed: Boolean) {
+        _uiState.update {
+            it.copy(
+                allowGeneratePDF = isAllowed
+            )
         }
     }
 
@@ -103,7 +163,7 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
         val xPosCentered = canvas.width / 2F
         drawTitle(title, canvas, xPosCentered, fromDate, toDate)
 
-        for (item in itemsToPrint) {
+        for (item in _uiState.value.itemsToPrint) {
             if (baseY >= 660F) {
                 pdfDocument.finishPage(myPage)
                 myPage = pdfDocument.startPage(myPageInfo)
@@ -136,13 +196,15 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
         val file = File(context.getExternalFilesDir(null)?.absolutePath,
             "FoodDiary-${convertDateToFileName(Date(Calendar.getInstance().timeInMillis))}.pdf")
 
-        toastMessage = try {
-            pdfDocument.writeTo(FileOutputStream(file))
-            "PDF file generated in ${context.getExternalFilesDir(null)?.absolutePath}"
-        } catch (e: Exception) {
-            e.printStackTrace()
-            "Failed to generate PDF file.."
-        }
+        updateToastMessage(
+            try {
+                pdfDocument.writeTo(FileOutputStream(file))
+                "PDF file generated in ${context.getExternalFilesDir(null)?.absolutePath}"
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "Failed to generate PDF file.."
+            }
+        )
 
         pdfDocument.close()
     }
@@ -164,7 +226,7 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
     }
 
     fun emptyToastMessage() {
-        toastMessage = ""
+        updateToastMessage("")
     }
 
     companion object {
