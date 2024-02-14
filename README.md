@@ -35,18 +35,3 @@ This app is continuously being developed in terms of the UI and features.
 <img src="screenshots/Screenshot_20240105_190704.png" alt="Food item history page" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" width="200" height="400" />
 
 (Screen records for the app's newest version are yet to be uploaded)
-[//]: # ()
-[//]: # (- Adding a food item)
-
-[//]: # (https://user-images.githubusercontent.com/25239668/142009395-9b7c0b29-1257-49d3-ae1b-19f4383dcec9.mp4)
-
-[//]: # ()
-[//]: # (- Viewing food item history)
-
-[//]: # (https://user-images.githubusercontent.com/25239668/142009819-f8b17752-7253-4078-a056-ff74521b2158.mp4)
-
-[//]: # ()
-[//]: # (- Printing food list within certain date range &#40;not yet completed&#41;)
-
-[//]: # (https://user-images.githubusercontent.com/25239668/142009651-3db9bb21-d89e-4465-88d6-634837f1b6e8.mp4)
-
