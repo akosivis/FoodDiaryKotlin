@@ -18,4 +18,13 @@
     <string name="item_added_successfully">Item has been successfully added!</string>
     <string name="close">Close</string>
     <string name="no_items_to_display">There are no items added yet!</string>
+    <string name="add_meds_intake">Add medicine intake</string>
+    <string name="meds_item_details">Medicine item details</string>
+    <string name="meds_item_name">Medicine item name</string>
+    <string name="food_item_name_not_italic">Food item name</string>
+    <string name="insert_success">Insertion is successful</string>
+    <string name="insert_not_success">Insertion is not successful!</string>
+    <string name="select_date_range">Select a date range</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
 </resources>
