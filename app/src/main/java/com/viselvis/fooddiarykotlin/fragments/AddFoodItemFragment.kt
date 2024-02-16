@@ -59,10 +59,10 @@ class AddFoodItemFragment : Fragment() {
         addFoodItemViewModel.isDataInserted.observe(viewLifecycleOwner) { isSuccess ->
             if (!isSuccess.equals(-1)) {
                 // go back to the allnotes fragment
-                Toast.makeText(activity, "Insertion is successful!", Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, resources.getString(R.string.insert_success), Toast.LENGTH_LONG).show()
                 activity?.supportFragmentManager?.popBackStack()
             } else {
-                Toast.makeText(activity, "Insertion is not successful", Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, resources.getString(R.string.insert_not_success), Toast.LENGTH_LONG).show()
             }
         }
         return binding?.root
@@ -103,9 +103,9 @@ class AddFoodItemFragment : Fragment() {
                             }
                         },
                         placeholderText = if (foodItemType == 1) {
-                            "Medicine item name"
+                            stringResource(id = R.string.meds_item_name)
                         } else {
-                            "Food item name"
+                            stringResource(id = R.string.food_item_name_not_italic)
                         },
                     )
 
@@ -127,9 +127,9 @@ class AddFoodItemFragment : Fragment() {
                         text = addFoodItemViewModel.itemDetail,
                         onTextChanged = { addFoodItemViewModel.itemDetail = it },
                         placeholderText = if (foodItemType == 1) {
-                            "Medicine item details"
+                            stringResource(id = R.string.meds_item_details)
                         } else {
-                            "Food item details"
+                            stringResource(id = R.string.food_item_details)
                         }
                     )
 
@@ -190,9 +190,9 @@ class AddFoodItemFragment : Fragment() {
                     ) {
                         Text(
                             text = if (foodItemType == 1) {
-                                "Add medicine intake"
+                                stringResource(id = R.string.add_meds_intake)
                             } else {
-                                "Add food item"
+                                stringResource(id = R.string.add_food_item)
                             }
                         )
                     }

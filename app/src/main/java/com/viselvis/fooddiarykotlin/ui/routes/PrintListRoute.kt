@@ -8,9 +8,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.utils.BaseLoadingIndicator
 import com.viselvis.fooddiarykotlin.viewmodels.PrintFoodDiaryViewModel
 import java.util.*
@@ -51,14 +53,14 @@ fun PrintListRoute(
                     fromDateSelected = dateRangePickerState.selectedStartDateMillis!!
                     toDateSelected = dateRangePickerState.selectedEndDateMillis!!
                 }) {
-                    Text(text = "Confirm")
+                    Text(text = stringResource(id = R.string.confirm))
                 }
             },
             dismissButton = {
                 TextButton(onClick = {
                     printFoodDiaryViewModel.showDatePicker(false)
                 }) {
-                    Text(text = "Cancel")
+                    Text(text = stringResource(id = R.string.cancel))
                 }
             }
         ) {
@@ -79,7 +81,7 @@ fun PrintListRoute(
                 .padding(horizontal = 15.dp),
             verticalArrangement = Arrangement.Center
         ) {
-            Text("Select a date range ", fontSize = 24.sp)
+            Text(stringResource(id = R.string.select_date_range), fontSize = 24.sp)
             Spacer(modifier = Modifier.height(40.dp))
             Row {
                 Text(text = "from: ", fontSize = 24.sp)
@@ -89,7 +91,7 @@ fun PrintListRoute(
                         .alignByBaseline()
                         .clickable {
                             printFoodDiaryViewModel.showDatePicker(true)
-                            printFoodDiaryViewModel.updateDateDisplayClicked( 0)
+                            printFoodDiaryViewModel.updateDateDisplayClicked(0)
                         },
                     text = printFoodDiaryViewModel.longToStringDisplay(fromDateSelected).toString(),
                     fontSize = 24.sp
@@ -126,7 +128,7 @@ fun PrintListRoute(
                 },
                 shape = RoundedCornerShape(45.dp),
             ) {
-                Text("Generate PDF", fontSize = 20.sp)
+                Text(stringResource(id = R.string.generate_pdf), fontSize = 20.sp)
             }
         }
     }
