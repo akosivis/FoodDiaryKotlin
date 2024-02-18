@@ -7,8 +7,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
@@ -48,7 +46,7 @@ fun AddFoodItemRoute(
                     inclusive = false
                 )
             },
-            message = "Item is added successfully!"
+            message = stringResource(id = R.string.item_added_successfully)
         )
     }
 
@@ -65,9 +63,9 @@ fun AddFoodItemRoute(
                         viewModel.updateItemName(it)
                     },
                     placeholderText = if (foodItemType == 1) {
-                        "Medicine item name"
+                        stringResource(id = R.string.meds_item_name)
                     } else {
-                        "Food item name"
+                        stringResource(id = R.string.food_item_name)
                     },
                 )
 
@@ -89,16 +87,16 @@ fun AddFoodItemRoute(
                     text = uiState.itemDetail,
                     onTextChanged = { viewModel.updateItemDetail(it) },
                     placeholderText = if (foodItemType == 1) {
-                        "Medicine item details"
+                        stringResource(id = R.string.meds_item_details)
                     } else {
-                        "Food item details"
+                        stringResource(id = R.string.food_item_details)
                     }
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
                 when (foodItemType) {
                     0 -> {
-                        Text("Contains: ")
+                        Text(text = stringResource(id = R.string.contains))
                         Spacer(modifier = Modifier.height(5.dp))
                         Box(
                             modifier = Modifier.fillMaxWidth()
@@ -154,9 +152,9 @@ fun AddFoodItemRoute(
                 ) {
                     Text(
                         text = if (foodItemType == 1) {
-                            "Add medicine intake"
+                            stringResource(id = R.string.add_meds_intake)
                         } else {
-                            "Add food item"
+                            stringResource(id = R.string.add_food_item)
                         }
                     )
                 }

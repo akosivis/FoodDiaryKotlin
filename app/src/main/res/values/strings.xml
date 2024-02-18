@@ -27,4 +27,8 @@
     <string name="select_date_range">Select a date range</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="prev_day">Previous day</string>
+    <string name="next_day">Next day</string>
+    <string name="what_is_your_name">What is your name?</string>
+    <string name="save">Save</string>
 </resources>
