@@ -9,7 +9,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.utils.BaseTextField
 import com.viselvis.fooddiarykotlin.viewmodels.EnterUsernameViewModel
 
@@ -30,7 +32,7 @@ fun EnterNameRoute(
         verticalArrangement = Arrangement.Center
     ) {
         Text (
-            text = "What is your name?"
+            text = stringResource(id = R.string.what_is_your_name)
         )
         BaseTextField(
             text = uiState.userName,
@@ -47,7 +49,7 @@ fun EnterNameRoute(
                 viewModel.saveUserName()
             }
         ) {
-            Text("Save")
+            Text(text = stringResource(id = R.string.save))
         }
     }
 }

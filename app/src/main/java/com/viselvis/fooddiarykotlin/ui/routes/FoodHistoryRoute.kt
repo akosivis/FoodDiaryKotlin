@@ -16,9 +16,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.ui.theme.NoteEatTheme
 import com.viselvis.fooddiarykotlin.viewmodels.FoodHistoryViewModel
 
@@ -44,9 +46,10 @@ fun FoodHistoryPage(
                             .align(Alignment.CenterStart)
                             .padding(8.dp)
                             .clickable {
-                                viewModel.getPreviousDay() },
+                                viewModel.getPreviousDay()
+                            },
                         imageVector = Icons.Rounded.ArrowBack,
-                        contentDescription = "Previous day"
+                        contentDescription = stringResource(id = R.string.prev_day)
                     )
                     Column(
                         modifier = Modifier.align(Alignment.Center),
@@ -67,9 +70,10 @@ fun FoodHistoryPage(
                                 .align(Alignment.CenterEnd)
                                 .padding(8.dp)
                                 .clickable {
-                                    viewModel.getNextDay() },
+                                    viewModel.getNextDay()
+                                },
                             imageVector = Icons.Rounded.ArrowForward,
-                            contentDescription = "Next day"
+                            contentDescription = stringResource(id = R.string.next_day)
                         )
                     }
                 }
@@ -115,7 +119,7 @@ fun FoodHistoryPage(
                 Box(modifier = Modifier.fillMaxSize()) {
                     Text(
                         modifier = Modifier.align(Alignment.Center),
-                        text = "No food items recorded",
+                        text = stringResource(id = R.string.no_food_items_recorded),
                         fontSize = 20.sp
                     )
                 }

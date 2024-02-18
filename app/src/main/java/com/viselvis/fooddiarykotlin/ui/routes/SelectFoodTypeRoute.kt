@@ -11,8 +11,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.database.SelectFoodTypeModel
 import com.viselvis.fooddiarykotlin.utils.BaseClickableCard
 
@@ -35,7 +37,7 @@ fun SelectFoodTypeRoute(
                 .fillMaxSize()
                 .padding(10.dp)
         ) {
-            Text(text = "Select food type:", fontSize = 20.sp)
+            Text(text = stringResource(id = R.string.select_food_type), fontSize = 20.sp)
             Spacer(modifier = Modifier.height(8.dp))
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
