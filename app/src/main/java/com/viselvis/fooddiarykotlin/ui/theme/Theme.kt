@@ -104,7 +104,8 @@ fun NoteEatTheme(
   }
 
   MaterialTheme(
-    colorScheme = colors,
-    content = content
+      colorScheme = colors,
+      content = content,
+      typography = typography
   )
 }
