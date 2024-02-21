@@ -3,6 +3,7 @@ package com.viselvis.fooddiarykotlin.ui.routes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,8 +41,14 @@ fun HomeRoute(
         modifier = Modifier.fillMaxSize()
     ) {
         Column (modifier = Modifier.padding(15.dp)){
-            Text("Hi ${userNameState.userName}")
-            Text(text = "Here are your latest food items: ")
+            Text(
+                text ="Hi ${userNameState.userName}",
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Text(
+                text = "Here are your latest food items: ",
+                style = MaterialTheme.typography.headlineSmall
+            )
 
             Spacer(modifier = Modifier.height(15.dp))
 
