@@ -58,8 +58,6 @@ data class IntroPage(
 @Composable
 fun IntroPage(page: IntroPage) {
     Column(modifier = Modifier.fillMaxSize()) {
-        // Image
-
         Text(
             text = page.mainText,
             fontWeight = FontWeight.Bold,

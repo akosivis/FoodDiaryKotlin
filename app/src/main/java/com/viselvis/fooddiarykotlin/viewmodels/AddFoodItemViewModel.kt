@@ -70,7 +70,6 @@ class AddFoodItemViewModel(private val repo: FoodItemRepository) : ViewModel() {
     }
 
     fun saveFoodItem(foodItem: FoodItemModel) = viewModelScope.launch {
-        // _isDataInserted.value = repo.insertFoodItem(foodItem)
         _uiState.update {
             it.copy(isDataInserted = repo.insertFoodItem(foodItem))
         }
@@ -86,8 +85,6 @@ class AddFoodItemViewModel(private val repo: FoodItemRepository) : ViewModel() {
                     itemIngredientInput = ""
                 )
             }
-            // itemIngredientsList.add(ingredientInput.trim())
-            // itemIngredientInput = ""
         }
     }
 
@@ -98,8 +95,6 @@ class AddFoodItemViewModel(private val repo: FoodItemRepository) : ViewModel() {
                     itemIngredientInput = input
                 )
             }
-            // itemIngredientsList.add(ingredientInput.trim())
-            // itemIngredientInput = ""
         }
     }
 

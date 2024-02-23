@@ -39,17 +39,6 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
     private val _uiState = MutableStateFlow(PrintFoodDiaryUiState())
     val uiState: StateFlow<PrintFoodDiaryUiState> = _uiState.asStateFlow()
 
-//    var showDatePicker by mutableStateOf(false)
-//    var dateToday: Calendar = Calendar.getInstance()
-//    // 0 - from Date display is clicked,
-//    // 1 - to Date display is clicked
-//    var dateDisplayClicked by mutableStateOf(-1)
-//    var allowGeneratePDF by mutableStateOf(true)
-//    var itemsToPrint by mutableStateOf(emptyList<FoodItemModel>())
-//    var toastMessage by mutableStateOf("")
-//    var isLoading by mutableStateOf(false)
-
-
     fun longToStringDisplay(date: Long): CharSequence {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = date
@@ -111,14 +100,6 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
         _uiState.update {
             it.copy(
                 dateDisplayClicked = dateInput
-            )
-        }
-    }
-
-    fun allowGeneratedPdf(isAllowed: Boolean) {
-        _uiState.update {
-            it.copy(
-                allowGeneratePDF = isAllowed
             )
         }
     }
@@ -219,10 +200,6 @@ class PrintFoodDiaryViewModel(private val repo: FoodItemRepository): ViewModel()
         canvas.drawText("Food Diary", xPosCentered, 90F, title)
         canvas.drawText("Records from ${convertDateToText(Date(fromDate))} " +
                 "to ${convertDateToText(Date(toDate))}", xPosCentered, 110F, title)
-    }
-
-    private fun createPage() {
-        TODO("Not yet implemented")
     }
 
     fun emptyToastMessage() {

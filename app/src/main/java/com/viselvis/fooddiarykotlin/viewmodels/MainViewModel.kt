@@ -12,8 +12,6 @@ import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 class MainViewModel(private val repo: FoodItemRepository): ViewModel() {
-    // private val viewModelState = MutableStateFlow(MainViewModelState(latestFoodItems = emptyList()))
-    // val uiState = viewModelState
     private var _userNameState = MutableStateFlow(
         EnterUsernameState(
             userName = "",
