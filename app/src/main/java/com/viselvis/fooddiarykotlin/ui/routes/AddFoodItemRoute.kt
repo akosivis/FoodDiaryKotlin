@@ -162,14 +162,3 @@ fun AddFoodItemRoute(
         }
     }
 }
-
-@Composable
-fun AddFoodItemScreen(
-    navController: NavHostController,
-    viewModel: AddFoodItemViewModel,
-    foodItemType: Int?,
-    isInsertedSuccessfully: Long,
-    dismiss: () -> Unit,
-) {
-
-}

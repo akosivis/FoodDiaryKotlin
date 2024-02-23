@@ -18,9 +18,6 @@ import java.util.*
 
 class FoodHistoryViewModel(private val repo: FoodItemRepository): ViewModel() {
     val allFoodItems: LiveData<List<FoodItemModel>> = repo.allFoodItems.asLiveData()
-    // val foodItemsByDate: LiveData<List<FoodItemModel>> = repo.byDateFoodItems.asLive
-    var foodItemsForGivenDate by mutableStateOf(listOf<FoodItemModel>())
-    var daySelected by mutableStateOf(Calendar.getInstance())
     var dateToday by mutableStateOf(Calendar.getInstance())
     var dateToDisplay by mutableStateOf("")
     var dayToDisplay by mutableStateOf("")
@@ -31,12 +28,6 @@ class FoodHistoryViewModel(private val repo: FoodItemRepository): ViewModel() {
         )
     )
     val uiState = currentFoodItemListState
-//    var currentFoodItemListState by mutableStateOf(
-//        FoodItemListState(
-//            givenCalendarInstance = Calendar.getInstance(),
-//            foodItems = emptyList(),
-//        )
-//    )
 
     init {
         getDayDetails()
@@ -129,12 +120,6 @@ class FoodHistoryViewModel(private val repo: FoodItemRepository): ViewModel() {
 data class FoodItemListState (
     var givenCalendarInstance: Calendar,
     var foodItems: List<FoodItemModel>,
-
-//    fun getGivenDate(): CharSequence? {
-//        date = daySelected.time
-//        dateSelected = daySelected.time
-//        return DateFormat.getDateInstance().format(date)
-//    }
 )
 
 class FoodHistoryViewModelFactory(private val repo: FoodItemRepository) : ViewModelProvider.Factory {
