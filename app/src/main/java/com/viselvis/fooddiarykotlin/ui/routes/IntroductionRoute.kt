@@ -12,6 +12,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 
@@ -81,4 +83,13 @@ fun IntroPage(page: IntroPage) {
             )
         }
     }
+}
+
+@Preview(widthDp = 412, heightDp = 892)
+@Composable
+fun IntroRoutePreview() {
+    IntroPage(3, "",
+        "Hope you can use this app well, xxxx!",
+        "", false
+    ) {}
 }
