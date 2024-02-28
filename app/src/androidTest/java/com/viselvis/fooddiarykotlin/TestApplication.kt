@@ -6,5 +6,5 @@ import com.viselvis.fooddiarykotlin.database.FoodListDatabase
 
 class TestApplication: Application() {
     val database by lazy { FoodListDatabase.getInstance(this) }
-    val repository by lazy { FoodItemRepository(database.foodItemDao()) }
+    // val repository by lazy { FoodItemRepository(database.foodItemDao()) }
 }
