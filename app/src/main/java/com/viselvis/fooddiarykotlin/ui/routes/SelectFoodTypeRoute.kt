@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,10 +36,15 @@ fun SelectFoodTypeRoute(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(10.dp)
+                .padding(15.dp)
         ) {
-            Text(text = stringResource(id = R.string.select_food_type), fontSize = 20.sp)
-            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(id = R.string.select_food_type),
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            Spacer(modifier = Modifier.height(15.dp))
+
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -46,7 +52,7 @@ fun SelectFoodTypeRoute(
             ) {
                 items(initialList) { item ->
                     BaseClickableCard(
-                        isFixedHeight = true,
+                        isFixedHeight = false,
                         clickable = {
                             when (item.foodTypeId) {
                                 1 -> navigateToAddFoodItem(1)

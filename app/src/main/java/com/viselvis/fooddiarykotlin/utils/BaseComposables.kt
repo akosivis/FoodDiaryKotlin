@@ -249,3 +249,33 @@ fun BaseDialog(
         }
     )
 }
+
+@Composable
+fun BaseListItemCard(
+    modifierAddtl: Modifier = Modifier,
+    clickable: () -> Unit,
+    text: String,
+    imageVector: ImageVector? = null,
+    contentDesc: String = "",
+) {
+    Card (
+        modifier = Modifier.clickable(onClick = clickable).then(modifierAddtl),
+    ) {
+        Column (
+            Modifier.padding(15.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (imageVector != null) {
+                Icon(
+                    imageVector = imageVector,
+                    contentDescription = contentDesc
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            Text (
+                text = text,
+                style = MaterialTheme.typography.displayMedium
+            )
+        }
+    }
+}
