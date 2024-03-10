@@ -27,7 +27,7 @@ class FoodHistoryActivity : AppCompatActivity() {
     private lateinit var dateSelected: Date
 
     private val foodHistoryViewModel: FoodHistoryViewModel by viewModels {
-        FoodHistoryViewModelFactory((application as FoodItemListApplication).repository)
+        FoodHistoryViewModelFactory((application as FoodItemListApplication).foodItemsRepo)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

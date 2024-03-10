@@ -37,7 +37,7 @@ class FoodHistoryFragment : Fragment() {
 
     private var binding: FragmentFoodHistoryBinding? = null
     private val foodHistoryViewModel: FoodHistoryViewModel by viewModels {
-        FoodHistoryViewModelFactory((context?.applicationContext as FoodItemListApplication).repository)
+        FoodHistoryViewModelFactory((context?.applicationContext as FoodItemListApplication).foodItemsRepo)
     }
 
     override fun onCreateView(

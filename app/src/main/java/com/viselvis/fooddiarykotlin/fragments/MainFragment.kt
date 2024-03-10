@@ -35,8 +35,9 @@ import com.viselvis.fooddiarykotlin.viewmodels.MainViewModelFactory
 class MainFragment : Fragment() {
 
     private var binding: FragmentMainBinding? = null
+    private val application = activity?.application as FoodItemListApplication
     private val mainViewModel: MainViewModel by viewModels {
-        MainViewModelFactory((activity?.application as FoodItemListApplication).repository)
+        MainViewModelFactory(application.foodItemsRepo, application.userRepo)
     }
 
     private val adapter = FoodItemAdapter(0)

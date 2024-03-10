@@ -11,27 +11,10 @@ import java.io.IOException
 import java.util.*
 
 class FoodItemRepository(
-    private val dataStore: DataStore<Preferences>,
     private val foodItemDao: FoodItemDao
 ) {
-    object PreferencesKeys {
-        val USERNAME = stringPreferencesKey("username")
-    }
-
     val allFoodItems: Flow<List<FoodItemModel>> = foodItemDao.getAllFoodItems()
     val firstThreeFoodItems: Flow<List<FoodItemModel>> = foodItemDao.getFirstThreeFoodItems()
-    // val foodItemsByRange: Flow<List<FoodItemModel>> = foodItemDao.getFoodItemsByDateRange(startDate, endDate)
-    val usernameFlow: Flow<String> = dataStore.data
-        .catch { exception ->
-            // dataStore.data throws an IOException when an error is encountered when reading data
-            if (exception is IOException) {
-                emit(emptyPreferences())
-            } else {
-                throw exception
-            }
-        }.map { preferences ->
-            preferences[PreferencesKeys.USERNAME] ?: ""
-        }
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
@@ -47,11 +30,5 @@ class FoodItemRepository(
 
     fun getFoodItemsOnGivenDate(startDay: Long, endDay: Long): List<FoodItemModel> {
         return foodItemDao.getFoodItemsByDate(startDay, endDay)
-    }
-
-    suspend fun writeUserName(input: String) {
-        dataStore.edit { preferences ->
-            preferences[PreferencesKeys.USERNAME] = input
-        }
     }
 }

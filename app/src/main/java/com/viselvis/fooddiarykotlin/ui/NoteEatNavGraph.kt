@@ -35,7 +35,7 @@ fun NoteEatNavGraph(
     ) {
         composable(NoteEatDestinations.ENTER_NAME_ROUTE) {
             val viewModel: EnterUsernameViewModel = viewModel(
-                factory = EnterUsernameViewModelFactory(application.repository)
+                factory = EnterUsernameViewModelFactory(application.userRepo)
             )
             EnterNameRoute(
                 viewModel,
@@ -53,7 +53,10 @@ fun NoteEatNavGraph(
         ) {
             composable(NoteEatDestinations.HOME_ROUTE) {
                 val viewModel: MainViewModel = viewModel(
-                    factory = MainViewModelFactory(application.repository)
+                    factory = MainViewModelFactory(
+                        application.foodItemsRepo,
+                        application.userRepo
+                    )
                 )
                 HomeRoute(
                     viewModel = viewModel,
@@ -65,7 +68,7 @@ fun NoteEatNavGraph(
 
             composable(NoteEatDestinations.PRINT_ROUTE) {
                 val viewModel: PrintFoodDiaryViewModel = viewModel(
-                    factory = PrintFoodDiaryViewModelFactory(application.repository)
+                    factory = PrintFoodDiaryViewModelFactory(application.foodItemsRepo)
                 )
                 PrintListRoute(printFoodDiaryViewModel = viewModel)
             }
@@ -83,7 +86,7 @@ fun NoteEatNavGraph(
                 arguments = listOf(navArgument("type") { type = NavType.IntType } )
             ) { backStackEntry ->
                 val viewModel: AddFoodItemViewModel = viewModel(
-                    factory = AddFoodItemViewModelFactory(application.repository)
+                    factory = AddFoodItemViewModelFactory(application.foodItemsRepo)
                 )
                 AddFoodItemRoute(
                     navController = navController,
@@ -94,7 +97,7 @@ fun NoteEatNavGraph(
 
             composable(NoteEatDestinations.FOOD_HISTORY_ROUTE) {
                 val viewModel: FoodHistoryViewModel = viewModel(
-                    factory = FoodHistoryViewModelFactory(application.repository)
+                    factory = FoodHistoryViewModelFactory(application.foodItemsRepo)
                 )
                 FoodHistoryPage(viewModel = viewModel)
             }

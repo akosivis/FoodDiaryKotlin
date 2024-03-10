@@ -24,7 +24,7 @@ import java.util.*
 class AddFoodItemActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddFoodItemBinding
     private val addFoodItemViewModel: AddFoodItemViewModel by viewModels {
-        AddFoodItemViewModelFactory((application as FoodItemListApplication).repository)
+        AddFoodItemViewModelFactory((application as FoodItemListApplication).foodItemsRepo)
     }
     private var ingredientsArrayList=  arrayListOf<String>()
     private var foodItemType: Int = -1
