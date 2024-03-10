@@ -17,11 +17,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import com.viselvis.fooddiarykotlin.utils.BaseClickableCard
 import com.viselvis.fooddiarykotlin.utils.BaseColumnItem
+import com.viselvis.fooddiarykotlin.viewmodels.HomeRouteState
 import com.viselvis.fooddiarykotlin.viewmodels.MainViewModel
+
+private enum class HomeScreenType {
+    Walkthrough,
+    MainContent
+}
 
 @Composable
 fun HomeRoute(
@@ -30,8 +37,16 @@ fun HomeRoute(
     navigateToFoodHistory: () -> Unit,
     navigateToEnterNameRoute: () -> Unit
 ){
-    val recentFoodItems: List<FoodItemModel> by viewModel.latestFoodItems.observeAsState(initial = listOf())
-    val userNameState by viewModel.userNameState.collectAsState()
+    // val recentFoodItems: List<FoodItemModel> by viewModel.latestFoodItems.observeAsState(initial = listOf())
+    // val userNameState by viewModel.userNameState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    HomeRoute(
+        uiState = uiState,
+        navToSelectFoodType = navigateToSelectFoodType,
+        navToFoodHistory = navigateToFoodHistory,
+        navToEnterNameRoute = navigateToEnterNameRoute
+    )
 
     if (!userNameState.isThereUserName) {
         navigateToEnterNameRoute()
@@ -107,6 +122,16 @@ fun HomeRoute(
             }
         }
     }
+}
+
+@Composable
+fun HomeRoute(
+    uiState: HomeRouteState,
+    navigateToSelectFoodType: () -> Unit,
+    navigateToFoodHistory: () -> Unit,
+    navigateToEnterNameRoute: () -> Unit
+) {
+
 }
 
 @Composable

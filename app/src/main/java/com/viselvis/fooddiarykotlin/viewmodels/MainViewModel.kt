@@ -5,60 +5,108 @@ import androidx.lifecycle.*
 import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import com.viselvis.fooddiarykotlin.database.FoodItemRepository
 import com.viselvis.fooddiarykotlin.database.UserRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 sealed interface HomeRouteState {
     val isLoading: Boolean
-    val isFirstTimeLogin: Boolean
+    val userNameState: EnterUsernameState
 
-    data class FirstTimeLogin(
-        val introPage: Int,
+    data class Walkthrough(
+        val walkthroughPage: Int,
         override val isLoading: Boolean,
-        override val isFirstTimeLogin: Boolean
+        override val userNameState: EnterUsernameState
     ) : HomeRouteState
 
-    data class NotFirstTimeLogin(
-        val userNameState: EnterUsernameState,
+    data class MainContent(
         val latestFoodItems: List<FoodItemModel>,
         override val isLoading: Boolean,
-        override val isFirstTimeLogin: Boolean
+        override val userNameState: EnterUsernameState
     ): HomeRouteState
+}
+
+private data class HomeViewModelState(
+    val isLoading: Boolean = false,
+    val hasFinishedWalkthrough: Boolean = true,
+    val walkThroughPage: Int = 0,
+    val userNameState: EnterUsernameState = EnterUsernameState(
+        userName = "",
+        isThereUserName = true
+    ),
+    val latestFoodItems: List<FoodItemModel> = emptyList()
+) {
+    fun toUiState(): HomeRouteState =
+        if (hasFinishedWalkthrough) {
+            HomeRouteState.MainContent (
+                isLoading = isLoading,
+                latestFoodItems = latestFoodItems,
+                userNameState = userNameState,
+            )
+        } else {
+            HomeRouteState.Walkthrough(
+                isLoading = isLoading,
+                walkthroughPage = walkThroughPage,
+                userNameState = userNameState,
+            )
+        }
 }
 
 class MainViewModel(
     private val foodItemsRepo: FoodItemRepository,
-    private val userRepo: UserRepository): ViewModel() {
+    private val userRepo: UserRepository
+    ): ViewModel() {
 
-    private var _userNameState = MutableStateFlow(
-        EnterUsernameState(
-            userName = "",
-            isThereUserName = true
+//    private var _userNameState = MutableStateFlow(
+//        EnterUsernameState(
+//            userName = "",
+//            isThereUserName = true
+//        )
+//    )
+//    val userNameState: StateFlow<EnterUsernameState> = _userNameState.asStateFlow()
+//    val latestFoodItems: LiveData<List<FoodItemModel>> = foodItemsRepo.firstThreeFoodItems.asLiveData()
+
+    private val viewModelState = MutableStateFlow(HomeViewModelState(isLoading = true))
+    val uiState = viewModelState
+        .map(HomeViewModelState::toUiState)
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            viewModelState.value.toUiState()
         )
-    )
-    val userNameState: StateFlow<EnterUsernameState> = _userNameState.asStateFlow()
-    val latestFoodItems: LiveData<List<FoodItemModel>> = foodItemsRepo.firstThreeFoodItems.asLiveData()
 
     init {
         viewModelScope.launch {
+            fetchUserName()
+            fetchFoodItems()
+        }
+    }
+
+    private fun fetchUserName() {
+        viewModelScope.launch {
             userRepo.userFlow.collect { user ->
-                _userNameState.update {
-                    it.copy(
-                        userName = user.userName,
-                        isThereUserName = user.userName != ""
+                viewModelState.update {
+                    it.copy (
+                        userNameState = EnterUsernameState(
+                            userName = user.userName,
+                            isThereUserName = user.userName != ""
+                        ),
+                        hasFinishedWalkthrough = !(user.isFirstTimeLogin)
                     )
                 }
             }
+        }
+    }
 
-//            repo.firstThreeFoodItems.collect { items ->
-//                viewModelState.update {
-//                    it.copy(latestFoodItems = items)
-//                }
-//            }
+    private fun fetchFoodItems() {
+        viewModelScope.launch {
+            foodItemsRepo.firstThreeFoodItems.collect { items ->
+                viewModelState.update {
+                    it.copy(
+                        latestFoodItems = items
+                    )
+                }
+            }
         }
     }
 }
