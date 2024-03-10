@@ -4,6 +4,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.*
 import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import com.viselvis.fooddiarykotlin.database.FoodItemRepository
+import com.viselvis.fooddiarykotlin.database.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +12,28 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
-class MainViewModel(private val repo: FoodItemRepository): ViewModel() {
+sealed interface HomeRouteState {
+    val isLoading: Boolean
+    val isFirstTimeLogin: Boolean
+
+    data class FirstTimeLogin(
+        val introPage: Int,
+        override val isLoading: Boolean,
+        override val isFirstTimeLogin: Boolean
+    ) : HomeRouteState
+
+    data class NotFirstTimeLogin(
+        val userNameState: EnterUsernameState,
+        val latestFoodItems: List<FoodItemModel>,
+        override val isLoading: Boolean,
+        override val isFirstTimeLogin: Boolean
+    ): HomeRouteState
+}
+
+class MainViewModel(
+    private val foodItemsRepo: FoodItemRepository,
+    private val userRepo: UserRepository): ViewModel() {
+
     private var _userNameState = MutableStateFlow(
         EnterUsernameState(
             userName = "",
@@ -19,15 +41,15 @@ class MainViewModel(private val repo: FoodItemRepository): ViewModel() {
         )
     )
     val userNameState: StateFlow<EnterUsernameState> = _userNameState.asStateFlow()
-    val latestFoodItems: LiveData<List<FoodItemModel>> = repo.firstThreeFoodItems.asLiveData()
+    val latestFoodItems: LiveData<List<FoodItemModel>> = foodItemsRepo.firstThreeFoodItems.asLiveData()
 
     init {
         viewModelScope.launch {
-            repo.usernameFlow.collect { name ->
+            userRepo.userFlow.collect { user ->
                 _userNameState.update {
                     it.copy(
-                        userName = name,
-                        isThereUserName = name != ""
+                        userName = user.userName,
+                        isThereUserName = user.userName != ""
                     )
                 }
             }
@@ -50,11 +72,12 @@ data class EnterUsernameState (
     var isThereUserName: Boolean,
 )
 
-class MainViewModelFactory(private val repo: FoodItemRepository) : ViewModelProvider.Factory {
+class MainViewModelFactory(
+    private val foodItemsRepo: FoodItemRepository, private val userRepo: UserRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return MainViewModel(repo) as T
+            return MainViewModel(foodItemsRepo, userRepo) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

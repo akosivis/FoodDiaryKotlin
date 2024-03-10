@@ -45,7 +45,7 @@ class AddFoodItemFragment : Fragment() {
 
     private var binding: FragmentAddFoodItemBinding? = null
     private val addFoodItemViewModel: AddFoodItemViewModel by viewModels {
-        AddFoodItemViewModelFactory((context?.applicationContext as FoodItemListApplication).repository)
+        AddFoodItemViewModelFactory((context?.applicationContext as FoodItemListApplication).foodItemsRepo)
     }
     private var foodItemType by mutableStateOf(-1)
 

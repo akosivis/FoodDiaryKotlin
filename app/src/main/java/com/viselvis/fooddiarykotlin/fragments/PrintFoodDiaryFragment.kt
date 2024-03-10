@@ -36,7 +36,7 @@ class PrintFoodDiaryFragment : Fragment() {
     private val TAG = "PrintFoodDiaryFragment"
     private lateinit var binding: FragmentPrintBinding
     private val printFoodDiaryViewModel: PrintFoodDiaryViewModel by viewModels {
-        PrintFoodDiaryViewModelFactory((activity?.application as FoodItemListApplication).repository)
+        PrintFoodDiaryViewModelFactory((activity?.application as FoodItemListApplication).foodItemsRepo)
     }
 
     override fun onCreateView(

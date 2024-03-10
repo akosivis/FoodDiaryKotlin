@@ -11,12 +11,16 @@ import androidx.lifecycle.viewModelScope
 import com.viselvis.fooddiarykotlin.MainActivity
 import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import com.viselvis.fooddiarykotlin.database.FoodItemRepository
+import com.viselvis.fooddiarykotlin.database.UserRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 import java.util.*
 
-class EnterUsernameViewModel(private val repo: FoodItemRepository): ViewModel() {
+class EnterUsernameViewModel(
+    private val repo: UserRepository
+    ): ViewModel() {
+
     private var _uiState = MutableStateFlow(
         EnterUsernameState(
             userName = "",
@@ -46,7 +50,7 @@ class EnterUsernameViewModel(private val repo: FoodItemRepository): ViewModel() 
     }
 }
 
-class EnterUsernameViewModelFactory(private val repo: FoodItemRepository) : ViewModelProvider.Factory {
+class EnterUsernameViewModelFactory(private val repo: UserRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(EnterUsernameViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

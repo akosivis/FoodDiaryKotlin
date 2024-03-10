@@ -8,16 +8,21 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.viselvis.fooddiarykotlin.database.FoodItemRepository
 import com.viselvis.fooddiarykotlin.database.FoodListDatabase
+import com.viselvis.fooddiarykotlin.database.UserRepository
 
 class FoodItemListApplication: Application() {
-    private val USER_NAME: String = "username"
+    private val USER: String = "user"
 
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = USER_NAME)
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = USER)
     val database by lazy { FoodListDatabase.getInstance(this) }
-    val repository by lazy {
+    val foodItemsRepo by lazy {
         FoodItemRepository(
-            dataStore,
             database.foodItemDao()
+        )
+    }
+    val userRepo by lazy {
+        UserRepository(
+            dataStore
         )
     }
 
