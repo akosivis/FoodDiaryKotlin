@@ -66,7 +66,11 @@ class MainViewModel(
 //    val userNameState: StateFlow<EnterUsernameState> = _userNameState.asStateFlow()
 //    val latestFoodItems: LiveData<List<FoodItemModel>> = foodItemsRepo.firstThreeFoodItems.asLiveData()
 
-    private val viewModelState = MutableStateFlow(HomeViewModelState(isLoading = true))
+    private val viewModelState = MutableStateFlow(
+        HomeViewModelState(
+            isLoading = true,
+        )
+    )
     val uiState = viewModelState
         .map(HomeViewModelState::toUiState)
         .stateIn(
@@ -107,6 +111,19 @@ class MainViewModel(
                     )
                 }
             }
+        }
+    }
+
+    fun switchPage(isNext: Boolean) {
+        viewModelState.update {
+            it.copy (
+                walkThroughPage = if (isNext) {
+                    it.walkThroughPage + 1
+                } else {
+                    it.walkThroughPage - 1
+                } ,
+                hasFinishedWalkthrough = (it.walkThroughPage > 3)
+            )
         }
     }
 }

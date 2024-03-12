@@ -1,5 +1,7 @@
 package com.viselvis.fooddiarykotlin.ui.routes
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -41,86 +44,94 @@ fun HomeRoute(
     // val userNameState by viewModel.userNameState.collectAsState()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    HomeRoute(
-        uiState = uiState,
-        navToSelectFoodType = navigateToSelectFoodType,
-        navToFoodHistory = navigateToFoodHistory,
-        navToEnterNameRoute = navigateToEnterNameRoute
-    )
-
-    if (!userNameState.isThereUserName) {
+    if (!uiState.userNameState.isThereUserName) {
         navigateToEnterNameRoute()
     }
 
     Surface (
         modifier = Modifier.fillMaxSize()
     ) {
-        Column (modifier = Modifier.padding(15.dp)){
-            Text(
-                text ="Hi ${userNameState.userName}",
-                style = MaterialTheme.typography.headlineSmall
-            )
-            Text(
-                text = "Here are your latest food items: ",
-                style = MaterialTheme.typography.headlineSmall
-            )
-
-            Spacer(modifier = Modifier.height(15.dp))
-
-            if (recentFoodItems.isNotEmpty()) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(5.dp)
-                ) {
-                    items(recentFoodItems) { item ->
-                        BaseColumnItem(
-                            itemType = 4,
-                            content = {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(8.dp)
-                                ) {
-                                    Column {
-                                        Text(
-                                            text = item.foodItemTitle,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 16.sp
-                                        )
-                                        Text(text = item.foodItemDetails)
-                                    }
-                                }
-                            }
+        Box {
+            when (uiState) {
+                is HomeRouteState.Walkthrough -> {
+                    Box (modifier = Modifier.background(color = Color.Black.copy(alpha = 0.5f))) {
+                        Text (
+                            modifier = Modifier.clickable { viewModel.switchPage(true) },
+                            text = if ((uiState as HomeRouteState.Walkthrough).walkthroughPage < 3) "Next" else "Done"
                         )
                     }
                 }
-            } else {
-                DisplayNoItems()
+                is HomeRouteState.MainContent -> {}
             }
 
-            Spacer(modifier = Modifier.height(15.dp))
+            Column (modifier = Modifier.padding(15.dp)){
+                Text(
+                    text ="Hi ${uiState.userNameState.userName}",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                Text(
+                    text = "Here are your latest food items: ",
+                    style = MaterialTheme.typography.headlineSmall
+                )
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                BaseClickableCard (
-                    modifierAddtl = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    clickable = { navigateToSelectFoodType() },
-                    name = "Add food item",
-                )
-                Spacer(modifier = Modifier.width(15.dp))
-                BaseClickableCard (
-                    modifierAddtl = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    clickable = { navigateToFoodHistory() },
-                    name = "View food history"
-                )
+                Spacer(modifier = Modifier.height(15.dp))
+                val recentFoodItems = (uiState as HomeRouteState.MainContent).latestFoodItems
+                if (recentFoodItems.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        items(recentFoodItems) { item ->
+                            BaseColumnItem(
+                                itemType = 4,
+                                content = {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(8.dp)
+                                    ) {
+                                        Column {
+                                            Text(
+                                                text = item.foodItemTitle,
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 16.sp
+                                            )
+                                            Text(text = item.foodItemDetails)
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                    }
+                } else {
+                    DisplayNoItems()
+                }
+
+                Spacer(modifier = Modifier.height(15.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    BaseClickableCard (
+                        modifierAddtl = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        clickable = { navigateToSelectFoodType() },
+                        name = "Add food item",
+                    )
+                    Spacer(modifier = Modifier.width(15.dp))
+                    BaseClickableCard (
+                        modifierAddtl = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        clickable = { navigateToFoodHistory() },
+                        name = "View food history"
+                    )
+                }
             }
         }
+
     }
 }
 
@@ -131,6 +142,7 @@ fun HomeRoute(
     navigateToFoodHistory: () -> Unit,
     navigateToEnterNameRoute: () -> Unit
 ) {
+
 
 }
 
