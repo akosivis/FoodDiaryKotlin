@@ -131,18 +131,30 @@ fun HomeRoute(
             when (uiState) {
                 is HomeRouteState.Walkthrough -> {
                     Box (
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
                             .background(color = Color.Black.copy(alpha = 0.5f))
                             .padding(15.dp)
                     ) {
-                        Text (
+                        Column (
                             modifier = Modifier
-                                .clickable { viewModel.switchPage(true) }
-                                .align(Alignment.BottomEnd),
-                            text = if ((uiState as HomeRouteState.Walkthrough).walkthroughPage < 3)
-                                "Next" else "Done",
-                            style = MaterialTheme.typography.headlineSmall
-                        )
+                                .fillMaxWidth()
+                                .align(Alignment.BottomCenter),
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            Text (
+                                text = getWalkthroughText((uiState as HomeRouteState.Walkthrough).walkthroughPage),
+                                style = MaterialTheme.typography.headlineSmall
+                            )
+                            Spacer(modifier = Modifier.height(15.dp))
+                            Text (
+                                modifier = Modifier.clickable { viewModel.switchPage(true) },
+                                text = if ((uiState as HomeRouteState.Walkthrough).walkthroughPage < 3)
+                                    "Next" else "Done",
+                                style = MaterialTheme.typography.headlineSmall,
+                            )
+                        }
+
                     }
                 }
                 is HomeRouteState.MainContent -> {
@@ -152,6 +164,13 @@ fun HomeRoute(
         }
 
     }
+}
+
+fun getWalkthroughText(page: Int): String = when (page) {
+    0 -> "Welcome to NoteEat app!"
+    1 -> "You can list your recent food intakes here."
+    2 -> "You can also print your food intake on a given date."
+    else -> "Hope you can use this app well!"
 }
 
 val fakeLatestFoodItems  = listOf(
@@ -171,17 +190,6 @@ val fakeLatestFoodItems  = listOf(
         Calendar.getInstance().time, arrayListOf("nuts", "chocolate")
     ),
 )
-
-@Composable
-fun HomeRoute(
-    uiState: HomeRouteState,
-    navigateToSelectFoodType: () -> Unit,
-    navigateToFoodHistory: () -> Unit,
-    navigateToEnterNameRoute: () -> Unit
-) {
-
-
-}
 
 @Composable
 fun DisplayNoItems() {
