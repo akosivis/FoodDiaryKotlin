@@ -9,7 +9,7 @@ import java.io.IOException
 
 data class UserData(
     val userName: String,
-    val isFirstTimeLogin: Boolean
+    val hasFinishedWalkthrough: Boolean
 )
 
 class UserRepository(
@@ -17,7 +17,7 @@ class UserRepository(
 ) {
     object PreferencesKeys {
         val USERNAME = stringPreferencesKey("username")
-        val IS_FIRST_TIME_LOGIN = booleanPreferencesKey("isFirstTimeLogin")
+        val HAS_FINISHED_WALKTHROUGH = booleanPreferencesKey("hasFinishedWalkthrough")
     }
 
     val userFlow: Flow<UserData> = dataStore.data
@@ -31,16 +31,20 @@ class UserRepository(
         }.map { preferences ->
             UserData (
                 userName = preferences[PreferencesKeys.USERNAME] ?: "",
-                isFirstTimeLogin = preferences[PreferencesKeys.IS_FIRST_TIME_LOGIN] ?: true
+                hasFinishedWalkthrough = preferences[PreferencesKeys.HAS_FINISHED_WALKTHROUGH] ?: false
             )
         }
 
     suspend fun writeUserName(input: String) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.USERNAME] = input
-            preferences[PreferencesKeys.IS_FIRST_TIME_LOGIN] = true
+            preferences[PreferencesKeys.HAS_FINISHED_WALKTHROUGH] = false
         }
     }
 
-    suspend fun isFirstTimeLogin
+    suspend fun finishWalkthrough() {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.HAS_FINISHED_WALKTHROUGH] = true
+        }
+    }
 }

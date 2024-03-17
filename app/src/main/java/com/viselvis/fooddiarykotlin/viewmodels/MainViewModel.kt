@@ -54,17 +54,7 @@ private data class HomeViewModelState(
 
 class MainViewModel(
     private val foodItemsRepo: FoodItemRepository,
-    private val userRepo: UserRepository
-    ): ViewModel() {
-
-//    private var _userNameState = MutableStateFlow(
-//        EnterUsernameState(
-//            userName = "",
-//            isThereUserName = true
-//        )
-//    )
-//    val userNameState: StateFlow<EnterUsernameState> = _userNameState.asStateFlow()
-//    val latestFoodItems: LiveData<List<FoodItemModel>> = foodItemsRepo.firstThreeFoodItems.asLiveData()
+    private val userRepo: UserRepository): ViewModel() {
 
     private val viewModelState = MutableStateFlow(
         HomeViewModelState(
@@ -95,7 +85,7 @@ class MainViewModel(
                             userName = user.userName,
                             isThereUserName = user.userName != ""
                         ),
-                        hasFinishedWalkthrough = !(user.isFirstTimeLogin)
+                        hasFinishedWalkthrough = user.hasFinishedWalkthrough
                     )
                 }
             }
@@ -124,6 +114,12 @@ class MainViewModel(
                 } ,
                 hasFinishedWalkthrough = (it.walkThroughPage > 3)
             )
+        }
+
+        if (viewModelState.value.walkThroughPage > 3) {
+            viewModelScope.launch {
+                userRepo.finishWalkthrough()
+            }
         }
     }
 }
