@@ -28,7 +28,7 @@ sealed interface HomeRouteState {
 
 private data class HomeViewModelState(
     val isLoading: Boolean = false,
-    val hasFinishedWalkthrough: Boolean = true,
+    val hasFinishedWalkthrough: Boolean = false,
     val walkThroughPage: Int = 0,
     val userNameState: EnterUsernameState = EnterUsernameState(
         userName = "",

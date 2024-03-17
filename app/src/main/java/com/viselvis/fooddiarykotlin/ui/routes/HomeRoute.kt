@@ -21,12 +21,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.room.PrimaryKey
 import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import com.viselvis.fooddiarykotlin.utils.BaseClickableCard
 import com.viselvis.fooddiarykotlin.utils.BaseColumnItem
 import com.viselvis.fooddiarykotlin.viewmodels.HomeRouteState
 import com.viselvis.fooddiarykotlin.viewmodels.MainViewModel
+import java.util.*
+import kotlin.collections.ArrayList
 
 private enum class HomeScreenType {
     Walkthrough,
@@ -52,18 +55,6 @@ fun HomeRoute(
         modifier = Modifier.fillMaxSize()
     ) {
         Box {
-            when (uiState) {
-                is HomeRouteState.Walkthrough -> {
-                    Box (modifier = Modifier.background(color = Color.Black.copy(alpha = 0.5f))) {
-                        Text (
-                            modifier = Modifier.clickable { viewModel.switchPage(true) },
-                            text = if ((uiState as HomeRouteState.Walkthrough).walkthroughPage < 3) "Next" else "Done"
-                        )
-                    }
-                }
-                is HomeRouteState.MainContent -> {}
-            }
-
             Column (modifier = Modifier.padding(15.dp)){
                 Text(
                     text ="Hi ${uiState.userNameState.userName}",
@@ -75,7 +66,13 @@ fun HomeRoute(
                 )
 
                 Spacer(modifier = Modifier.height(15.dp))
-                val recentFoodItems = (uiState as HomeRouteState.MainContent).latestFoodItems
+
+                val recentFoodItems = if (uiState is HomeRouteState.MainContent) {
+                    (uiState as HomeRouteState.MainContent).latestFoodItems
+                } else {
+                    fakeLatestFoodItems
+                }
+
                 if (recentFoodItems.isNotEmpty()) {
                     LazyColumn(
                         modifier = Modifier.fillMaxWidth(),
@@ -130,10 +127,50 @@ fun HomeRoute(
                     )
                 }
             }
+
+            when (uiState) {
+                is HomeRouteState.Walkthrough -> {
+                    Box (
+                        modifier = Modifier.fillMaxSize()
+                            .background(color = Color.Black.copy(alpha = 0.5f))
+                            .padding(15.dp)
+                    ) {
+                        Text (
+                            modifier = Modifier
+                                .clickable { viewModel.switchPage(true) }
+                                .align(Alignment.BottomEnd),
+                            text = if ((uiState as HomeRouteState.Walkthrough).walkthroughPage < 3)
+                                "Next" else "Done",
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                    }
+                }
+                is HomeRouteState.MainContent -> {
+
+                }
+            }
         }
 
     }
 }
+
+val fakeLatestFoodItems  = listOf(
+    FoodItemModel (
+        0, 1, "Food item title",
+        "Food item with nuts", Calendar.getInstance().time,
+        Calendar.getInstance().time, arrayListOf("nuts", "chocolate")
+    ),
+    FoodItemModel(
+        1, 0, "Food item title",
+        "Food item with nuts", Calendar.getInstance().time,
+        Calendar.getInstance().time, arrayListOf("nuts", "chocolate")
+    ),
+    FoodItemModel(
+        2, 0, "Food item title",
+        "Food item with nuts", Calendar.getInstance().time,
+        Calendar.getInstance().time, arrayListOf("nuts", "chocolate")
+    ),
+)
 
 @Composable
 fun HomeRoute(

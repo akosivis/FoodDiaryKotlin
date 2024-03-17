@@ -39,13 +39,13 @@ fun NoteEatNavGraph(
             )
             EnterNameRoute(
                 viewModel,
-                navigateToIntroPage
+                navigateToMainRoute
             )
         }
 
-        composable(NoteEatDestinations.INTRODUCTION_ROUTE) {
-            IntroductionRoute(navigateToMainRoute)
-        }
+//        composable(NoteEatDestinations.INTRODUCTION_ROUTE) {
+//            IntroductionRoute(navigateToMainRoute)
+//        }
 
         navigation(
             startDestination = NoteEatDestinations.HOME_ROUTE,
