@@ -31,7 +31,7 @@ class UserRepository(
         }.map { preferences ->
             UserData (
                 userName = preferences[PreferencesKeys.USERNAME] ?: "",
-                isFirstTimeLogin = preferences[PreferencesKeys.IS_FIRST_TIME_LOGIN] ?: false
+                isFirstTimeLogin = preferences[PreferencesKeys.IS_FIRST_TIME_LOGIN] ?: true
             )
         }
 
@@ -41,4 +41,6 @@ class UserRepository(
             preferences[PreferencesKeys.IS_FIRST_TIME_LOGIN] = true
         }
     }
+
+    suspend fun isFirstTimeLogin
 }
