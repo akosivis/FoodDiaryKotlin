@@ -9,70 +9,29 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
-sealed interface HomeRouteState {
-    val isLoading: Boolean
-    val userNameState: EnterUsernameState
-
-    data class Walkthrough(
-        val walkthroughPage: Int,
-        override val isLoading: Boolean,
-        override val userNameState: EnterUsernameState
-    ) : HomeRouteState
-
-    data class MainContent(
-        val latestFoodItems: List<FoodItemModel>,
-        override val isLoading: Boolean,
-        override val userNameState: EnterUsernameState
-    ): HomeRouteState
-}
-
-private data class HomeViewModelState(
+data class MainViewModelState(
     val isLoading: Boolean = false,
     val hasFinishedWalkthrough: Boolean = false,
     val walkThroughPage: Int = 0,
     val userNameState: EnterUsernameState = EnterUsernameState(
         userName = "",
         isThereUserName = true
-    ),
-    val latestFoodItems: List<FoodItemModel> = emptyList()
-) {
-    fun toUiState(): HomeRouteState =
-        if (hasFinishedWalkthrough) {
-            HomeRouteState.MainContent (
-                isLoading = isLoading,
-                latestFoodItems = latestFoodItems,
-                userNameState = userNameState,
-            )
-        } else {
-            HomeRouteState.Walkthrough(
-                isLoading = isLoading,
-                walkthroughPage = walkThroughPage,
-                userNameState = userNameState,
-            )
-        }
-}
+    )
+)
 
 class MainViewModel(
-    private val foodItemsRepo: FoodItemRepository,
     private val userRepo: UserRepository): ViewModel() {
 
     private val viewModelState = MutableStateFlow(
-        HomeViewModelState(
+        MainViewModelState(
             isLoading = true,
         )
     )
     val uiState = viewModelState
-        .map(HomeViewModelState::toUiState)
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Eagerly,
-            viewModelState.value.toUiState()
-        )
 
     init {
         viewModelScope.launch {
             fetchUserName()
-            fetchFoodItems()
         }
     }
 
@@ -86,18 +45,6 @@ class MainViewModel(
                             isThereUserName = user.userName != ""
                         ),
                         hasFinishedWalkthrough = user.hasFinishedWalkthrough
-                    )
-                }
-            }
-        }
-    }
-
-    private fun fetchFoodItems() {
-        viewModelScope.launch {
-            foodItemsRepo.firstThreeFoodItems.collect { items ->
-                viewModelState.update {
-                    it.copy(
-                        latestFoodItems = items
                     )
                 }
             }
@@ -124,21 +71,16 @@ class MainViewModel(
     }
 }
 
-data class MainViewModelState(
-    val latestFoodItems: List<FoodItemModel>? = null
-)
-
 data class EnterUsernameState (
     var userName: String,
     var isThereUserName: Boolean,
 )
 
-class MainViewModelFactory(
-    private val foodItemsRepo: FoodItemRepository, private val userRepo: UserRepository) : ViewModelProvider.Factory {
+class MainViewModelFactory(private val userRepo: UserRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return MainViewModel(foodItemsRepo, userRepo) as T
+            return MainViewModel(userRepo) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

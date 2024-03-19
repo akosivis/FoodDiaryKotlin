@@ -52,8 +52,8 @@ fun NoteEatNavGraph(
             route = NoteEatDestinations.MAIN_ROUTE
         ) {
             composable(NoteEatDestinations.HOME_ROUTE) {
-                val viewModel: MainViewModel = viewModel(
-                    factory = MainViewModelFactory(
+                val viewModel: HomeViewModel = viewModel(
+                    factory = HomeViewModelFactory(
                         application.foodItemsRepo,
                         application.userRepo
                     )
