@@ -37,7 +37,7 @@ class MainFragment : Fragment() {
     private var binding: FragmentMainBinding? = null
     private val application = activity?.application as FoodItemListApplication
     private val mainViewModel: MainViewModel by viewModels {
-        MainViewModelFactory(application.foodItemsRepo, application.userRepo)
+        MainViewModelFactory(application.userRepo)
     }
 
     private val adapter = FoodItemAdapter(0)

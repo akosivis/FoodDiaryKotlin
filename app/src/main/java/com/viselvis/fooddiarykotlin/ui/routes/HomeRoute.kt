@@ -27,6 +27,7 @@ import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import com.viselvis.fooddiarykotlin.utils.BaseClickableCard
 import com.viselvis.fooddiarykotlin.utils.BaseColumnItem
 import com.viselvis.fooddiarykotlin.viewmodels.HomeRouteState
+import com.viselvis.fooddiarykotlin.viewmodels.HomeViewModel
 import com.viselvis.fooddiarykotlin.viewmodels.MainViewModel
 import java.util.*
 import kotlin.collections.ArrayList
@@ -38,7 +39,7 @@ private enum class HomeScreenType {
 
 @Composable
 fun HomeRoute(
-    viewModel: MainViewModel,
+    viewModel: HomeViewModel,
     navigateToSelectFoodType: () -> Unit,
     navigateToFoodHistory: () -> Unit,
     navigateToEnterNameRoute: () -> Unit
@@ -127,50 +128,8 @@ fun HomeRoute(
                     )
                 }
             }
-
-            when (uiState) {
-                is HomeRouteState.Walkthrough -> {
-                    Box (
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(color = Color.Black.copy(alpha = 0.5f))
-                            .padding(15.dp)
-                    ) {
-                        Column (
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.BottomCenter),
-                            horizontalAlignment = Alignment.Start
-                        ) {
-                            Text (
-                                text = getWalkthroughText((uiState as HomeRouteState.Walkthrough).walkthroughPage),
-                                style = MaterialTheme.typography.headlineSmall
-                            )
-                            Spacer(modifier = Modifier.height(15.dp))
-                            Text (
-                                modifier = Modifier.clickable { viewModel.switchPage(true) },
-                                text = if ((uiState as HomeRouteState.Walkthrough).walkthroughPage < 3)
-                                    "Next" else "Done",
-                                style = MaterialTheme.typography.headlineSmall,
-                            )
-                        }
-
-                    }
-                }
-                is HomeRouteState.MainContent -> {
-
-                }
-            }
         }
-
     }
-}
-
-fun getWalkthroughText(page: Int): String = when (page) {
-    0 -> "Welcome to NoteEat app!"
-    1 -> "You can list your recent food intakes here."
-    2 -> "You can also print your food intake on a given date."
-    else -> "Hope you can use this app well!"
 }
 
 val fakeLatestFoodItems  = listOf(
