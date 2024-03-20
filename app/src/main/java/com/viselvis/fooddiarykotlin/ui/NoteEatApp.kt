@@ -21,7 +21,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
 import com.viselvis.fooddiarykotlin.ui.theme.NoteEatTheme
-import com.viselvis.fooddiarykotlin.viewmodels.HomeRouteState
 import com.viselvis.fooddiarykotlin.viewmodels.MainViewModel
 import com.viselvis.fooddiarykotlin.viewmodels.MainViewModelFactory
 import kotlinx.coroutines.CoroutineScope
@@ -164,33 +163,47 @@ fun NoteEatAppScreen(
                 }
             }
 
-            if (!uiState.hasFinishedWalkthrough) {
-                Box (
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = Color.Black.copy(alpha = 0.5f))
-                        .padding(15.dp)
-                ) {
-                    Column (
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.BottomCenter),
-                        horizontalAlignment = Alignment.Start
-                    ) {
-                        Text (
-                            text = getWalkthroughText(uiState.walkThroughPage),
-                            style = MaterialTheme.typography.headlineSmall
-                        )
-                        Spacer (modifier = Modifier.height(15.dp))
-                        Text (
-                            modifier = Modifier.clickable { viewModel.switchPage(true) },
-                            text = if (uiState.walkThroughPage < 3)
-                                "Next" else "Done",
-                            style = MaterialTheme.typography.headlineSmall,
-                        )
-                    }
-                }
+            if (
+                !uiState.hasFinishedWalkthrough &&
+                currentRoute != NoteEatDestinations.ENTER_NAME_ROUTE
+            ) {
+                WalkthroughScreen(
+                    walkThroughPage = uiState.walkThroughPage,
+                    switchPage = { viewModel.switchPage(true) }
+                )
             }
+        }
+    }
+}
+
+@Composable
+fun WalkthroughScreen(
+    walkThroughPage: Int,
+    switchPage: () -> Unit
+) {
+    Box (
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.Black.copy(alpha = 0.5f))
+            .padding(15.dp)
+    ) {
+        Column (
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text (
+                text = getWalkthroughText(walkThroughPage),
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Spacer (modifier = Modifier.height(15.dp))
+            Text (
+                modifier = Modifier.clickable(onClick = switchPage),
+                text = if (walkThroughPage < 3)
+                    "Next" else "Done",
+                style = MaterialTheme.typography.headlineSmall,
+            )
         }
     }
 }
