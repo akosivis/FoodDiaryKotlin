@@ -3,6 +3,7 @@ package com.viselvis.fooddiarykotlin.ui.routes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,23 +28,27 @@ fun EnterNameRoute(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(15.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text (
-            text = stringResource(id = R.string.what_is_your_name)
+            text = stringResource(id = R.string.what_is_your_name),
+            style = MaterialTheme.typography.headlineSmall
         )
-        BaseTextField(
+        Spacer(modifier = Modifier.height(10.dp))
+        BaseTextField (
             text = uiState.userName,
             onTextChanged = { viewModel.updateUserName(it) },
             placeholderText = "",
             isSingleLine = true
         )
+        Spacer(modifier = Modifier.height(10.dp))
         Button(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(5.dp),
+                .fillMaxWidth(),
             shape = RoundedCornerShape(45.dp),
             onClick = {
                 viewModel.saveUserName()
