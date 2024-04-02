@@ -61,6 +61,9 @@ fun HomeRoute(
                     text ="Hi ${uiState.userNameState.userName}",
                     style = MaterialTheme.typography.headlineSmall
                 )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
                 Text(
                     text = "Here are your latest food items: ",
                     style = MaterialTheme.typography.headlineSmall
