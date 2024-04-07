@@ -21,6 +21,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
 import com.viselvis.fooddiarykotlin.ui.theme.NoteEatTheme
+import com.viselvis.fooddiarykotlin.utils.BaseLoadingIndicator
 import com.viselvis.fooddiarykotlin.viewmodels.MainViewModel
 import com.viselvis.fooddiarykotlin.viewmodels.MainViewModelFactory
 import kotlinx.coroutines.CoroutineScope
@@ -171,6 +172,12 @@ fun NoteEatAppScreen(
                     walkThroughPage = uiState.walkThroughPage,
                     switchPage = { viewModel.switchPage(true) }
                 )
+            }
+
+            if (uiState.isLoading) {
+                BaseLoadingIndicator()
+            } else {
+                // Hide
             }
         }
     }
