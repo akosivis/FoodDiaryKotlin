@@ -10,8 +10,8 @@ import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 data class MainViewModelState(
-    val isLoading: Boolean = false,
-    val hasFinishedWalkthrough: Boolean = false,
+    val isLoading: Boolean = true,
+    val hasFinishedWalkthrough: Boolean = true,
     val walkThroughPage: Int = 0,
     val userNameState: EnterUsernameState = EnterUsernameState(
         userName = "",
@@ -30,9 +30,7 @@ class MainViewModel(
     val uiState = viewModelState
 
     init {
-        viewModelScope.launch {
-            fetchUserName()
-        }
+        fetchUserName()
     }
 
     private fun fetchUserName() {
@@ -44,7 +42,8 @@ class MainViewModel(
                             userName = user.userName,
                             isThereUserName = user.userName != ""
                         ),
-                        hasFinishedWalkthrough = user.hasFinishedWalkthrough
+                        hasFinishedWalkthrough = user.hasFinishedWalkthrough,
+                        isLoading = false
                     )
                 }
             }
