@@ -16,7 +16,6 @@ class FoodItemRepository(
     val allFoodItems: Flow<List<FoodItemModel>> = foodItemDao.getAllFoodItems()
     val firstThreeFoodItems: Flow<List<FoodItemModel>> = foodItemDao.getFirstThreeFoodItems()
 
-    @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun insertFoodItem(foodItem: FoodItemModel): Long {
         return foodItemDao.insertFoodItem(foodItem)

@@ -13,5 +13,5 @@ data class FoodItemModel(
         var foodItemDetails: String,
         var foodItemCreated: Date,
         var foodItemLastModified: Date,
-        var foodItemIngredients: ArrayList<String>
+        var foodItemIngredients: List<String>
 )
