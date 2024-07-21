@@ -11,6 +11,7 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -49,10 +50,11 @@ class MainActivity : ComponentActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        // WindowCompat.setDecorFitsSystemWindows(window, false)
 
         val application: FoodItemListApplication = (application as FoodItemListApplication)
         // val noteEatDataStore: DataStore<Preferences> = applicationContext.createDataStore(name = "gfg-datastore")
+        enableEdgeToEdge()
         setContent {
             NoteEatApp(app = application)
         }
