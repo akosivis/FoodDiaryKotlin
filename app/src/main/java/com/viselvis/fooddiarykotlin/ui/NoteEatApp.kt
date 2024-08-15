@@ -191,18 +191,19 @@ fun WalkthroughScreen(
     Box (
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color.Black.copy(alpha = 0.5f))
+            .background(color = Color.Black.copy(alpha = 0.6f))
             .padding(15.dp)
     ) {
         Column (
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.BottomCenter),
+                .align(Alignment.BottomCenter)
+                .padding(8.dp),
             horizontalAlignment = Alignment.Start
         ) {
             Text (
                 text = getWalkthroughText(walkThroughPage),
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.headlineMedium
             )
             Spacer (modifier = Modifier.height(15.dp))
             Text (
