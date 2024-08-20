@@ -57,6 +57,12 @@ fun HomeRoute(
     ) {
         Box {
             Column (modifier = Modifier.padding(15.dp)){
+                val recentFoodItems = if (uiState is HomeRouteState.MainContent) {
+                    (uiState as HomeRouteState.MainContent).latestFoodItems
+                } else {
+                    fakeLatestFoodItems
+                }
+
                 Text(
                     text ="Hi ${uiState.userNameState.userName}",
                     style = MaterialTheme.typography.headlineSmall
@@ -64,20 +70,12 @@ fun HomeRoute(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Text(
-                    text = "Here are your latest food items: ",
-                    style = MaterialTheme.typography.headlineSmall
-                )
-
-                Spacer(modifier = Modifier.height(15.dp))
-
-                val recentFoodItems = if (uiState is HomeRouteState.MainContent) {
-                    (uiState as HomeRouteState.MainContent).latestFoodItems
-                } else {
-                    fakeLatestFoodItems
-                }
-
                 if (recentFoodItems.isNotEmpty()) {
+                    Text(
+                        text = "Here are your latest food items: ",
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                    Spacer(modifier = Modifier.height(15.dp))
                     LazyColumn(
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(5.dp)
@@ -105,7 +103,12 @@ fun HomeRoute(
                         }
                     }
                 } else {
-                    DisplayNoItems()
+                    Text(
+                        text = stringResource(id = R.string.no_items_to_display),
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                    Spacer(modifier = Modifier.height(15.dp))
+                    // DisplayNoItems()
                 }
 
                 Spacer(modifier = Modifier.height(15.dp))
