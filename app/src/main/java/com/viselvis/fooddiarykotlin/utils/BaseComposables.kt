@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Placeable
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.*
@@ -173,6 +174,39 @@ fun BaseClickableCard (
             if (imageVector != null) {
                 Icon(
                     imageVector = imageVector,
+                    contentDescription = contentDesc
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            Text(name)
+        }
+    }
+}
+
+@Composable
+fun FoodTypeItemClickable (
+    clickable: () -> Unit,
+    name: String,
+    iconId: Int?,
+    contentDesc: String = "",
+    isFixedHeight: Boolean = false,
+) {
+    Card (
+        modifier = Modifier.clickable(onClick = clickable),
+    ) {
+        Column (
+            modifier = if (isFixedHeight) {
+                Modifier
+                    .padding(15.dp)
+                    .height(130.dp)
+            } else {
+                Modifier.padding(15.dp)
+            },
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (iconId != null) {
+                Image(
+                    painter = painterResource(id = iconId),
                     contentDescription = contentDesc
                 )
                 Spacer(modifier = Modifier.height(8.dp))

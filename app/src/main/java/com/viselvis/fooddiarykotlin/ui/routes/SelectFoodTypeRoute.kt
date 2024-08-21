@@ -1,5 +1,6 @@
 package com.viselvis.fooddiarykotlin.ui.routes
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -7,27 +8,41 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.database.SelectFoodTypeModel
 import com.viselvis.fooddiarykotlin.utils.BaseClickableCard
+import com.viselvis.fooddiarykotlin.utils.FoodTypeItemClickable
 
 @Composable
 fun SelectFoodTypeRoute(
     navigateToAddFoodItem: (Int) -> Unit,
 ) {
     val initialList = listOf (
-        SelectFoodTypeModel(0, "Add food item",
-            Icons.Default.ShoppingCart, "add food item"),
-        SelectFoodTypeModel(1, "Add medicine taken",
-            Icons.Default.Menu, "add medicine item" )
+        SelectFoodTypeModel(
+            0,
+            "Food",
+            "add food item",
+            R.drawable.icon_food_50
+        ),
+        SelectFoodTypeModel(
+            1,
+            "Medicine",
+            "add medicine item",
+            R.drawable.icon_medicine_50
+        )
     )
 
     Surface (
@@ -51,7 +66,7 @@ fun SelectFoodTypeRoute(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(initialList) { item ->
-                    BaseClickableCard(
+                    FoodTypeItemClickable(
                         isFixedHeight = false,
                         clickable = {
                             when (item.foodTypeId) {
@@ -60,7 +75,7 @@ fun SelectFoodTypeRoute(
                             }
                         },
                         name = item.foodTypeTitle,
-                        imageVector = item.foodTypeIcon,
+                        iconId = item.drawableResource,
                         contentDesc = item.contentDescription,
                     )
                 }
