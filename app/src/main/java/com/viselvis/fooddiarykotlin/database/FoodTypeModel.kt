@@ -1,5 +1,6 @@
 package com.viselvis.fooddiarykotlin.database
 
+import android.graphics.drawable.Drawable
 import androidx.compose.ui.graphics.vector.ImageVector
 
 data class FoodTypeModel(
@@ -11,8 +12,8 @@ data class FoodTypeModel(
 data class SelectFoodTypeModel(
     var foodTypeId: Int,
     var foodTypeTitle: String,
-    var foodTypeIcon: ImageVector,
-    var contentDescription: String
+    var contentDescription: String,
+    var drawableResource: Int
 )
 
 /***
