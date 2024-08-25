@@ -199,13 +199,17 @@ fun FoodTypeItemClickable (
                 Modifier
                     .padding(15.dp)
                     .height(130.dp)
+                    .fillMaxWidth()
             } else {
-                Modifier.padding(15.dp)
+                Modifier
+                    .padding(15.dp)
+                    .fillMaxWidth()
             },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (iconId != null) {
                 Image(
+                    modifier = Modifier.size(40.dp, 40.dp),
                     painter = painterResource(id = iconId),
                     contentDescription = contentDesc
                 )
