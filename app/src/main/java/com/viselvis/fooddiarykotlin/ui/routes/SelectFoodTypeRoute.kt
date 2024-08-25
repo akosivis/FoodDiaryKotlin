@@ -55,7 +55,7 @@ fun SelectFoodTypeRoute(
         ) {
             Text(
                 text = stringResource(id = R.string.select_food_type),
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.headlineMedium
             )
 
             Spacer(modifier = Modifier.height(15.dp))
