@@ -13,6 +13,7 @@ object NoteEatDestinations {
     const val ADD_FOOD_ITEM_ROUTE = "add_edit_food"
     const val FOOD_HISTORY_ROUTE = "view_food_history"
     const val SELECT_FOOD_TYPE_ROUTE = "select_food_type"
+    const val ITEM_DETAIL_ROUTE = "item_detail"
 }
 
 class NoteEatNavigationActions(navController: NavHostController) {
@@ -91,6 +92,15 @@ class NoteEatNavigationActions(navController: NavHostController) {
     }
     val navigateToIntroPage: () -> Unit = {
         navController.navigate(NoteEatDestinations.INTRODUCTION_ROUTE) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+    val navigateToNewDetailPage: () -> Unit = {
+        navController.navigate(NoteEatDestinations.ITEM_DETAIL_ROUTE) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }
