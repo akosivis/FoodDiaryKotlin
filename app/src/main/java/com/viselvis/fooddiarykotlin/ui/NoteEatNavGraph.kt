@@ -1,6 +1,7 @@
 package com.viselvis.fooddiarykotlin.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -100,6 +101,10 @@ fun NoteEatNavGraph(
                     factory = FoodHistoryViewModelFactory(application.foodItemsRepo)
                 )
                 FoodHistoryPage(viewModel = viewModel)
+            }
+
+            composable(NoteEatDestinations.ITEM_DETAIL_ROUTE) {
+                ItemDetailRoute()
             }
 
         }
