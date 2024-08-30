@@ -42,7 +42,8 @@ fun HomeRoute(
     viewModel: HomeViewModel,
     navigateToSelectFoodType: () -> Unit,
     navigateToFoodHistory: () -> Unit,
-    navigateToEnterNameRoute: () -> Unit
+    navigateToEnterNameRoute: () -> Unit,
+    navigateToItem: (Long) -> Unit
 ){
     // val recentFoodItems: List<FoodItemModel> by viewModel.latestFoodItems.observeAsState(initial = listOf())
     // val userNameState by viewModel.userNameState.collectAsState()
@@ -81,7 +82,8 @@ fun HomeRoute(
                         verticalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
                         items(recentFoodItems) { item ->
-                            BaseColumnItem(
+                            BaseColumnItem (
+                                clickable = { navigateToItem(item.foodItemId) },
                                 itemType = 4,
                                 content = {
                                     Row(

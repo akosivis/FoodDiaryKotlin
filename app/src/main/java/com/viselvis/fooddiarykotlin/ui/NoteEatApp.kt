@@ -159,7 +159,8 @@ fun NoteEatAppScreen(
                         navigateToFoodHistory = navigationActions.navigateToViewFoodHistory,
                         navigateToMainRoute = navigationActions.navigateToMainRoute,
                         navigateToEnterUsername = navigationActions.navigateToEnterUserName,
-                        navigateToIntroPage = navigationActions.navigateToIntroPage
+                        navigateToIntroPage = navigationActions.navigateToIntroPage,
+                        navigateToItemDetail = navigationActions.navigateToItemDetailPage
                     )
                 }
             }

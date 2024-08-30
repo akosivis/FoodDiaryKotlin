@@ -15,6 +15,9 @@ interface FoodItemDao {
     @Update
     fun updateFoodItem(foodItem: FoodItemModel)
 
+    @Query("SELECT * FROM food_item_table WHERE foodItemId == :id")
+    fun getFoodItemById(id: Long): FoodItemModel?
+
     @Query("SELECT * FROM food_item_table ORDER BY foodItemCreated DESC")
     fun getAllFoodItems(): Flow<List<FoodItemModel>>
 

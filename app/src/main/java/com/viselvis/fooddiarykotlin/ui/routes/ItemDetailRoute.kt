@@ -1,6 +1,5 @@
 package com.viselvis.fooddiarykotlin.ui.routes
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,15 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asComposePath
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,11 +23,14 @@ import com.viselvis.fooddiarykotlin.ui.theme.NoteEatTheme
 import com.viselvis.fooddiarykotlin.ui.theme.md_theme_light_primary
 import com.viselvis.fooddiarykotlin.utils.BaseChip
 import com.viselvis.fooddiarykotlin.utils.FlowRow
+import com.viselvis.fooddiarykotlin.viewmodels.ItemDetailViewModel
 
-@Preview(widthDp = 412, heightDp = 892)
+// @Preview(widthDp = 412, heightDp = 892)
 @Composable
 fun ItemDetailRoute(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: ItemDetailViewModel,
+    foodItemId: Long?
 ) {
     NoteEatTheme {
         Surface (modifier = Modifier.fillMaxSize()) {

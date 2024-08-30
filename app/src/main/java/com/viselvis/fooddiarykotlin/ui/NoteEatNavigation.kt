@@ -99,13 +99,13 @@ class NoteEatNavigationActions(navController: NavHostController) {
             restoreState = true
         }
     }
-    val navigateToNewDetailPage: () -> Unit = {
-        navController.navigate(NoteEatDestinations.ITEM_DETAIL_ROUTE) {
+    val navigateToItemDetailPage: (Long) -> Unit = { foodItemId ->
+        navController.navigate("${NoteEatDestinations.ITEM_DETAIL_ROUTE}/${foodItemId}") {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }
             launchSingleTop = true
-            restoreState = true
+            // restoreState = true
         }
     }
 }
