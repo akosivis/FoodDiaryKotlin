@@ -1,7 +1,6 @@
 package com.viselvis.fooddiarykotlin.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -28,6 +27,7 @@ fun NoteEatNavGraph(
     navigateToMainRoute: () -> Unit,
     navigateToEnterUsername: () -> Unit,
     navigateToIntroPage: () -> Unit,
+    navigateToItemDetail: (Long) -> Unit
 ) {
     NavHost(
         modifier = modifier,
@@ -63,7 +63,8 @@ fun NoteEatNavGraph(
                     viewModel = viewModel,
                     navigateToSelectFoodType = navigateToSelectFoodTypeRoute,
                     navigateToFoodHistory = navigateToFoodHistory,
-                    navigateToEnterNameRoute = navigateToEnterUsername
+                    navigateToEnterNameRoute = navigateToEnterUsername,
+                    navigateToItem = navigateToItemDetail
                 )
             }
 
@@ -103,10 +104,18 @@ fun NoteEatNavGraph(
                 FoodHistoryPage(viewModel = viewModel)
             }
 
-            composable(NoteEatDestinations.ITEM_DETAIL_ROUTE) {
-                ItemDetailRoute()
+            composable(
+                "${NoteEatDestinations.ITEM_DETAIL_ROUTE}/{foodItemId}",
+                arguments = listOf(navArgument("foodItemId") { type = NavType.LongType } )
+            ) { backStackEntry ->
+                val viewModel: ItemDetailViewModel = viewModel(
+                    factory = ItemDetailViewModelFactory(application.foodItemsRepo)
+                )
+                ItemDetailRoute(
+                    viewModel = viewModel,
+                    foodItemId = backStackEntry.arguments?.getLong("foodItemId")
+                )
             }
-
         }
     }
 }
