@@ -31,7 +31,7 @@ class FoodItemRepository(
         return foodItemDao.getFoodItemsByDate(startDay, endDay)
     }
 
-    fun getFoodItemOnGivenId(foodItemId: Long) : FoodItemModel? {
+    fun getFoodItemOnGivenId(foodItemId: Long): FoodItemModel? {
         return foodItemDao.getFoodItemById(foodItemId)
     }
 }
