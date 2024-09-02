@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,14 +31,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.application.FoodItemListApplication
-import com.viselvis.fooddiarykotlin.database.FoodItemModel
 import com.viselvis.fooddiarykotlin.databinding.FragmentAddFoodItemBinding
 import com.viselvis.fooddiarykotlin.ui.theme.NoteEatTheme
 import com.viselvis.fooddiarykotlin.utils.BaseChip
 import com.viselvis.fooddiarykotlin.utils.BaseTextField
 import com.viselvis.fooddiarykotlin.viewmodels.AddFoodItemViewModel
 import com.viselvis.fooddiarykotlin.viewmodels.AddFoodItemViewModelFactory
-import java.util.*
 
 class AddFoodItemFragment : Fragment() {
 
@@ -147,8 +144,7 @@ class AddFoodItemFragment : Fragment() {
                                 ) {
                                     for (ingredient in addFoodItemViewModel.itemIngredientsList) {
                                         BaseChip(
-                                            text = ingredient,
-                                            clickable = {}
+                                            text = ingredient
                                         )
                                     }
 

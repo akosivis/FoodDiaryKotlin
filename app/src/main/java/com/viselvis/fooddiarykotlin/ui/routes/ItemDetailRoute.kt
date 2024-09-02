@@ -111,7 +111,9 @@ fun ItemDetailPage(
                 style = MaterialTheme.typography.headlineSmall
             )
             Spacer(modifier = Modifier.height(5.dp))
-            Text(text = state.itemDetailToDisplay.foodItemDetails)
+            Text(
+                text = state.itemDetailToDisplay.foodItemDetails
+            )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = "Contains: ",
@@ -124,8 +126,7 @@ fun ItemDetailPage(
             ) {
                 for (ingredient in state.itemDetailToDisplay.foodItemIngredients) {
                     BaseChip(
-                        text = ingredient,
-                        clickable = {}
+                        text = ingredient
                     )
                 }
             }

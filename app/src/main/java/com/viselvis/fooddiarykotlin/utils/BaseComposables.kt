@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Warning
@@ -15,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.key.*
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.res.painterResource
@@ -115,26 +113,38 @@ private class Row(
 @Composable
 fun BaseChip (
     text: String,
-    clickable: () -> Unit,
+    clickable: (() -> Unit)? = null,
 ) {
-    InputChip (
-        onClick = clickable,
-        selected = true,
-        label = {
-            Text (
-                text = text,
-                fontSize = 16.sp
-            )
-        },
-        trailingIcon = {
-            Icon(
-                Icons.Default.Close,
-                contentDescription = "Close this chip",
-                Modifier.size(InputChipDefaults.AvatarSize)
-            )
-        },
-    )
-
+    if (clickable != null) {
+        InputChip (
+            onClick = clickable,
+            selected = true,
+            label = {
+                Text (
+                    text = text,
+                    fontSize = 16.sp
+                )
+            },
+            trailingIcon = {
+                Icon(
+                    Icons.Default.Close,
+                    contentDescription = "Close this chip",
+                    Modifier.size(InputChipDefaults.AvatarSize)
+                )
+            },
+        )
+    } else {
+        InputChip (
+            onClick = {},
+            selected = true,
+            label = {
+                Text (
+                    text = text,
+                    fontSize = 16.sp
+                )
+            }
+        )
+    }
 }
 
 @Composable

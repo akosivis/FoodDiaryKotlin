@@ -101,7 +101,10 @@ fun NoteEatNavGraph(
                 val viewModel: FoodHistoryViewModel = viewModel(
                     factory = FoodHistoryViewModelFactory(application.foodItemsRepo)
                 )
-                FoodHistoryPage(viewModel = viewModel)
+                FoodHistoryPage(
+                    viewModel = viewModel,
+                    navigateToItem = navigateToItemDetail
+                )
             }
 
             composable(
