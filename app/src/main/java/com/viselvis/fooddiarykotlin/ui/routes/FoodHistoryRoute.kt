@@ -25,7 +25,8 @@ import com.viselvis.fooddiarykotlin.viewmodels.FoodHistoryViewModel
 
 @Composable
 fun FoodHistoryPage(
-    viewModel: FoodHistoryViewModel
+    viewModel: FoodHistoryViewModel,
+    navigateToItem: (Long) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -89,7 +90,9 @@ fun FoodHistoryPage(
                 ) {
                     items(uiState.foodItems) { foodItem ->
                         Card(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { navigateToItem(foodItem.foodItemId) },
                         ) {
                             Row(
                                 modifier = Modifier
