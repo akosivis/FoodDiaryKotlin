@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,10 +21,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.res.stringResource
 import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.toPath
+import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.ui.theme.md_theme_light_primary
 import com.viselvis.fooddiarykotlin.utils.BaseChip
+import com.viselvis.fooddiarykotlin.utils.BaseTextField
 import com.viselvis.fooddiarykotlin.utils.FlowRow
 import com.viselvis.fooddiarykotlin.viewmodels.ItemDetailUiState
 import com.viselvis.fooddiarykotlin.viewmodels.ItemDetailViewModel
@@ -36,13 +43,27 @@ fun ItemDetailRoute(
     foodItemId: Long?
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
     when (val state = uiState) {
         is ItemDetailUiState.Error -> ItemDetailError(errorMessage = state.errorMessage)
         is ItemDetailUiState.Loading -> {
             ItemDetailLoading()
             foodItemId?.let { viewModel.fetchFoodItem(it) }
         }
-        is ItemDetailUiState.Ready -> ItemDetailPage(state, modifier)
+        is ItemDetailUiState.ViewMode -> ItemDetailPage(
+            state,
+            modifier
+        ) {
+            if (foodItemId != null) {
+                viewModel.editFoodItem(foodItemId)
+            }
+        }
+
+        is ItemDetailUiState.EditMode -> ItemEditPage(
+            state,
+            modifier,
+            { viewModel.insertItemIngredientInput() }
+        )
     }
 }
 
@@ -76,8 +97,9 @@ fun ItemDetailLoading(modifier: Modifier = Modifier) {
 
 @Composable
 fun ItemDetailPage(
-    state: ItemDetailUiState.Ready,
-    modifier: Modifier
+    state: ItemDetailUiState.ViewMode,
+    modifier: Modifier,
+    toEditMode: (Long) -> Unit,
 ) {
     Surface (modifier = Modifier.fillMaxSize()) {
         Column (
@@ -122,7 +144,7 @@ fun ItemDetailPage(
             Spacer(modifier = Modifier.height(5.dp))
             FlowRow(
                 horizontalGap = 8.dp,
-                verticalGap = 8.dp,
+                verticalGap = 8.dp
             ) {
                 for (ingredient in state.itemDetailToDisplay.foodItemIngredients) {
                     BaseChip(
@@ -132,4 +154,98 @@ fun ItemDetailPage(
             }
         }
     }
+}
+
+@Composable
+fun ItemEditPage(
+    state: ItemDetailUiState.EditMode,
+    modifier: Modifier,
+    insertIngredient: (String) -> Unit,
+    insertItemIngredientInput: (String) -> Unit
+) {
+    Surface (modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = modifier
+                .padding(15.dp)
+                .fillMaxSize()
+        ) {
+            Box(
+                modifier = Modifier
+                    .drawWithCache {
+                        val roundedPolygon = RoundedPolygon(
+                            numVertices = 6,
+                            radius = size.minDimension / 2,
+                            centerX = size.width / 2,
+                            centerY = size.height / 2
+                        )
+                        val roundedPolygonPath = roundedPolygon
+                            .toPath()
+                            .asComposePath()
+                        onDrawBehind {
+                            drawPath(roundedPolygonPath, color = md_theme_light_primary)
+                        }
+                    }
+                    .size(50.dp, 50.dp)
+                    .align(alignment = Alignment.CenterHorizontally)
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            Text (
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = state.itemToEdit.itemName,
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(
+                text = state.itemToEdit.itemDetail
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = "Contains: ",
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            when (state.itemToEdit.) {
+                0 -> {
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        FlowRow(
+                            horizontalGap = 8.dp,
+                            verticalGap = 8.dp,
+                        ) {
+                            for (ingredient in state.itemToEdit.itemIngredientsList) {
+                                BaseChip(
+                                    text = ingredient,
+                                    clickable = {}
+                                )
+                            }
+
+                            BaseTextField(
+                                givenModifier = Modifier
+                                    .fillMaxWidth()
+                                    .onKeyEvent { event ->
+                                        if (event.key == Key.Enter) {
+                                            val input =
+                                                state.itemToEdit.itemIngredientInput
+                                            if (input.isNotEmpty()) {
+                                                viewModel.insertIngredient(input)
+                                            }
+                                            true
+                                        }
+                                        false
+                                    },
+                                text = state.itemToEdit.itemIngredientInput,
+                                onTextChanged = {
+                                    viewModel.insertItemIngredientInput(it)
+                                },
+                                placeholderText = stringResource(R.string.ingredients_hint),
+                                isSingleLine = true
+                            )
+                        }
+                    }
+                }
+                else -> {}
+        }
+    }
+}
 }

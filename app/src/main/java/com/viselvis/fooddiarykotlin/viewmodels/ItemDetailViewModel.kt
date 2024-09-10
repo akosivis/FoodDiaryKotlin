@@ -17,15 +17,99 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
         ItemDetailUiState.Loading
     )
     val uiState: StateFlow<ItemDetailUiState> = _uiState.asStateFlow()
+    private var _addEditItemState = MutableStateFlow(AddItemUiState())
+    val addEditItemState: StateFlow<AddItemUiState> = _addEditItemState.asStateFlow()
 
     fun fetchFoodItem(itemId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             repo.getFoodItemOnGivenId(itemId).apply {
                 if (this != null) {
-                    _uiState.value = ItemDetailUiState.Ready(this)
+                    _uiState.value = ItemDetailUiState.ViewMode(this)
                 } else {
                     _uiState.value = ItemDetailUiState.Error("We cannot load the item!")
                 }
+            }
+        }
+    }
+
+    fun editFoodItem(itemId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.getFoodItemOnGivenId(itemId).apply {
+                if (this != null) {
+                    _uiState.value = ItemDetailUiState.EditMode(
+                        AddItemUiState(
+                            itemName = this.foodItemTitle,
+                            itemDetail = this.foodItemDetails,
+                            itemIngredientsList = this.foodItemIngredients
+                        )
+                    )
+                } else {
+                    _uiState.value = ItemDetailUiState.Error("We cannot load the item!")
+                }
+            }
+        }
+    }
+
+    fun insertItemIngredientInput(input: String) {
+        if (input.trim().isNotEmpty()) {
+            _addEditItemState.update {
+                it.copy(
+                    itemIngredientInput = input
+                )
+            }
+        }
+    }
+
+    fun insertIngredient(ingredientInput: String) {
+        if (ingredientInput.trim().isNotEmpty()) {
+            if (_uiState.value is ItemDetailUiState.EditMode) {
+                var ingredientList = (_uiState.value as ItemDetailUiState.EditMode).itemToEdit.itemIngredientsList + ingredientInput
+                _uiState.update {
+                    (it as ItemDetailUiState.EditMode).copy(
+                        itemToEdit = AddItemUiState(
+                            itemName = it.itemToEdit.itemName,
+                            itemDetail = it.itemToEdit.itemDetail,
+                            errorMessage = it.itemToEdit.errorMessage,
+                            isDataInserted = it.itemToEdit.isDataInserted,
+                            itemIngredientsList = ingredientList,
+                            itemIngredientInput = ""
+                        ),
+                    )
+                }
+            }
+        }
+    }
+
+    fun updateItemName(input: String) {
+        if (input.trim().isNotEmpty()) {
+            _uiState.update {
+                (it as ItemDetailUiState.EditMode).copy(
+                    itemToEdit = AddItemUiState(
+                        itemName = input,
+                        itemDetail = it.itemToEdit.itemDetail,
+                        errorMessage = "",
+                        isDataInserted = it.itemToEdit.isDataInserted,
+                        itemIngredientsList = it.itemToEdit.itemIngredientsList,
+                        itemIngredientInput = it.itemToEdit.itemIngredientInput
+                    ),
+                )
+            }
+        }
+    }
+
+    fun updateItemDetail(inputDetail: String) {
+        if (inputDetail.trim().isNotEmpty()) {
+            _uiState.update {
+                (it as ItemDetailUiState.EditMode).copy(
+                    itemToEdit = AddItemUiState(
+                        itemName = it.itemToEdit.itemName,
+                        itemDetail = inputDetail,
+                        errorMessage = "",
+                        isDataInserted = it.itemToEdit.isDataInserted,
+                        itemIngredientsList = it.itemToEdit.itemIngredientsList,
+                        itemIngredientInput = it.itemToEdit.itemIngredientInput
+                    ),
+                )
             }
         }
     }
@@ -38,8 +122,11 @@ data class FoodItemState (
 sealed interface ItemDetailUiState {
     data object Loading: ItemDetailUiState
     data class Error(val errorMessage: String? = null): ItemDetailUiState
-    data class Ready(
+    data class ViewMode(
         val itemDetailToDisplay: FoodItemModel
+    ) : ItemDetailUiState
+    data class EditMode(
+        val itemToEdit: AddItemUiState
     ) : ItemDetailUiState
 }
 
