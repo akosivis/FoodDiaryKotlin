@@ -19,6 +19,7 @@ data class AddItemUiState(
     val itemIngredientsList : List<String> = emptyList(),
     val errorMessage: String = "",
     val isDataInserted: Long = (-1).toLong(),
+    val itemFoodType: Int = 0
 )
 
 class AddFoodItemViewModel(private val repo: FoodItemRepository) : ViewModel() {

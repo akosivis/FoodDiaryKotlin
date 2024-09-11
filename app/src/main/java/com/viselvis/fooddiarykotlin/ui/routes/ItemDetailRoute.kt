@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -62,7 +64,8 @@ fun ItemDetailRoute(
         is ItemDetailUiState.EditMode -> ItemEditPage(
             state,
             modifier,
-            { viewModel.insertItemIngredientInput() }
+            insertItemIngredientInput = { viewModel.insertItemIngredientInput(it) },
+            insertIngredient = { viewModel.insertIngredient(it) }
         )
     }
 }
@@ -99,7 +102,7 @@ fun ItemDetailLoading(modifier: Modifier = Modifier) {
 fun ItemDetailPage(
     state: ItemDetailUiState.ViewMode,
     modifier: Modifier,
-    toEditMode: (Long) -> Unit,
+    toEditMode: () -> Unit,
 ) {
     Surface (modifier = Modifier.fillMaxSize()) {
         Column (
@@ -152,6 +155,19 @@ fun ItemDetailPage(
                     )
                 }
             }
+
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp),
+                shape = RoundedCornerShape(45.dp),
+                onClick = toEditMode
+            ) {
+                Text(
+                    text = "Edit food item"
+                )
+            }
+
         }
     }
 }
@@ -204,7 +220,7 @@ fun ItemEditPage(
                 style = MaterialTheme.typography.headlineSmall
             )
             Spacer(modifier = Modifier.height(5.dp))
-            when (state.itemToEdit.) {
+            when (state.itemToEdit.itemFoodType) {
                 0 -> {
                     Box(
                         modifier = Modifier.fillMaxWidth()
@@ -228,7 +244,7 @@ fun ItemEditPage(
                                             val input =
                                                 state.itemToEdit.itemIngredientInput
                                             if (input.isNotEmpty()) {
-                                                viewModel.insertIngredient(input)
+                                                insertIngredient(input)
                                             }
                                             true
                                         }
@@ -236,7 +252,7 @@ fun ItemEditPage(
                                     },
                                 text = state.itemToEdit.itemIngredientInput,
                                 onTextChanged = {
-                                    viewModel.insertItemIngredientInput(it)
+                                    insertItemIngredientInput(it)
                                 },
                                 placeholderText = stringResource(R.string.ingredients_hint),
                                 isSingleLine = true
