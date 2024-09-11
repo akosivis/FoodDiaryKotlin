@@ -40,7 +40,8 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                         AddItemUiState(
                             itemName = this.foodItemTitle,
                             itemDetail = this.foodItemDetails,
-                            itemIngredientsList = this.foodItemIngredients
+                            itemIngredientsList = this.foodItemIngredients,
+                            itemFoodType = this.foodItemType
                         )
                     )
                 } else {
