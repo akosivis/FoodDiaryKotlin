@@ -329,3 +329,28 @@ fun BaseListItemCard(
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BaseTextFieldWithoutBg(
+    text: String,
+    onTextChanged: (String) -> Unit,
+    placeholderText: String,
+    givenModifier: Modifier = Modifier.fillMaxWidth(),
+    isSingleLine: Boolean = false
+) {
+    TextField(
+        modifier = givenModifier,
+        value = text,
+        onValueChange = onTextChanged,
+        textStyle = MaterialTheme.typography.headlineSmall,
+        singleLine = isSingleLine,
+        placeholder = { Text(placeholderText) },
+        colors = TextFieldDefaults.colors(
+            // backgroundColor = Color.White,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+        ),
+    )
+}

@@ -33,6 +33,7 @@ import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.ui.theme.md_theme_light_primary
 import com.viselvis.fooddiarykotlin.utils.BaseChip
 import com.viselvis.fooddiarykotlin.utils.BaseTextField
+import com.viselvis.fooddiarykotlin.utils.BaseTextFieldWithoutBg
 import com.viselvis.fooddiarykotlin.utils.FlowRow
 import com.viselvis.fooddiarykotlin.viewmodels.ItemDetailUiState
 import com.viselvis.fooddiarykotlin.viewmodels.ItemDetailViewModel
@@ -65,7 +66,9 @@ fun ItemDetailRoute(
             state,
             modifier,
             insertItemIngredientInput = { viewModel.insertItemIngredientInput(it) },
-            insertIngredient = { viewModel.insertIngredient(it) }
+            insertIngredient = { viewModel.insertIngredient(it) },
+            updateItemName = { viewModel.updateItemName(it) },
+            updateItemDescription = { viewModel.updateItemDetail(it) }
         )
     }
 }
@@ -177,7 +180,9 @@ fun ItemEditPage(
     state: ItemDetailUiState.EditMode,
     modifier: Modifier,
     insertIngredient: (String) -> Unit,
-    insertItemIngredientInput: (String) -> Unit
+    insertItemIngredientInput: (String) -> Unit,
+    updateItemName: (String) -> Unit,
+    updateItemDescription: (String) -> Unit
 ) {
     Surface (modifier = Modifier.fillMaxSize()) {
         Column(
@@ -205,15 +210,43 @@ fun ItemEditPage(
                     .align(alignment = Alignment.CenterHorizontally)
             )
             Spacer(modifier = Modifier.height(5.dp))
-            Text (
-                modifier = Modifier.align(Alignment.CenterHorizontally),
+//            Text (
+//                modifier = Modifier.align(Alignment.CenterHorizontally),
+//                text = state.itemToEdit.itemName,
+//                style = MaterialTheme.typography.headlineSmall
+//            )
+            BaseTextFieldWithoutBg(
                 text = state.itemToEdit.itemName,
-                style = MaterialTheme.typography.headlineSmall
+                onTextChanged = {
+                    updateItemName(it)
+//                    if (itemNameToEdit.isNotEmpty()) {
+//                        addFoodItemViewModel.errorMessage = ""
+//                    }
+                },
+                placeholderText = if (state.itemToEdit.itemFoodType == 1) {
+                    stringResource(id = R.string.meds_item_name)
+                } else {
+                    stringResource(id = R.string.food_item_name_not_italic)
+                },
             )
             Spacer(modifier = Modifier.height(5.dp))
-            Text(
-                text = state.itemToEdit.itemDetail
+            BaseTextFieldWithoutBg(
+                text = state.itemToEdit.itemDetail,
+                onTextChanged = {
+                    updateItemDescription(it)
+//                    if (itemNameToEdit.isNotEmpty()) {
+//                        addFoodItemViewModel.errorMessage = ""
+//                    }
+                },
+                placeholderText = if (state.itemToEdit.itemFoodType == 1) {
+                    stringResource(id = R.string.meds_item_details)
+                } else {
+                    stringResource(id = R.string.food_item_details)
+                },
             )
+//            Text(
+//                text = state.itemToEdit.itemDetail
+//            )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = "Contains: ",
