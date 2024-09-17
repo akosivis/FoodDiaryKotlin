@@ -3,14 +3,15 @@ package com.viselvis.fooddiarykotlin.ui.routes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,6 +22,7 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.asComposePath
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.input.key.Key
@@ -32,6 +34,7 @@ import androidx.graphics.shapes.toPath
 import com.viselvis.fooddiarykotlin.R
 import com.viselvis.fooddiarykotlin.ui.theme.md_theme_light_primary
 import com.viselvis.fooddiarykotlin.utils.BaseChip
+import com.viselvis.fooddiarykotlin.utils.BaseItemClickable
 import com.viselvis.fooddiarykotlin.utils.BaseTextField
 import com.viselvis.fooddiarykotlin.utils.BaseTextFieldWithoutBg
 import com.viselvis.fooddiarykotlin.utils.FlowRow
@@ -66,9 +69,10 @@ fun ItemDetailRoute(
             state,
             modifier,
             insertItemIngredientInput = { viewModel.insertItemIngredientInput(it) },
+            deleteItemIngredient = { viewModel.removeInIngredientList(it) },
             insertIngredient = { viewModel.insertIngredient(it) },
             updateItemName = { viewModel.updateItemName(it) },
-            updateItemDescription = { viewModel.updateItemDetail(it) }
+            updateItemDescription = { viewModel.updateItemDetail(it) },
         )
     }
 }
@@ -107,71 +111,79 @@ fun ItemDetailPage(
     modifier: Modifier,
     toEditMode: () -> Unit,
 ) {
-    Surface (modifier = Modifier.fillMaxSize()) {
-        Column (
-            modifier = modifier
-                .padding(15.dp)
-                .fillMaxSize()
-        ) {
-            Box(
-                modifier = Modifier
-                    .drawWithCache {
-                        val roundedPolygon = RoundedPolygon(
-                            numVertices = 6,
-                            radius = size.minDimension / 2,
-                            centerX = size.width / 2,
-                            centerY = size.height / 2
+    Surface (
+        modifier = modifier.fillMaxSize()
+    ) {
+        Scaffold (
+            content = { padding ->
+                Column (
+                    modifier = modifier.padding(
+                        PaddingValues(
+                            start = 15.dp,
+                            end = 15.dp,
+                            bottom = padding.calculateBottomPadding()
                         )
-                        val roundedPolygonPath = roundedPolygon
-                            .toPath()
-                            .asComposePath()
-                        onDrawBehind {
-                            drawPath(roundedPolygonPath, color = md_theme_light_primary)
+                    ).fillMaxHeight()
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .drawWithCache {
+                                val roundedPolygon = RoundedPolygon(
+                                    numVertices = 6,
+                                    radius = size.minDimension / 2,
+                                    centerX = size.width / 2,
+                                    centerY = size.height / 2
+                                )
+                                val roundedPolygonPath = roundedPolygon
+                                    .toPath()
+                                    .asComposePath()
+                                onDrawBehind {
+                                    drawPath(roundedPolygonPath, color = md_theme_light_primary)
+                                }
+                            }
+                            .size(50.dp, 50.dp)
+                            .align(alignment = Alignment.CenterHorizontally)
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    Text (
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        text = state.itemDetailToDisplay.foodItemTitle,
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    Text(
+                        text = state.itemDetailToDisplay.foodItemDetails
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = "Contains: ",
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    FlowRow(
+                        horizontalGap = 8.dp,
+                        verticalGap = 8.dp
+                    ) {
+                        for (ingredient in state.itemDetailToDisplay.foodItemIngredients) {
+                            BaseChip(
+                                text = ingredient
+                            )
                         }
                     }
-                    .size(50.dp, 50.dp)
-                    .align(alignment = Alignment.CenterHorizontally)
-            )
-            Spacer(modifier = Modifier.height(5.dp))
-            Text (
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = state.itemDetailToDisplay.foodItemTitle,
-                style = MaterialTheme.typography.headlineSmall
-            )
-            Spacer(modifier = Modifier.height(5.dp))
-            Text(
-                text = state.itemDetailToDisplay.foodItemDetails
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = "Contains: ",
-                style = MaterialTheme.typography.headlineSmall
-            )
-            Spacer(modifier = Modifier.height(5.dp))
-            FlowRow(
-                horizontalGap = 8.dp,
-                verticalGap = 8.dp
-            ) {
-                for (ingredient in state.itemDetailToDisplay.foodItemIngredients) {
-                    BaseChip(
-                        text = ingredient
+                }
+            },
+            bottomBar = {
+                Row (
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    BaseItemClickable(
+                        clickable = toEditMode,
+                        name = "Edit food item",
+                        iconId = R.drawable.baseline_edit_24
                     )
                 }
             }
-
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp),
-                shape = RoundedCornerShape(45.dp),
-                onClick = toEditMode
-            ) {
-                Text(
-                    text = "Edit food item"
-                )
-            }
-
-        }
+        )
     }
 }
 
@@ -182,20 +194,40 @@ fun ItemEditPage(
     insertIngredient: (String) -> Unit,
     insertItemIngredientInput: (String) -> Unit,
     updateItemName: (String) -> Unit,
-    updateItemDescription: (String) -> Unit
+    updateItemDescription: (String) -> Unit,
+    deleteItemIngredient: (String) -> Unit
 ) {
     Surface (modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = modifier
-                .padding(15.dp)
-                .fillMaxSize()
+        Scaffold (
+            bottomBar = {
+                Row (
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    BaseItemClickable(
+                        clickable = {},
+                        name = "Save food item",
+                        iconId = R.drawable.baseline_save_24
+                    )
+                }
+            }
         ) {
-            Box(
-                modifier = Modifier
-                    .drawWithCache {
-                        val roundedPolygon = RoundedPolygon(
-                            numVertices = 6,
-                            radius = size.minDimension / 2,
+            innerPadding ->
+            Column(
+                modifier = modifier.padding(
+                    PaddingValues(
+                        start = 15.dp,
+                        end = 15.dp,
+                        bottom = innerPadding.calculateBottomPadding()
+                    )
+                )
+                .fillMaxSize()
+            ) {
+                Box(
+                    modifier = Modifier
+                        .drawWithCache {
+                            val roundedPolygon = RoundedPolygon(
+                                numVertices = 6,
+                                radius = size.minDimension / 2,
                             centerX = size.width / 2,
                             centerY = size.height / 2
                         )
@@ -208,93 +240,93 @@ fun ItemEditPage(
                     }
                     .size(50.dp, 50.dp)
                     .align(alignment = Alignment.CenterHorizontally)
-            )
-            Spacer(modifier = Modifier.height(5.dp))
+                )
+                Spacer(modifier = Modifier.height(5.dp))
 //            Text (
 //                modifier = Modifier.align(Alignment.CenterHorizontally),
 //                text = state.itemToEdit.itemName,
 //                style = MaterialTheme.typography.headlineSmall
 //            )
-            BaseTextFieldWithoutBg(
-                text = state.itemToEdit.itemName,
-                onTextChanged = {
-                    updateItemName(it)
+                BaseTextFieldWithoutBg(
+                    text = state.itemToEdit.itemName,
+                    onTextChanged = {
+                        updateItemName(it)
 //                    if (itemNameToEdit.isNotEmpty()) {
 //                        addFoodItemViewModel.errorMessage = ""
 //                    }
-                },
-                placeholderText = if (state.itemToEdit.itemFoodType == 1) {
-                    stringResource(id = R.string.meds_item_name)
-                } else {
-                    stringResource(id = R.string.food_item_name_not_italic)
-                },
-            )
-            Spacer(modifier = Modifier.height(5.dp))
-            BaseTextFieldWithoutBg(
-                text = state.itemToEdit.itemDetail,
-                onTextChanged = {
-                    updateItemDescription(it)
+                    },
+                    placeholderText = if (state.itemToEdit.itemFoodType == 1) {
+                        stringResource(id = R.string.meds_item_name)
+                    } else {
+                        stringResource(id = R.string.food_item_name_not_italic)
+                    },
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                BaseTextFieldWithoutBg(
+                    text = state.itemToEdit.itemDetail,
+                    onTextChanged = {
+                        updateItemDescription(it)
 //                    if (itemNameToEdit.isNotEmpty()) {
 //                        addFoodItemViewModel.errorMessage = ""
 //                    }
-                },
-                placeholderText = if (state.itemToEdit.itemFoodType == 1) {
-                    stringResource(id = R.string.meds_item_details)
-                } else {
-                    stringResource(id = R.string.food_item_details)
-                },
-            )
+                    },
+                    placeholderText = if (state.itemToEdit.itemFoodType == 1) {
+                        stringResource(id = R.string.meds_item_details)
+                    } else {
+                        stringResource(id = R.string.food_item_details)
+                    },
+                )
 //            Text(
 //                text = state.itemToEdit.itemDetail
 //            )
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = "Contains: ",
-                style = MaterialTheme.typography.headlineSmall
-            )
-            Spacer(modifier = Modifier.height(5.dp))
-            when (state.itemToEdit.itemFoodType) {
-                0 -> {
-                    Box(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        FlowRow(
-                            horizontalGap = 8.dp,
-                            verticalGap = 8.dp,
-                        ) {
-                            for (ingredient in state.itemToEdit.itemIngredientsList) {
-                                BaseChip(
-                                    text = ingredient,
-                                    clickable = {}
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = "Contains: ",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+
+                when (state.itemToEdit.itemFoodType) {
+                    0 -> {
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            FlowRow(
+                                horizontalGap = 8.dp,
+                                verticalGap = 8.dp
+                            ) {
+                                for (ingredient in state.itemToEdit.itemIngredientsList) {
+                                    BaseChip(
+                                        text = ingredient,
+                                        clickable = {
+                                            deleteItemIngredient(ingredient)
+                                        }
+                                    )
+                                }
+
+                                BaseTextField(
+                                    givenModifier = Modifier
+                                        .fillMaxWidth()
+                                        .onKeyEvent { event ->
+                                            if (event.key == Key.Enter) {
+                                                val input = state.itemToEdit.itemIngredientInput
+
+                                                if (input.isNotEmpty()) {
+                                                    insertIngredient(input)
+                                                }
+                                                true
+                                            }
+                                            false
+                                        },
+                                    text = state.itemToEdit.itemIngredientInput,
+                                    onTextChanged = { insertItemIngredientInput(it) },
+                                    placeholderText = stringResource(R.string.ingredients_hint),
+                                    isSingleLine = true
                                 )
                             }
-
-                            BaseTextField(
-                                givenModifier = Modifier
-                                    .fillMaxWidth()
-                                    .onKeyEvent { event ->
-                                        if (event.key == Key.Enter) {
-                                            val input =
-                                                state.itemToEdit.itemIngredientInput
-                                            if (input.isNotEmpty()) {
-                                                insertIngredient(input)
-                                            }
-                                            true
-                                        }
-                                        false
-                                    },
-                                text = state.itemToEdit.itemIngredientInput,
-                                onTextChanged = {
-                                    insertItemIngredientInput(it)
-                                },
-                                placeholderText = stringResource(R.string.ingredients_hint),
-                                isSingleLine = true
-                            )
                         }
                     }
+                    else -> {}
                 }
-                else -> {}
+            }
         }
     }
-}
 }

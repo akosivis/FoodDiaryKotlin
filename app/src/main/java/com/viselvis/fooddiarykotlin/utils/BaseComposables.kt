@@ -231,6 +231,41 @@ fun FoodTypeItemClickable (
 }
 
 @Composable
+fun BaseItemClickable(
+    clickable: () -> Unit,
+    name: String,
+    iconId: Int?,
+    contentDesc: String = "",
+    isFixedHeight: Boolean = false,
+) {
+    Column (
+        modifier = if (isFixedHeight) {
+            Modifier
+                .padding(15.dp)
+                .height(130.dp)
+                .fillMaxWidth()
+                .clickable(onClick = clickable)
+        } else {
+            Modifier
+                .padding(15.dp)
+                .fillMaxWidth()
+                .clickable(onClick = clickable)
+        },
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (iconId != null) {
+            Image(
+                modifier = Modifier.size(40.dp, 40.dp),
+                painter = painterResource(id = iconId),
+                contentDescription = contentDesc
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+        Text(name)
+    }
+}
+
+@Composable
 fun BaseColumnItem (
     clickable: () -> Unit = {},
     content: @Composable ColumnScope.() -> Unit,
