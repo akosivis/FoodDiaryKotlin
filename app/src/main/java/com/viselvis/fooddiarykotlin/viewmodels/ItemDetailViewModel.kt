@@ -53,10 +53,19 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
 
     fun insertItemIngredientInput(input: String) {
         if (input.trim().isNotEmpty()) {
-            _addEditItemState.update {
-                it.copy(
-                    itemIngredientInput = input
-                )
+            if (_uiState.value is ItemDetailUiState.EditMode) {
+                _uiState.update {
+                    (it as ItemDetailUiState.EditMode).copy(
+                        itemToEdit = AddItemUiState(
+                            itemName = it.itemToEdit.itemName,
+                            itemDetail = it.itemToEdit.itemDetail,
+                            errorMessage = it.itemToEdit.errorMessage,
+                            isDataInserted = it.itemToEdit.isDataInserted,
+                            itemIngredientsList = it.itemToEdit.itemIngredientsList,
+                            itemIngredientInput = input
+                        ),
+                    )
+                }
             }
         }
     }
@@ -73,7 +82,7 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                             errorMessage = it.itemToEdit.errorMessage,
                             isDataInserted = it.itemToEdit.isDataInserted,
                             itemIngredientsList = ingredientList,
-                            itemIngredientInput = ""
+                            itemIngredientInput = it.itemToEdit.itemIngredientInput
                         ),
                     )
                 }
@@ -108,6 +117,26 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                         errorMessage = "",
                         isDataInserted = it.itemToEdit.isDataInserted,
                         itemIngredientsList = it.itemToEdit.itemIngredientsList,
+                        itemIngredientInput = it.itemToEdit.itemIngredientInput
+                    ),
+                )
+            }
+        }
+    }
+
+    fun removeInIngredientList(ingredient: String) {
+        if (_uiState.value is ItemDetailUiState.EditMode) {
+            val newList = (_uiState.value as ItemDetailUiState.EditMode).itemToEdit.itemIngredientsList.filter {
+                it != ingredient
+            }
+            _uiState.update {
+                (it as ItemDetailUiState.EditMode).copy(
+                    itemToEdit = AddItemUiState(
+                        itemName = it.itemToEdit.itemName,
+                        itemDetail = it.itemToEdit.itemDetail,
+                        errorMessage = "",
+                        isDataInserted = it.itemToEdit.isDataInserted,
+                        itemIngredientsList = newList,
                         itemIngredientInput = it.itemToEdit.itemIngredientInput
                     ),
                 )
