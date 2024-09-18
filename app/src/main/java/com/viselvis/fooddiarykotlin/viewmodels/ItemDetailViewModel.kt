@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
     private var _uiState = MutableStateFlow<ItemDetailUiState>(
@@ -38,6 +39,7 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                 if (this != null) {
                     _uiState.value = ItemDetailUiState.EditMode(
                         AddItemUiState(
+                            itemId = this.foodItemId,
                             itemName = this.foodItemTitle,
                             itemDetail = this.foodItemDetails,
                             itemIngredientsList = this.foodItemIngredients,
@@ -82,7 +84,7 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                             errorMessage = it.itemToEdit.errorMessage,
                             isDataInserted = it.itemToEdit.isDataInserted,
                             itemIngredientsList = ingredientList,
-                            itemIngredientInput = it.itemToEdit.itemIngredientInput
+                            itemIngredientInput = ""
                         ),
                     )
                 }
@@ -142,6 +144,64 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                 )
             }
         }
+    }
+
+    fun updateFoodItem() = viewModelScope.launch {
+        if (_uiState.value is ItemDetailUiState.EditMode) {
+            val uiStateValue = (_uiState.value as ItemDetailUiState.EditMode)
+
+            if (uiStateValue.itemToEdit.itemName.isNotEmpty()) {
+                val foodItemIngredients: ArrayList<String> = arrayListOf()
+                uiStateValue.itemToEdit.itemIngredientsList.forEach {
+                    foodItemIngredients.add(it)
+                }
+
+                val dateCreated = Calendar.getInstance().time
+                val dateModified = Calendar.getInstance().time
+                val newFoodItem = FoodItemModel(
+                    foodItemType = uiStateValue.itemToEdit.itemFoodType,
+                    foodItemTitle = uiStateValue.itemToEdit.itemName,
+                    foodItemDetails = uiStateValue.itemToEdit.itemDetail,
+                    foodItemCreated = dateCreated,
+                    foodItemLastModified = dateModified,
+                    foodItemIngredients = foodItemIngredients
+                )
+
+                _uiState.update {
+                    (it as ItemDetailUiState.EditMode).copy(
+                        itemToEdit = AddItemUiState(
+                            itemName = it.itemToEdit.itemName,
+                            itemDetail = it.itemToEdit.itemDetail,
+                            errorMessage = it.itemToEdit.errorMessage,
+                            isDataInserted = repo.updateFoodItem(newFoodItem),
+                            itemIngredientsList = it.itemToEdit.itemIngredientsList,
+                            itemIngredientInput = it.itemToEdit.itemIngredientInput
+                        )
+                    )
+                }
+
+            } else {
+                _uiState.update {
+                    (it as ItemDetailUiState.EditMode).copy(
+                        itemToEdit = AddItemUiState(
+                            itemName = it.itemToEdit.itemName,
+                            itemDetail = it.itemToEdit.itemDetail,
+                            errorMessage = when (it.itemToEdit.itemFoodType) {
+                                1 -> "Medicine item name is required!"
+                                else -> "Food item name is required!"
+                            },
+                            isDataInserted = it.itemToEdit.isDataInserted,
+                            itemIngredientsList = it.itemToEdit.itemIngredientsList,
+                            itemIngredientInput = it.itemToEdit.itemIngredientInput
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    private fun saveFoodItem(newFoodItem: FoodItemModel) {
+
     }
 }
 

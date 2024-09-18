@@ -116,7 +116,8 @@ fun NoteEatNavGraph(
                 )
                 ItemDetailRoute(
                     viewModel = viewModel,
-                    foodItemId = backStackEntry.arguments?.getLong("foodItemId")
+                    foodItemId = backStackEntry.arguments?.getLong("foodItemId"),
+                    navController = navController
                 )
             }
         }
