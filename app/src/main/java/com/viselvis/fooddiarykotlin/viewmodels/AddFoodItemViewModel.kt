@@ -13,6 +13,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 data class AddItemUiState(
+    val itemId: Long = 0,
     val itemName : String = "",
     val itemDetail : String = "",
     val itemIngredientInput : String = "",

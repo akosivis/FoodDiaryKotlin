@@ -25,15 +25,25 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.toPath
+import androidx.navigation.NavHostController
 import com.viselvis.fooddiarykotlin.R
+import com.viselvis.fooddiarykotlin.database.FoodItemModel
+import com.viselvis.fooddiarykotlin.ui.NoteEatDestinations
 import com.viselvis.fooddiarykotlin.ui.theme.md_theme_light_primary
 import com.viselvis.fooddiarykotlin.utils.BaseChip
+import com.viselvis.fooddiarykotlin.utils.BaseDialog
 import com.viselvis.fooddiarykotlin.utils.BaseItemClickable
 import com.viselvis.fooddiarykotlin.utils.BaseTextField
 import com.viselvis.fooddiarykotlin.utils.BaseTextFieldWithoutBg
@@ -46,7 +56,8 @@ import com.viselvis.fooddiarykotlin.viewmodels.ItemDetailViewModel
 fun ItemDetailRoute(
     modifier: Modifier = Modifier,
     viewModel: ItemDetailViewModel,
-    foodItemId: Long?
+    foodItemId: Long?,
+    navController: NavHostController
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -73,6 +84,8 @@ fun ItemDetailRoute(
             insertIngredient = { viewModel.insertIngredient(it) },
             updateItemName = { viewModel.updateItemName(it) },
             updateItemDescription = { viewModel.updateItemDetail(it) },
+            navController = navController,
+            updateFoodItem = { viewModel.updateFoodItem() }
         )
     }
 }
@@ -195,8 +208,24 @@ fun ItemEditPage(
     insertItemIngredientInput: (String) -> Unit,
     updateItemName: (String) -> Unit,
     updateItemDescription: (String) -> Unit,
-    deleteItemIngredient: (String) -> Unit
+    deleteItemIngredient: (String) -> Unit,
+    navController: NavHostController,
+    updateFoodItem: () -> Unit
 ) {
+    var isItemAddedDialogShown by mutableStateOf(false)
+    if (!isItemAddedDialogShown && (state.itemToEdit.isDataInserted != (-1).toLong())) {
+        BaseDialog(
+            onDismiss = {
+                isItemAddedDialogShown = true
+                navController.popBackStack(
+                    route = NoteEatDestinations.HOME_ROUTE,
+                    inclusive = false
+                )
+            },
+            message = stringResource(id = R.string.item_added_successfully)
+        )
+    }
+
     Surface (modifier = Modifier.fillMaxSize()) {
         Scaffold (
             bottomBar = {
@@ -204,7 +233,7 @@ fun ItemEditPage(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     BaseItemClickable(
-                        clickable = {},
+                        clickable = updateFoodItem,
                         name = "Save food item",
                         iconId = R.drawable.baseline_save_24
                     )
@@ -261,6 +290,17 @@ fun ItemEditPage(
                         stringResource(id = R.string.food_item_name_not_italic)
                     },
                 )
+                if (state.itemToEdit.errorMessage.isNotEmpty()) {
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Text (
+                            text = state.itemToEdit.errorMessage,
+                            fontSize = 14.sp,
+                            fontStyle = FontStyle.Normal,
+                            color = Color.Red,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+                }
                 Spacer(modifier = Modifier.height(5.dp))
                 BaseTextFieldWithoutBg(
                     text = state.itemToEdit.itemDetail,

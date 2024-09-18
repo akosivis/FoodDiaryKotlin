@@ -21,6 +21,9 @@ class FoodItemRepository(
         return foodItemDao.insertFoodItem(foodItem)
     }
 
+    suspend fun updateFoodItem(foodItem: FoodItemModel): Long {
+        return foodItemDao.updateFoodItem(foodItem).toLong()
+    }
     // val foodItemsByRange: Flow<List<FoodItemModel>> get() =
 
     fun getFoodItemsByRange(startDate: Long, endDate: Long): Flow<List<FoodItemModel>> {
