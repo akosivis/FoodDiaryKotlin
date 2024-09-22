@@ -12,7 +12,7 @@ interface FoodItemDao {
     @Insert
     suspend fun insertFoodItem(foodItem: FoodItemModel): Long
 
-    @Update
+    @Update(entity = FoodItemModel::class)
     suspend fun updateFoodItem(foodItem: FoodItemModel): Int
 
     @Query("SELECT * FROM food_item_table WHERE foodItemId == :id")

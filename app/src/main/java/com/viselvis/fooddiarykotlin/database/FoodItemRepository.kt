@@ -22,7 +22,8 @@ class FoodItemRepository(
     }
 
     suspend fun updateFoodItem(foodItem: FoodItemModel): Long {
-        return foodItemDao.updateFoodItem(foodItem).toLong()
+        val longResult =  foodItemDao.updateFoodItem(foodItem).toLong()
+        return longResult
     }
     // val foodItemsByRange: Flow<List<FoodItemModel>> get() =
 

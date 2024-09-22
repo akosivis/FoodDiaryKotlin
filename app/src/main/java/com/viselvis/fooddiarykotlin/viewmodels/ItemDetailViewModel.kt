@@ -59,6 +59,7 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                 _uiState.update {
                     (it as ItemDetailUiState.EditMode).copy(
                         itemToEdit = AddItemUiState(
+                            itemId = it.itemToEdit.itemId,
                             itemName = it.itemToEdit.itemName,
                             itemDetail = it.itemToEdit.itemDetail,
                             errorMessage = it.itemToEdit.errorMessage,
@@ -79,6 +80,7 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                 _uiState.update {
                     (it as ItemDetailUiState.EditMode).copy(
                         itemToEdit = AddItemUiState(
+                            itemId = it.itemToEdit.itemId,
                             itemName = it.itemToEdit.itemName,
                             itemDetail = it.itemToEdit.itemDetail,
                             errorMessage = it.itemToEdit.errorMessage,
@@ -97,6 +99,7 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
             _uiState.update {
                 (it as ItemDetailUiState.EditMode).copy(
                     itemToEdit = AddItemUiState(
+                        itemId = it.itemToEdit.itemId,
                         itemName = input,
                         itemDetail = it.itemToEdit.itemDetail,
                         errorMessage = "",
@@ -114,6 +117,7 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
             _uiState.update {
                 (it as ItemDetailUiState.EditMode).copy(
                     itemToEdit = AddItemUiState(
+                        itemId = it.itemToEdit.itemId,
                         itemName = it.itemToEdit.itemName,
                         itemDetail = inputDetail,
                         errorMessage = "",
@@ -134,6 +138,7 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
             _uiState.update {
                 (it as ItemDetailUiState.EditMode).copy(
                     itemToEdit = AddItemUiState(
+                        itemId = it.itemToEdit.itemId,
                         itemName = it.itemToEdit.itemName,
                         itemDetail = it.itemToEdit.itemDetail,
                         errorMessage = "",
@@ -159,6 +164,7 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                 val dateCreated = Calendar.getInstance().time
                 val dateModified = Calendar.getInstance().time
                 val newFoodItem = FoodItemModel(
+                    foodItemId = uiStateValue.itemToEdit.itemId,
                     foodItemType = uiStateValue.itemToEdit.itemFoodType,
                     foodItemTitle = uiStateValue.itemToEdit.itemName,
                     foodItemDetails = uiStateValue.itemToEdit.itemDetail,
@@ -170,6 +176,7 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                 _uiState.update {
                     (it as ItemDetailUiState.EditMode).copy(
                         itemToEdit = AddItemUiState(
+                            itemId = it.itemToEdit.itemId,
                             itemName = it.itemToEdit.itemName,
                             itemDetail = it.itemToEdit.itemDetail,
                             errorMessage = it.itemToEdit.errorMessage,
@@ -184,6 +191,7 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                 _uiState.update {
                     (it as ItemDetailUiState.EditMode).copy(
                         itemToEdit = AddItemUiState(
+                            itemId = it.itemToEdit.itemId,
                             itemName = it.itemToEdit.itemName,
                             itemDetail = it.itemToEdit.itemDetail,
                             errorMessage = when (it.itemToEdit.itemFoodType) {

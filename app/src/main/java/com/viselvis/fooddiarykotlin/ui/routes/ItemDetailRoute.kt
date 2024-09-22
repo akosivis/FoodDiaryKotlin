@@ -222,7 +222,7 @@ fun ItemEditPage(
                     inclusive = false
                 )
             },
-            message = stringResource(id = R.string.item_added_successfully)
+            message = stringResource(id = R.string.item_edited_successfully)
         )
     }
 
