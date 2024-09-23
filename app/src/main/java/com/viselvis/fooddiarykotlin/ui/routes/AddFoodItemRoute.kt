@@ -117,19 +117,9 @@ fun AddFoodItemRoute(
                         } else {
                             stringResource(id = R.string.food_item_name)
                         },
+                        inputTextStyle = MaterialTheme.typography.headlineSmall,
+                        isTextCenter = true
                     )
-
-//                    BaseTextField(
-//                        text = uiState.itemName,
-//                        onTextChanged = {
-//                            viewModel.updateItemName(it)
-//                        },
-//                        placeholderText = if (foodItemType == 1) {
-//                            stringResource(id = R.string.meds_item_name)
-//                        } else {
-//                            stringResource(id = R.string.food_item_name)
-//                        },
-//                    )
 
                     if (uiState.errorMessage.isNotEmpty()) {
                         Box(modifier = Modifier.fillMaxWidth()) {
@@ -156,16 +146,6 @@ fun AddFoodItemRoute(
                             stringResource(id = R.string.food_item_details)
                         },
                     )
-
-//                    BaseTextField(
-//                        text = uiState.itemDetail,
-//                        onTextChanged = { viewModel.updateItemDetail(it) },
-//                        placeholderText = if (foodItemType == 1) {
-//                            stringResource(id = R.string.meds_item_details)
-//                        } else {
-//                            stringResource(id = R.string.food_item_details)
-//                        }
-//                    )
 
                     Spacer(modifier = Modifier.height(10.dp))
                     when (foodItemType) {

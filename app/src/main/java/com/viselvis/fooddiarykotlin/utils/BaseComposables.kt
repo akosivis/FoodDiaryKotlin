@@ -3,8 +3,10 @@ package com.viselvis.fooddiarykotlin.utils
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Warning
@@ -19,6 +21,9 @@ import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
 import com.viselvis.fooddiarykotlin.R
 import kotlin.math.roundToInt
@@ -372,20 +377,45 @@ fun BaseTextFieldWithoutBg(
     onTextChanged: (String) -> Unit,
     placeholderText: String,
     givenModifier: Modifier = Modifier.fillMaxWidth(),
-    isSingleLine: Boolean = false
+    inputTextStyle: TextStyle = LocalTextStyle.current,
+    isSingleLine: Boolean = false,
+    isTextCenter: Boolean = false,
 ) {
-    TextField(
+    val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    val visualTransformation = VisualTransformation.None
+
+    BasicTextField(
         modifier = givenModifier,
         value = text,
         onValueChange = onTextChanged,
-        textStyle = MaterialTheme.typography.headlineSmall,
+        // MaterialTheme.typography.headlineSmall
+        textStyle = inputTextStyle
+            .copy(textAlign = if (isTextCenter) {
+                TextAlign.Center
+            } else {
+                TextAlign.Start
+            }),
         singleLine = isSingleLine,
-        placeholder = { Text(placeholderText) },
-        colors = TextFieldDefaults.colors(
-            // backgroundColor = Color.White,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-        ),
+        interactionSource = interactionSource,
+        visualTransformation = visualTransformation,
+        decorationBox = @Composable { innerTextField ->
+            TextFieldDefaults.DecorationBox(
+                value = text,
+                placeholder = { Text(placeholderText) },
+                enabled = true,
+                singleLine = isSingleLine,
+                interactionSource = interactionSource,
+                visualTransformation = visualTransformation,
+                innerTextField = innerTextField,
+                colors = TextFieldDefaults.colors(
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                ),
+                contentPadding = PaddingValues(0.dp),
+            )
+        }
     )
 }

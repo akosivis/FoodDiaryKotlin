@@ -158,20 +158,23 @@ fun ItemDetailPage(
                             .align(alignment = Alignment.CenterHorizontally)
                     )
                     Spacer(modifier = Modifier.height(5.dp))
-                    Text (
+                    Text(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         text = state.itemDetailToDisplay.foodItemTitle,
+                        textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.headlineSmall
                     )
                     Spacer(modifier = Modifier.height(5.dp))
                     Text(
                         text = state.itemDetailToDisplay.foodItemDetails
                     )
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Text(
-                        text = "Contains: ",
-                        style = MaterialTheme.typography.headlineSmall
-                    )
+                    if (state.itemDetailToDisplay.foodItemType == 0) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Text(
+                            text = "Contains: ",
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                    }
                     Spacer(modifier = Modifier.height(5.dp))
                     FlowRow(
                         horizontalGap = 8.dp,
@@ -271,24 +274,18 @@ fun ItemEditPage(
                     .align(alignment = Alignment.CenterHorizontally)
                 )
                 Spacer(modifier = Modifier.height(5.dp))
-//            Text (
-//                modifier = Modifier.align(Alignment.CenterHorizontally),
-//                text = state.itemToEdit.itemName,
-//                style = MaterialTheme.typography.headlineSmall
-//            )
                 BaseTextFieldWithoutBg(
                     text = state.itemToEdit.itemName,
                     onTextChanged = {
                         updateItemName(it)
-//                    if (itemNameToEdit.isNotEmpty()) {
-//                        addFoodItemViewModel.errorMessage = ""
-//                    }
                     },
                     placeholderText = if (state.itemToEdit.itemFoodType == 1) {
                         stringResource(id = R.string.meds_item_name)
                     } else {
                         stringResource(id = R.string.food_item_name_not_italic)
                     },
+                    inputTextStyle = MaterialTheme.typography.headlineSmall,
+                    isTextCenter = true
                 )
                 if (state.itemToEdit.errorMessage.isNotEmpty()) {
                     Box(modifier = Modifier.fillMaxWidth()) {
@@ -306,9 +303,6 @@ fun ItemEditPage(
                     text = state.itemToEdit.itemDetail,
                     onTextChanged = {
                         updateItemDescription(it)
-//                    if (itemNameToEdit.isNotEmpty()) {
-//                        addFoodItemViewModel.errorMessage = ""
-//                    }
                     },
                     placeholderText = if (state.itemToEdit.itemFoodType == 1) {
                         stringResource(id = R.string.meds_item_details)
@@ -316,18 +310,16 @@ fun ItemEditPage(
                         stringResource(id = R.string.food_item_details)
                     },
                 )
-//            Text(
-//                text = state.itemToEdit.itemDetail
-//            )
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = "Contains: ",
-                    style = MaterialTheme.typography.headlineSmall
-                )
-                Spacer(modifier = Modifier.height(5.dp))
+
 
                 when (state.itemToEdit.itemFoodType) {
                     0 -> {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Text(
+                            text = "Contains: ",
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                        Spacer(modifier = Modifier.height(5.dp))
                         Box(modifier = Modifier.fillMaxWidth()) {
                             FlowRow(
                                 horizontalGap = 8.dp,
