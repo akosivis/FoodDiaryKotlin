@@ -43,7 +43,7 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                             itemName = this.foodItemTitle,
                             itemDetail = this.foodItemDetails,
                             itemIngredientsList = this.foodItemIngredients,
-                            itemFoodType = this.foodItemType
+                            itemFoodType = this.foodItemType,
                         )
                     )
                 } else {
@@ -65,7 +65,8 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                             errorMessage = it.itemToEdit.errorMessage,
                             isDataInserted = it.itemToEdit.isDataInserted,
                             itemIngredientsList = it.itemToEdit.itemIngredientsList,
-                            itemIngredientInput = input
+                            itemIngredientInput = input,
+                            itemFoodType = it.itemToEdit.itemFoodType
                         ),
                     )
                 }
@@ -86,7 +87,8 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                             errorMessage = it.itemToEdit.errorMessage,
                             isDataInserted = it.itemToEdit.isDataInserted,
                             itemIngredientsList = ingredientList,
-                            itemIngredientInput = ""
+                            itemIngredientInput = "",
+                            itemFoodType = it.itemToEdit.itemFoodType
                         ),
                     )
                 }
@@ -105,7 +107,8 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                         errorMessage = "",
                         isDataInserted = it.itemToEdit.isDataInserted,
                         itemIngredientsList = it.itemToEdit.itemIngredientsList,
-                        itemIngredientInput = it.itemToEdit.itemIngredientInput
+                        itemIngredientInput = it.itemToEdit.itemIngredientInput,
+                        itemFoodType = it.itemToEdit.itemFoodType
                     ),
                 )
             }
@@ -123,7 +126,8 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                         errorMessage = "",
                         isDataInserted = it.itemToEdit.isDataInserted,
                         itemIngredientsList = it.itemToEdit.itemIngredientsList,
-                        itemIngredientInput = it.itemToEdit.itemIngredientInput
+                        itemIngredientInput = it.itemToEdit.itemIngredientInput,
+                        itemFoodType = it.itemToEdit.itemFoodType
                     ),
                 )
             }
@@ -144,7 +148,8 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                         errorMessage = "",
                         isDataInserted = it.itemToEdit.isDataInserted,
                         itemIngredientsList = newList,
-                        itemIngredientInput = it.itemToEdit.itemIngredientInput
+                        itemIngredientInput = it.itemToEdit.itemIngredientInput,
+                        itemFoodType = it.itemToEdit.itemFoodType
                     ),
                 )
             }
@@ -182,7 +187,8 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                             errorMessage = it.itemToEdit.errorMessage,
                             isDataInserted = repo.updateFoodItem(newFoodItem),
                             itemIngredientsList = it.itemToEdit.itemIngredientsList,
-                            itemIngredientInput = it.itemToEdit.itemIngredientInput
+                            itemIngredientInput = it.itemToEdit.itemIngredientInput,
+                            itemFoodType = it.itemToEdit.itemFoodType
                         )
                     )
                 }
@@ -200,7 +206,8 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
                             },
                             isDataInserted = it.itemToEdit.isDataInserted,
                             itemIngredientsList = it.itemToEdit.itemIngredientsList,
-                            itemIngredientInput = it.itemToEdit.itemIngredientInput
+                            itemIngredientInput = it.itemToEdit.itemIngredientInput,
+                            itemFoodType = it.itemToEdit.itemFoodType
                         )
                     )
                 }
