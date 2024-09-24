@@ -1,5 +1,7 @@
 package com.viselvis.fooddiarykotlin.ui.routes
 
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -138,25 +142,31 @@ fun ItemDetailPage(
                         )
                     ).fillMaxHeight()
                 ) {
-                    Box(
+                    Box (
                         modifier = Modifier
-                            .drawWithCache {
-                                val roundedPolygon = RoundedPolygon(
-                                    numVertices = 6,
-                                    radius = size.minDimension / 2,
-                                    centerX = size.width / 2,
-                                    centerY = size.height / 2
-                                )
-                                val roundedPolygonPath = roundedPolygon
-                                    .toPath()
-                                    .asComposePath()
-                                onDrawBehind {
-                                    drawPath(roundedPolygonPath, color = md_theme_light_primary)
-                                }
-                            }
                             .size(50.dp, 50.dp)
-                            .align(alignment = Alignment.CenterHorizontally)
-                    )
+                            .align(alignment = Alignment.CenterHorizontally),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Canvas(
+                            modifier = Modifier.fillMaxSize(),
+                            onDraw = {
+                                drawCircle(md_theme_light_primary)
+                            }
+                        )
+                        Icon(
+                            modifier = Modifier.size(30.dp, 30.dp),
+                            painter = painterResource( id =
+                                if (state.itemDetailToDisplay.foodItemType == 1) {
+                                    R.drawable.icon_medicine_50
+                                } else {
+                                    R.drawable.icon_food_50
+                                }
+                            ),
+                            tint = Color.White,
+                            contentDescription = ""
+                        )
+                    }
                     Spacer(modifier = Modifier.height(5.dp))
                     Text(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -254,25 +264,31 @@ fun ItemEditPage(
                 )
                 .fillMaxSize()
             ) {
-                Box(
+                Box (
                     modifier = Modifier
-                        .drawWithCache {
-                            val roundedPolygon = RoundedPolygon(
-                                numVertices = 6,
-                                radius = size.minDimension / 2,
-                            centerX = size.width / 2,
-                            centerY = size.height / 2
-                        )
-                        val roundedPolygonPath = roundedPolygon
-                            .toPath()
-                            .asComposePath()
-                        onDrawBehind {
-                            drawPath(roundedPolygonPath, color = md_theme_light_primary)
+                        .size(50.dp, 50.dp)
+                        .align(alignment = Alignment.CenterHorizontally),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Canvas(
+                        modifier = Modifier.fillMaxSize(),
+                        onDraw = {
+                            drawCircle(md_theme_light_primary)
                         }
-                    }
-                    .size(50.dp, 50.dp)
-                    .align(alignment = Alignment.CenterHorizontally)
-                )
+                    )
+                    Icon(
+                        modifier = Modifier.size(30.dp, 30.dp),
+                        painter = painterResource( id =
+                        if (state.itemToEdit.itemFoodType == 1) {
+                            R.drawable.icon_medicine_50
+                        } else {
+                            R.drawable.icon_food_50
+                        }
+                        ),
+                        tint = Color.White,
+                        contentDescription = ""
+                    )
+                }
                 Spacer(modifier = Modifier.height(5.dp))
                 BaseTextFieldWithoutBg(
                     text = state.itemToEdit.itemName,
