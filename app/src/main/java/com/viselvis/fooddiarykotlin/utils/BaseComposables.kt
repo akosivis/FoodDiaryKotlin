@@ -401,7 +401,14 @@ fun BaseTextFieldWithoutBg(
         decorationBox = @Composable { innerTextField ->
             TextFieldDefaults.DecorationBox(
                 value = text,
-                placeholder = { Text(placeholderText) },
+                placeholder = {
+                    Text(
+                        text = placeholderText,
+                        textAlign = if (isTextCenter)
+                            TextAlign.Center
+                        else
+                            TextAlign.Start
+                    )},
                 enabled = true,
                 singleLine = isSingleLine,
                 interactionSource = interactionSource,
