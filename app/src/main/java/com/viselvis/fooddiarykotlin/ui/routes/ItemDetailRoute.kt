@@ -1,5 +1,6 @@
 package com.viselvis.fooddiarykotlin.ui.routes
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +30,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
@@ -54,6 +57,8 @@ import com.viselvis.fooddiarykotlin.utils.BaseTextFieldWithoutBg
 import com.viselvis.fooddiarykotlin.utils.FlowRow
 import com.viselvis.fooddiarykotlin.viewmodels.ItemDetailUiState
 import com.viselvis.fooddiarykotlin.viewmodels.ItemDetailViewModel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 // @Preview(widthDp = 412, heightDp = 892)
 @Composable
@@ -89,7 +94,8 @@ fun ItemDetailRoute(
             updateItemName = { viewModel.updateItemName(it) },
             updateItemDescription = { viewModel.updateItemDetail(it) },
             navController = navController,
-            updateFoodItem = { viewModel.updateFoodItem() }
+            updateFoodItem = { viewModel.updateFoodItem() },
+            viewFoodItem = { foodItemId?.let { viewModel.fetchFoodItem(it) } }
         )
     }
 }
@@ -223,9 +229,13 @@ fun ItemEditPage(
     updateItemDescription: (String) -> Unit,
     deleteItemIngredient: (String) -> Unit,
     navController: NavHostController,
-    updateFoodItem: () -> Unit
+    updateFoodItem: () -> Unit,
+    viewFoodItem: () -> Unit = {}
 ) {
     var isItemAddedDialogShown by mutableStateOf(false)
+    var isItemEdited by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
     if (!isItemAddedDialogShown && (state.itemToEdit.isDataInserted != (-1).toLong())) {
         BaseDialog(
             onDismiss = {
@@ -238,6 +248,23 @@ fun ItemEditPage(
             message = stringResource(id = R.string.item_edited_successfully)
         )
     }
+
+    BackHandler (
+        enabled = isItemEdited,
+        onBack = {
+            scope.launch {
+                BaseDialog(
+                    onDismiss = {
+                        navController.popBackStack(
+                            route = NoteEatDestinations.HOME_ROUTE,
+                            inclusive = false
+                        )
+                    },
+                    message = "Are you sure you do not want to save your edits?"
+                )
+            }
+        }
+    )
 
     Surface (modifier = Modifier.fillMaxSize()) {
         Scaffold (
@@ -294,6 +321,7 @@ fun ItemEditPage(
                     text = state.itemToEdit.itemName,
                     onTextChanged = {
                         updateItemName(it)
+                        isItemEdited = true
                     },
                     placeholderText = if (state.itemToEdit.itemFoodType == 1) {
                         stringResource(id = R.string.meds_item_name)
@@ -319,6 +347,7 @@ fun ItemEditPage(
                     text = state.itemToEdit.itemDetail,
                     onTextChanged = {
                         updateItemDescription(it)
+                        isItemEdited = true
                     },
                     placeholderText = if (state.itemToEdit.itemFoodType == 1) {
                         stringResource(id = R.string.meds_item_details)
