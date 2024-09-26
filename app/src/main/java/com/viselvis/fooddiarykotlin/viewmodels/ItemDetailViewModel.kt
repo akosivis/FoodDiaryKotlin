@@ -215,7 +215,7 @@ class ItemDetailViewModel(private val repo: FoodItemRepository) : ViewModel() {
         }
     }
 
-    private fun saveFoodItem(newFoodItem: FoodItemModel) {
+    fun viewItemDetail(inputDetail: String) {
 
     }
 }
