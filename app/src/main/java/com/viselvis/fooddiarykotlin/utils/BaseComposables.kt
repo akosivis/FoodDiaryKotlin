@@ -320,13 +320,13 @@ fun NotWorkingDisplayPage(
 @Composable
 fun BaseDialog(
     onDismiss: () -> Unit,
-    message: String = "",
+    message: String = "",   // stringResource(R.string.item_added_successfully)
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
         text = {
             Text(
-                text = stringResource(id = R.string.item_added_successfully),
+                text = message,
                 style = MaterialTheme.typography.bodyLarge
             )
         },

@@ -234,6 +234,9 @@ fun ItemEditPage(
 ) {
     var isItemAddedDialogShown by mutableStateOf(false)
     var isItemEdited by remember { mutableStateOf(false) }
+    var isShowRejectEditPrompt by remember { mutableStateOf(false) }
+    val rejectEdit = { isShowRejectEditPrompt = true }
+
     val scope = rememberCoroutineScope()
 
     if (!isItemAddedDialogShown && (state.itemToEdit.isDataInserted != (-1).toLong())) {
@@ -249,22 +252,21 @@ fun ItemEditPage(
         )
     }
 
-    BackHandler (
-        enabled = isItemEdited,
-        onBack = {
-            scope.launch {
-                BaseDialog(
-                    onDismiss = {
-                        navController.popBackStack(
-                            route = NoteEatDestinations.HOME_ROUTE,
-                            inclusive = false
-                        )
-                    },
-                    message = "Are you sure you do not want to save your edits?"
-                )
-            }
-        }
-    )
+    if (isItemEdited) {
+        BackHandler (onBack = rejectEdit)
+    }
+
+    if (isShowRejectEditPrompt) {
+        BaseDialog(
+            onDismiss = {
+                navController.popBackStack(
+                    route = NoteEatDestinations.HOME_ROUTE,
+                    inclusive = false
+                )},
+            message = "Are you sure you do not want to save your edits?"
+        )
+    }
+
 
     Surface (modifier = Modifier.fillMaxSize()) {
         Scaffold (
