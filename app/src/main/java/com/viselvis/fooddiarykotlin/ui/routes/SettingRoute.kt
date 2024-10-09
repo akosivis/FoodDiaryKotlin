@@ -23,19 +23,23 @@ fun SettingsRoute() {
         Column (
             modifier = Modifier.fillMaxSize()
         ) {
-            Row (modifier = Modifier.fillMaxWidth().padding(8.dp)) {
-                Text(
-                    text = "Set reminder",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-
-            Row (modifier = Modifier.fillMaxWidth().padding(8.dp)) {
-                Text(
-                    text = "Set dark theme",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
+            SettingsItem("Set reminder")
+            SettingsItem("Set dark theme")
         }
+    }
+}
+
+@Composable
+fun SettingsItem (
+    text: String,
+    itemNumber: Int = 0
+) {
+    Row (modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.titleMedium
+        )
+
+
     }
 }
